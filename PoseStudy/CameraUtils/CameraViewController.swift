@@ -11,7 +11,10 @@ import UIKit
 
 final class CameraViewController: UIViewController {
     let cameraController = CameraController()
-    var previewView: UIView!
+    
+    @IBOutlet fileprivate var captureButton: UIButton!
+    @IBOutlet fileprivate var previewView: UIView!
+    
     
     override func viewDidLoad() {
                     
@@ -26,12 +29,13 @@ final class CameraViewController: UIViewController {
             
             try? self.cameraController.displayPreview(on: self.previewView)
         }
-        
     }
+    
+    override var prefersStatusBarHidden: Bool { return true }
 }
 
 
-extension CameraViewController : UIViewControllerRepresentable{
+extension CameraViewController : UIViewControllerRepresentable {
     public typealias UIViewControllerType = CameraViewController
     
     public func makeUIViewController(context: UIViewControllerRepresentableContext<CameraViewController>) -> CameraViewController {

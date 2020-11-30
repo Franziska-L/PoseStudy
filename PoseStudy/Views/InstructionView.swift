@@ -11,7 +11,8 @@ struct InstructionView: View {
     var body: some View {
         NavigationView {
             VStack {
-                Text(/*@START_MENU_TOKEN@*/"Hello, World!"/*@END_MENU_TOKEN@*/)
+                Text("Lege jetzt den Brustgurt an")
+                Text("Positioniere das Handy seitlich sodass dein ganzer Körper zu sehen ist.")
                 Text("Stelle Hände unter die Scultern")
                 Text("Achte auf eine Körperspannung in der Mitte")
                 Text("Achte auf eine Körperspannung im Rumpf")

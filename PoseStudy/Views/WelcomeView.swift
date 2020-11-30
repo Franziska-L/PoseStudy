@@ -9,8 +9,10 @@ import SwiftUI
 
 struct WelcomeView: View {
     
+    //TODO: info.plist photo library wieder löschen wenn videos in firebase gescpeichert werden
     @State var code: String = ""
-    @State var isCodeValide = false
+    //false!
+    @State var isCodeValide = true
     
     var body: some View {
         NavigationView {
@@ -22,6 +24,9 @@ struct WelcomeView: View {
                     .multilineTextAlignment(TextAlignment.center)
                     .textFieldStyle(RoundedBorderTextFieldStyle())
                 Spacer()
+                //TODO: hier den richtigen NavigationLink!
+                //-> Wenn code nicht vorhanden gehe zu Fragebögen
+                //Sonst gehe direkt zur Warm up View
                 NavigationLink(
                     destination: CameraView().navigationBarHidden(true),
                     isActive: $isCodeValide,
