@@ -6,21 +6,22 @@
 //
 
 import SwiftUI
+import FirebaseDatabase
 
 struct DemographicFormView: View {
     @State var age: String = ""
-    @State private var status = false
-    @State private var status2 = false
+    @State private var male = false
+    @State private var female = false
     
     var body: some View {
         VStack {
             Text("Persönliche Angaben").titleStyle()
         
             GroupBox(label: Text("Gender")) {
-                Toggle(isOn: $status) {
+                Toggle(isOn: $male) {
                     Text("Männlich")
                 }.toggleStyle(CheckboxToggleStyle())
-                Toggle(isOn: $status2) {
+                Toggle(isOn: $female) {
                     Text("Weiblich")
                 }.toggleStyle(CheckboxToggleStyle())
             }.padding()
@@ -44,7 +45,15 @@ struct DemographicFormView: View {
             /*ProgressView(value: /*@START_MENU_TOKEN@*/0.5/*@END_MENU_TOKEN@*/).accentColor(Color("darkgreen"))*/
         }
     }
+    
+    func saveToDatabase2() {
+        let ref: DatabaseReference = Database.database().reference().child("Participant")
+        ref.updateChildValues(["Age": age, "Gender": male ? "männlich" : "weiblich"])
+    }
+    
 }
+
+
 
 struct DemographicFormView_Previews: PreviewProvider {
     static var previews: some View {

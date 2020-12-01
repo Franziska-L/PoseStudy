@@ -17,6 +17,8 @@
 		737328202572EE6D0081FCA2 /* CameraView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7373281F2572EE6D0081FCA2 /* CameraView.swift */; };
 		737328542574E3CF0081FCA2 /* CameraController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 737328532574E3CF0081FCA2 /* CameraController.swift */; };
 		737328592574E50F0081FCA2 /* CameraViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 737328582574E50F0081FCA2 /* CameraViewController.swift */; };
+		7373287E257533BD0081FCA2 /* Dataset.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7373287D257533BD0081FCA2 /* Dataset.swift */; };
+		737328C525754B6B0081FCA2 /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 737328C425754B6B0081FCA2 /* GoogleService-Info.plist */; };
 		739B9DE8256FEFA100CE1F4A /* HealthFormView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 739B9DE7256FEFA100CE1F4A /* HealthFormView.swift */; };
 		73A2BF7E256ED2DB00A592E3 /* InstructionView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 73A2BF7D256ED2DB00A592E3 /* InstructionView.swift */; };
 		73F92244256E87B80005D25F /* Style.swift in Sources */ = {isa = PBXBuildFile; fileRef = 73F92243256E87B80005D25F /* Style.swift */; };
@@ -64,6 +66,8 @@
 		7373281F2572EE6D0081FCA2 /* CameraView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CameraView.swift; sourceTree = "<group>"; };
 		737328532574E3CF0081FCA2 /* CameraController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CameraController.swift; sourceTree = "<group>"; };
 		737328582574E50F0081FCA2 /* CameraViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CameraViewController.swift; sourceTree = "<group>"; };
+		7373287D257533BD0081FCA2 /* Dataset.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Dataset.swift; sourceTree = "<group>"; };
+		737328C425754B6B0081FCA2 /* GoogleService-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; name = "GoogleService-Info.plist"; path = "../../../../../../Downloads/GoogleService-Info.plist"; sourceTree = "<group>"; };
 		739B9DE7256FEFA100CE1F4A /* HealthFormView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HealthFormView.swift; sourceTree = "<group>"; };
 		73A2BF7D256ED2DB00A592E3 /* InstructionView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InstructionView.swift; sourceTree = "<group>"; };
 		73F92243256E87B80005D25F /* Style.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Style.swift; sourceTree = "<group>"; };
@@ -146,6 +150,7 @@
 				73F92253256E89C60005D25F /* Views */,
 				7336A31A256E790D00CB090D /* PoseStudyApp.swift */,
 				7336A31E256E790F00CB090D /* Assets.xcassets */,
+				737328C425754B6B0081FCA2 /* GoogleService-Info.plist */,
 				7336A323256E790F00CB090D /* Info.plist */,
 				7336A320256E790F00CB090D /* Preview Content */,
 			);
@@ -183,6 +188,7 @@
 			children = (
 				737328532574E3CF0081FCA2 /* CameraController.swift */,
 				737328582574E50F0081FCA2 /* CameraViewController.swift */,
+				7373287D257533BD0081FCA2 /* Dataset.swift */,
 			);
 			path = CameraUtils;
 			sourceTree = "<group>";
@@ -329,6 +335,7 @@
 			files = (
 				7336A322256E790F00CB090D /* Preview Assets.xcassets in Resources */,
 				7336A31F256E790F00CB090D /* Assets.xcassets in Resources */,
+				737328C525754B6B0081FCA2 /* GoogleService-Info.plist in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -480,6 +487,7 @@
 				737328542574E3CF0081FCA2 /* CameraController.swift in Sources */,
 				73F92244256E87B80005D25F /* Style.swift in Sources */,
 				73A2BF7E256ED2DB00A592E3 /* InstructionView.swift in Sources */,
+				7373287E257533BD0081FCA2 /* Dataset.swift in Sources */,
 				739B9DE8256FEFA100CE1F4A /* HealthFormView.swift in Sources */,
 				7336A31B256E790D00CB090D /* PoseStudyApp.swift in Sources */,
 				737328202572EE6D0081FCA2 /* CameraView.swift in Sources */,

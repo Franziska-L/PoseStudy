@@ -6,13 +6,17 @@
 //
 
 import SwiftUI
+import FirebaseDatabase
 
 struct WelcomeView: View {
-    
+
     //TODO: info.plist photo library wieder löschen wenn videos in firebase gescpeichert werden
     @State var code: String = ""
     //false!
-    @State var isCodeValide = true
+    @State var isCodeValide = false
+    @State var codeExists = false
+    @State var codeList = ["1234", "1235", "126", "1237"]
+    @State var data: Dataset = Dataset()
     
     var body: some View {
         NavigationView {
@@ -20,33 +24,52 @@ struct WelcomeView: View {
                 Text("Willkommen zur Studie.").titleStyle()
                 Spacer()
                 TextField("Enter Code", text: $code)
-                    .padding()
+                    .padding(.horizontal, 40)
                     .multilineTextAlignment(TextAlignment.center)
                     .textFieldStyle(RoundedBorderTextFieldStyle())
                 Spacer()
-                //TODO: hier den richtigen NavigationLink!
-                //-> Wenn code nicht vorhanden gehe zu Fragebögen
-                //Sonst gehe direkt zur Warm up View
-                NavigationLink(
-                    destination: CameraView().navigationBarHidden(true),
-                    isActive: $isCodeValide,
-                    label: {
-                        Button(action: start) {
-                            Text("Los gehts")
-                        }
-                    }).buttonStyle(CustomButtonStyle())
+                
+                Button(action: start) {
+                    Text("Los gehts")
+                }.buttonStyle(CustomButtonStyle())
+                if codeExists {
+                    NavigationLink(
+                        destination: WarmUpView().navigationBarHidden(true),
+                        isActive: $isCodeValide,
+                        label: {
+                            Text("").opacity(1.0)
+                        }).buttonStyle(PlainButtonStyle())
+                } else {
+                    NavigationLink(
+                        destination: DemographicFormView().navigationBarHidden(true),
+                        isActive: $isCodeValide,
+                        label: {
+                            Text("").opacity(1.0)
+                        }).buttonStyle(PlainButtonStyle())
+                }
             }
         }
     }
     
+    
     func start() {
-        if code == "1234" {
-            //If code exists skip questionnaire views!!
-            isCodeValide = true
-        }
-        else {
-            isCodeValide = false
-            print("color textfield red")
+        var ref: DatabaseReference = Database.database().reference()
+        ref.observeSingleEvent(of: .value, with: { (snapshot) in
+            
+            if snapshot.hasChild("Participant \(code)") {
+                isCodeValide = true
+                codeExists = true
+            } else {
+                if !code.isEmpty && codeList.contains(code) {
+                    isCodeValide = true
+                    codeExists = false
+                    
+                    ref = ref.child("Participant \(code)")
+                    ref.setValue(["Participant ID": code])
+                }
+            }
+        }) { (error) in
+            print(error.localizedDescription)
         }
     }
 }
