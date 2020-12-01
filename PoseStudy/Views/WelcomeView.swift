@@ -23,7 +23,7 @@ struct WelcomeView: View {
             VStack {
                 Text("Willkommen zur Studie.").titleStyle()
                 Spacer()
-                TextField("Enter Code", text: $code)
+                TextField("Gib deine ID ein", text: $code)
                     .padding(.horizontal, 40)
                     .multilineTextAlignment(TextAlignment.center)
                     .textFieldStyle(RoundedBorderTextFieldStyle())

@@ -21,6 +21,7 @@
 		737328C525754B6B0081FCA2 /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 737328C425754B6B0081FCA2 /* GoogleService-Info.plist */; };
 		739B9DE8256FEFA100CE1F4A /* HealthFormView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 739B9DE7256FEFA100CE1F4A /* HealthFormView.swift */; };
 		73A2BF7E256ED2DB00A592E3 /* InstructionView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 73A2BF7D256ED2DB00A592E3 /* InstructionView.swift */; };
+		73D602F22576473600ABC437 /* TestView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 73D602F12576473600ABC437 /* TestView.swift */; };
 		73F92244256E87B80005D25F /* Style.swift in Sources */ = {isa = PBXBuildFile; fileRef = 73F92243256E87B80005D25F /* Style.swift */; };
 		73F9224C256E89BC0005D25F /* DemographicFormView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 73F9224B256E89BC0005D25F /* DemographicFormView.swift */; };
 		73F9226E256EC2F50005D25F /* WarmUpView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 73F9226D256EC2F50005D25F /* WarmUpView.swift */; };
@@ -70,6 +71,7 @@
 		737328C425754B6B0081FCA2 /* GoogleService-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; name = "GoogleService-Info.plist"; path = "../../../../../../Downloads/GoogleService-Info.plist"; sourceTree = "<group>"; };
 		739B9DE7256FEFA100CE1F4A /* HealthFormView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HealthFormView.swift; sourceTree = "<group>"; };
 		73A2BF7D256ED2DB00A592E3 /* InstructionView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InstructionView.swift; sourceTree = "<group>"; };
+		73D602F12576473600ABC437 /* TestView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TestView.swift; sourceTree = "<group>"; };
 		73F92243256E87B80005D25F /* Style.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Style.swift; sourceTree = "<group>"; };
 		73F9224B256E89BC0005D25F /* DemographicFormView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DemographicFormView.swift; sourceTree = "<group>"; };
 		73F9226D256EC2F50005D25F /* WarmUpView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WarmUpView.swift; sourceTree = "<group>"; };
@@ -202,6 +204,7 @@
 				73F9226D256EC2F50005D25F /* WarmUpView.swift */,
 				73A2BF7D256ED2DB00A592E3 /* InstructionView.swift */,
 				7373281F2572EE6D0081FCA2 /* CameraView.swift */,
+				73D602F12576473600ABC437 /* TestView.swift */,
 			);
 			path = Views;
 			sourceTree = "<group>";
@@ -480,6 +483,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				73D602F22576473600ABC437 /* TestView.swift in Sources */,
 				737328592574E50F0081FCA2 /* CameraViewController.swift in Sources */,
 				73F9226E256EC2F50005D25F /* WarmUpView.swift in Sources */,
 				73F9224C256E89BC0005D25F /* DemographicFormView.swift in Sources */,

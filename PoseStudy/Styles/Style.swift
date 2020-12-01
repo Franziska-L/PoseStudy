@@ -56,3 +56,22 @@ extension View {
         self.modifier(Title())
     }
 }
+
+struct CaptureVideoButtonView: View {
+    @State private var animationAmount: CGFloat = 1
+    @Binding var isRecording: Bool
+    
+    var body: some View {
+        Image(systemName: isRecording ? "stop" : "video").font(.title)
+            .padding(30)
+            .background(Color.red)
+            .foregroundColor(.white)
+            .clipShape(Circle())
+            .scaleEffect(isRecording ? 0.7 : 0.9)
+            .overlay(
+                Circle()
+                    .stroke(Color.white, lineWidth: 4)
+        
+        )
+    }
+}

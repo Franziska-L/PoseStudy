@@ -7,6 +7,7 @@
 
 import UIKit
 import AVFoundation
+import Photos
 
 enum CameraControllerError: Swift.Error {
    case captureSessionAlreadyRunning
@@ -19,77 +20,16 @@ enum CameraControllerError: Swift.Error {
 
 
 class CameraController: NSObject, AVCaptureFileOutputRecordingDelegate {
-    func fileOutput(_ output: AVCaptureFileOutput, didFinishRecordingTo outputFileURL: URL, from connections: [AVCaptureConnection], error: Error?) {
-        // Note: Because we use a unique file path for each recording, a new recording won't overwrite a recording mid-save.
-        /*func cleanup() {
-            let path = outputFileURL.path
-            if FileManager.default.fileExists(atPath: path) {
-                do {
-                    try FileManager.default.removeItem(atPath: path)
-                } catch {
-                    print("Could not remove file at url: \(outputFileURL)")
-                }
-            }
-            
-            if let currentBackgroundRecordingID = backgroundRecordingID {
-                backgroundRecordingID = UIBackgroundTaskIdentifier.invalid
-                
-                if currentBackgroundRecordingID != UIBackgroundTaskIdentifier.invalid {
-                    UIApplication.shared.endBackgroundTask(currentBackgroundRecordingID)
-                }
-            }
-        }
-        
-        var success = true
-        
-        if error != nil {
-            print("Movie file finishing error: \(String(describing: error))")
-            success = (((error! as NSError).userInfo[AVErrorRecordingSuccessfullyFinishedKey] as AnyObject).boolValue)!
-        }
-        
-        if success {
-            // Check the authorization status.
-            PHPhotoLibrary.requestAuthorization { status in
-                if status == .authorized {
-                    // Save the movie file to the photo library and cleanup.
-                    PHPhotoLibrary.shared().performChanges({
-                        let options = PHAssetResourceCreationOptions()
-                        options.shouldMoveFile = true
-                        let creationRequest = PHAssetCreationRequest.forAsset()
-                        creationRequest.addResource(with: .video, fileURL: outputFileURL, options: options)
-                    }, completionHandler: { success, error in
-                        if !success {
-                            print("AVCam couldn't save the movie to your photo library: \(String(describing: error))")
-                        }
-                        cleanup()
-                    }
-                    )
-                } else {
-                    cleanup()
-                }
-            }
-        } else {
-            cleanup()
-        }
-        
-        // Enable the Camera and Record buttons to let the user switch camera and start another recording.
-        DispatchQueue.main.async {
-            // Only enable the ability to change camera if the device has more than one camera.
-            self.cameraButton.isEnabled = self.videoDeviceDiscoverySession.uniqueDevicePositionsCount > 1
-            self.recordButton.isEnabled = true
-            self.captureModeControl.isEnabled = true
-            self.recordButton.setImage(#imageLiteral(resourceName: "CaptureVideo"), for: [])
-        }*/
-    }
-    
     
     var session: AVCaptureSession?
     var frontCamera: AVCaptureDevice?
     var frontCameraInput: AVCaptureDeviceInput?
     var previewLayer: AVCaptureVideoPreviewLayer?
     
+    //For saving videos
     var videoOutput: AVCaptureMovieFileOutput?
-    
+    var backgroundRecordingID: UIBackgroundTaskIdentifier?
+  
     
     func prepare(completionHandler: @escaping (Error?) -> Void) {
         func createCaptureSession() {
@@ -136,8 +76,13 @@ class CameraController: NSObject, AVCaptureFileOutputRecordingDelegate {
                         connection.preferredVideoStabilizationMode = .auto
                     }
                 }
-                //self.session.commitConfiguration()
-                
+            }
+            //session.startRunning()
+        }
+        
+        func startSession() throws {
+            guard let session = self.session else {
+                throw CameraControllerError.captureSessionIsMissing
             }
             session.startRunning()
         }
@@ -148,6 +93,7 @@ class CameraController: NSObject, AVCaptureFileOutputRecordingDelegate {
                 try configureCaptureDevices()
                 try configureDeviceInputs()
                 try configureVideoOutput()
+                try startSession()
             }
                 
             catch {
@@ -172,15 +118,16 @@ class CameraController: NSObject, AVCaptureFileOutputRecordingDelegate {
         self.previewLayer = AVCaptureVideoPreviewLayer(session: session)
         self.previewLayer?.videoGravity = AVLayerVideoGravity.resizeAspectFill
         self.previewLayer?.connection?.videoOrientation = .portrait
-        
-        view.layer.insertSublayer(self.previewLayer!, at: 0)
         self.previewLayer?.frame = view.frame
+        view.layer.insertSublayer(self.previewLayer!, at: 0)
     }
     
-    func recording(completion: (UIImage?, Error?) -> Void) {
+    
+    func recording() {
         guard let movieFileOutput = self.videoOutput else {
             return
         }
+        print("recording")
         
         let videoPreviewLayerOrientation = previewLayer?.connection?.videoOrientation
         
@@ -207,6 +154,61 @@ class CameraController: NSObject, AVCaptureFileOutputRecordingDelegate {
             } else {
                 movieFileOutput.stopRecording()
             }
+        }
+    }
+    
+    func fileOutput(_ output: AVCaptureFileOutput, didFinishRecordingTo outputFileURL: URL, from connections: [AVCaptureConnection], error: Error?) {
+        // Note: Because we use a unique file path for each recording, a new recording won't overwrite a recording mid-save.
+        func cleanup() {
+            let path = outputFileURL.path
+            if FileManager.default.fileExists(atPath: path) {
+                do {
+                    try FileManager.default.removeItem(atPath: path)
+                } catch {
+                    print("Could not remove file at url: \(outputFileURL)")
+                }
+            }
+            
+            if let currentBackgroundRecordingID = backgroundRecordingID {
+                backgroundRecordingID = UIBackgroundTaskIdentifier.invalid
+                
+                if currentBackgroundRecordingID != UIBackgroundTaskIdentifier.invalid {
+                    UIApplication.shared.endBackgroundTask(currentBackgroundRecordingID)
+                }
+            }
+        }
+        
+        var success = true
+        
+        if error != nil {
+            print("Movie file finishing error: \(String(describing: error))")
+            success = (((error! as NSError).userInfo[AVErrorRecordingSuccessfullyFinishedKey] as AnyObject).boolValue)!
+        }
+        
+        if success {
+            
+            // Check the authorization status.
+            PHPhotoLibrary.requestAuthorization { status in
+                if status == .authorized {
+                    // Save the movie file to the photo library and cleanup.
+                    PHPhotoLibrary.shared().performChanges({
+                        let options = PHAssetResourceCreationOptions()
+                        options.shouldMoveFile = true
+                        let creationRequest = PHAssetCreationRequest.forAsset()
+                        creationRequest.addResource(with: .video, fileURL: outputFileURL, options: options)
+                    }, completionHandler: { success, error in
+                        if !success {
+                            print("AVCam couldn't save the movie to your photo library: \(String(describing: error))")
+                        }
+                        cleanup()
+                    }
+                    )
+                } else {
+                    cleanup()
+                }
+            }
+        } else {
+            cleanup()
         }
     }
 }
