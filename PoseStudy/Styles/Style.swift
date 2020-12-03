@@ -8,21 +8,6 @@
 import Foundation
 import SwiftUI
 
-struct CustomButtonStyle: ButtonStyle {
- 
-    func makeBody(configuration: Self.Configuration) -> some View {
-        configuration.label
-            .frame(minWidth: 0, maxWidth: .infinity)
-            .padding()
-            .foregroundColor(.white)
-            .background(LinearGradient(gradient: Gradient(colors: [Color("darkgreen"), Color("lightgreen")]), startPoint: .leading, endPoint: .trailing))
-            .cornerRadius(40)
-            .padding(.horizontal, 40)
-            .padding(.vertical, 30)
-            .scaleEffect(configuration.isPressed ? 0.9 : 1.0)
-    }
-}
-
 struct CheckboxToggleStyle: ToggleStyle {
     func makeBody(configuration: Configuration) -> some View {
         return HStack {
@@ -57,21 +42,4 @@ extension View {
     }
 }
 
-struct CaptureVideoButtonView: View {
-    @State private var animationAmount: CGFloat = 1
-    @Binding var isRecording: Bool
-    
-    var body: some View {
-        Image(systemName: isRecording ? "stop" : "video").font(.title)
-            .padding(30)
-            .background(Color.red)
-            .foregroundColor(.white)
-            .clipShape(Circle())
-            .scaleEffect(isRecording ? 0.7 : 0.9)
-            .overlay(
-                Circle()
-                    .stroke(Color.white, lineWidth: 4)
-        
-        )
-    }
-}
+

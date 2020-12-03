@@ -12,7 +12,9 @@ struct WarmUpView: View {
         NavigationView {
             VStack {
                 VStack {
-                    Text("Wärme dich kkurz auf, bevor du mit den Übungen beginnst:")
+                    Text("Aufwärmen").titleStyle()
+                    Image("jumpingjack")
+                    Text("Wärme dich kurz auf, bevor du mit den Übungen beginnst:")
                     Text("Mache 30 Hampelmänner")
                     Text("Wenn du fertig bist kanns los gehen.")
                     Spacer()

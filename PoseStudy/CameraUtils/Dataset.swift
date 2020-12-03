@@ -20,6 +20,8 @@ struct questionnaire {
     var diseas: String
 }
 
-func saveToDatabase() {
+struct health {
+    var cardiovascular: String
     
 }
+

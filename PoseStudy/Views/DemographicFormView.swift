@@ -13,15 +13,20 @@ struct DemographicFormView: View {
     @State private var male = false
     @State private var female = false
     
+    @Binding var data: Dataset
+    
     var body: some View {
+        let m = Binding<Bool>(get: { self.male }, set: { self.male = $0; self.female = false})
+        let w = Binding<Bool>(get: { self.female }, set: { self.male = false; self.female = $0})
+                
         VStack {
             Text("Persönliche Angaben").titleStyle()
         
             GroupBox(label: Text("Gender")) {
-                Toggle(isOn: $male) {
+                Toggle(isOn: m) {
                     Text("Männlich")
                 }.toggleStyle(CheckboxToggleStyle())
-                Toggle(isOn: $female) {
+                Toggle(isOn: w) {
                     Text("Weiblich")
                 }.toggleStyle(CheckboxToggleStyle())
             }.padding()
@@ -37,17 +42,19 @@ struct DemographicFormView: View {
             
             Spacer()
             NavigationLink(
-                destination: HealthFormView().navigationBarHidden(true),
+                destination: HealthFormView(data: $data).navigationBarHidden(true),
                 label: {
                     Text("Weiter")
-                }).buttonStyle(CustomButtonStyle())
+                }).buttonStyle(CustomButtonStyle()).simultaneousGesture(TapGesture().onEnded{
+                    save()
+                })
             
             /*ProgressView(value: /*@START_MENU_TOKEN@*/0.5/*@END_MENU_TOKEN@*/).accentColor(Color("darkgreen"))*/
         }
     }
     
-    func saveToDatabase2() {
-        let ref: DatabaseReference = Database.database().reference().child("Participant")
+    private func save() {
+        let ref: DatabaseReference = Database.database().reference().child("Participant \(data.participantID)")
         ref.updateChildValues(["Age": age, "Gender": male ? "männlich" : "weiblich"])
     }
     
@@ -55,8 +62,8 @@ struct DemographicFormView: View {
 
 
 
-struct DemographicFormView_Previews: PreviewProvider {
+/*struct DemographicFormView_Previews: PreviewProvider {
     static var previews: some View {
         DemographicFormView()
     }
-}
+}*/

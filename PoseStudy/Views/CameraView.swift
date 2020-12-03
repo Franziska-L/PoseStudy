@@ -30,7 +30,7 @@ struct CameraView: View {
                 CameraRepresentable(didTapCapture: $isRecording).edgesIgnoringSafeArea(.top)
                 
             }
-            CaptureVideoButtonView(isRecording: $isRecording).onTapGesture {
+            RecordButtonView(isRecording: $isRecording).onTapGesture {
                 self.isRecording = !self.isRecording
                 countTimer()
             }
@@ -68,7 +68,7 @@ struct CameraView: View {
         }
         else {
             timer?.invalidate()
-            timer = nil 
+            timer = nil
             minutes = 00
             seconds = 00
             timeSeconds = "\(seconds)"

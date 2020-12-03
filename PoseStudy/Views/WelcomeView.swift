@@ -41,7 +41,7 @@ struct WelcomeView: View {
                         }).buttonStyle(PlainButtonStyle())
                 } else {
                     NavigationLink(
-                        destination: DemographicFormView().navigationBarHidden(true),
+                        destination: DemographicFormView(data: $data).navigationBarHidden(true),
                         isActive: $isCodeValide,
                         label: {
                             Text("").opacity(1.0)
@@ -59,6 +59,7 @@ struct WelcomeView: View {
             if snapshot.hasChild("Participant \(code)") {
                 isCodeValide = true
                 codeExists = true
+                data.participantID = code
             } else {
                 if !code.isEmpty && codeList.contains(code) {
                     isCodeValide = true
@@ -66,6 +67,7 @@ struct WelcomeView: View {
                     
                     ref = ref.child("Participant \(code)")
                     ref.setValue(["Participant ID": code])
+                    data.participantID = code
                 }
             }
         }) { (error) in
