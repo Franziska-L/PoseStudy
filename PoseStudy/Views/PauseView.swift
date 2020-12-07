@@ -8,8 +8,25 @@
 import SwiftUI
 
 struct PauseView: View {
+    
+    @State var didPause = false
+    
     var body: some View {
-        Text("Mache mind. 5 Minuten Pause bevor du mit der zweiten Runde beginnst")
+        VStack {
+            Text("Pause").titleStyle()
+            Spacer()
+            Image("brake")
+            Text("Mache mind. 5 Minuten Pause bevor du mit der zweiten Runde beginnst").padding()
+            Spacer()
+            Text("Ausgeruht? Dann starte in die 2. Runde")
+            NavigationLink(
+                destination: InstructionView().navigationBarHidden(true),
+                label: {
+                    Text("Los")
+                    
+                }).buttonStyle(CustomButtonStyle())
+        
+        }
     }
 }
 

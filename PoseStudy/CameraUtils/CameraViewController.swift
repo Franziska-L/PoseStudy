@@ -48,15 +48,20 @@ struct CameraRepresentable: UIViewControllerRepresentable {
     
     
     @Binding var didTapCapture: Bool
+    @Binding var didTap: Bool
     
     public func makeUIViewController(context: Context) -> CameraViewController {
         return CameraViewController()
     }
     
     public func updateUIViewController(_ uiViewController: CameraViewController, context: Context) {
-        if(self.didTapCapture) {
+        if(self.didTap) {
             uiViewController.cameraController.recording()
+            print(didTap)
+            self.didTap = false
+            
         }
+        
     }
         
  

@@ -10,17 +10,20 @@ import FirebaseDatabase
 
 struct WelcomeView: View {
 
+    @State private var selection: String? = nil
     //TODO: info.plist photo library wieder löschen wenn videos in firebase gescpeichert werden
     @State var code: String = ""
-    //false!
     @State var isCodeValide = false
     @State var codeExists = false
-    @State var codeList = ["1234", "1235", "126", "1237"]
+    @State var codeList = ["1", "2", "3", "4", "5", "6", "7", "8", "9", "10"]
     @State var data: Dataset = Dataset()
     
     var body: some View {
         NavigationView {
             VStack {
+                NavigationLink(destination: DemographicFormView(data: $data), tag: "Demographic", selection: $selection) { EmptyView() }
+                NavigationLink(destination: WarmUpView(), tag: "WarmUp", selection: $selection) { EmptyView() }
+                
                 Text("Willkommen zur Studie.").titleStyle()
                 Spacer()
                 TextField("Gib deine ID ein", text: $code)
@@ -32,21 +35,6 @@ struct WelcomeView: View {
                 Button(action: start) {
                     Text("Los gehts")
                 }.buttonStyle(CustomButtonStyle())
-                if codeExists {
-                    NavigationLink(
-                        destination: WarmUpView().navigationBarHidden(true),
-                        isActive: $isCodeValide,
-                        label: {
-                            Text("").opacity(1.0)
-                        }).buttonStyle(PlainButtonStyle())
-                } else {
-                    NavigationLink(
-                        destination: DemographicFormView(data: $data).navigationBarHidden(true),
-                        isActive: $isCodeValide,
-                        label: {
-                            Text("").opacity(1.0)
-                        }).buttonStyle(PlainButtonStyle())
-                }
             }
         }
     }
@@ -57,17 +45,14 @@ struct WelcomeView: View {
         ref.observeSingleEvent(of: .value, with: { (snapshot) in
             
             if snapshot.hasChild("Participant \(code)") {
-                isCodeValide = true
-                codeExists = true
                 data.participantID = code
+                self.selection = "WarmUp"
             } else {
                 if !code.isEmpty && codeList.contains(code) {
-                    isCodeValide = true
-                    codeExists = false
-                    
                     ref = ref.child("Participant \(code)")
                     ref.setValue(["Participant ID": code])
                     data.participantID = code
+                    self.selection = "Demographic"
                 }
             }
         }) { (error) in

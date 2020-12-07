@@ -7,7 +7,7 @@
 
 import SwiftUI
 
-struct CardView1: View {
+struct CardView: View {
     @Binding var image: String
     @Binding var instruction: String
     
@@ -17,7 +17,7 @@ struct CardView1: View {
                         Image(image)
                             .resizable()
                             .scaledToFit()
-                            .frame(width: geometry.size.width, height: geometry.size.height * 0.75) 
+                            .frame(width: geometry.size.width, height: geometry.size.height * 0.75)
                             .clipped()
                         Text(instruction).padding().font(.title2)
                     }
@@ -26,23 +26,5 @@ struct CardView1: View {
                     .cornerRadius(10)
                     .shadow(radius: 5)
                 }
-    }
-}
-
-struct CardView_Previews: PreviewProvider {
-    @State var img: String = "jumpingjack"
-    @State var instruction: String = "Test"
-    
-    static var previews: some View {
-        Preview()
-    }
-    
-    struct Preview: View {
-        @State var img: String = "jumpingjack"
-        @State var instruction: String = "Test"
-        
-        var body: some View {
-            CardView1(image: $img, instruction: $instruction).frame(height: 300).padding()
-            }
     }
 }

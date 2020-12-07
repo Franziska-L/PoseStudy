@@ -8,6 +8,7 @@
 import UIKit
 import AVFoundation
 import Photos
+import FirebaseStorage
 
 enum CameraControllerError: Swift.Error {
    case captureSessionAlreadyRunning
@@ -32,10 +33,12 @@ class CameraController: NSObject, AVCaptureFileOutputRecordingDelegate {
   
     
     func prepare(completionHandler: @escaping (Error?) -> Void) {
+        //Setup session
         func createCaptureSession() {
             self.session = AVCaptureSession()
         }
         
+        //Setup camera position
         func configureCaptureDevices() throws {
             guard let camera = AVCaptureDevice.default(.builtInWideAngleCamera, for: AVMediaType.video, position: .front) else {
                 throw CameraControllerError.noCamerasAvailable
@@ -46,6 +49,7 @@ class CameraController: NSObject, AVCaptureFileOutputRecordingDelegate {
             camera.unlockForConfiguration()
         }
         
+        //Setup input device
         func configureDeviceInputs() throws {
             guard let session = self.session else {
                 throw CameraControllerError.captureSessionIsMissing
@@ -61,6 +65,7 @@ class CameraController: NSObject, AVCaptureFileOutputRecordingDelegate {
             } else { throw CameraControllerError.noCamerasAvailable }
         }
         
+        //Setup output
         func configureVideoOutput() throws {
             guard let session = self.session else {
                 throw CameraControllerError.captureSessionIsMissing
@@ -77,7 +82,6 @@ class CameraController: NSObject, AVCaptureFileOutputRecordingDelegate {
                     }
                 }
             }
-            //session.startRunning()
         }
         
         func startSession() throws {
@@ -149,15 +153,17 @@ class CameraController: NSObject, AVCaptureFileOutputRecordingDelegate {
                 
                 // Start recording video to a temporary file.
                 let outputFileName = NSUUID().uuidString
-                let outputFilePath = (NSTemporaryDirectory() as NSString).appendingPathComponent((outputFileName as NSString).appendingPathExtension("mov")!)
+                let outputFilePath = (NSTemporaryDirectory() as NSString).appendingPathComponent((outputFileName as NSString).appendingPathExtension("mp4")!)
                 movieFileOutput.startRecording(to: URL(fileURLWithPath: outputFilePath), recordingDelegate: self)
             } else {
                 movieFileOutput.stopRecording()
+                print("stoooop")
             }
         }
     }
     
     func fileOutput(_ output: AVCaptureFileOutput, didFinishRecordingTo outputFileURL: URL, from connections: [AVCaptureConnection], error: Error?) {
+        print("stop recording")
         // Note: Because we use a unique file path for each recording, a new recording won't overwrite a recording mid-save.
         func cleanup() {
             let path = outputFileURL.path
@@ -179,7 +185,7 @@ class CameraController: NSObject, AVCaptureFileOutputRecordingDelegate {
         }
         
         var success = true
-        
+
         if error != nil {
             print("Movie file finishing error: \(String(describing: error))")
             success = (((error! as NSError).userInfo[AVErrorRecordingSuccessfullyFinishedKey] as AnyObject).boolValue)!
@@ -187,28 +193,117 @@ class CameraController: NSObject, AVCaptureFileOutputRecordingDelegate {
         
         if success {
             
-            // Check the authorization status.
-            PHPhotoLibrary.requestAuthorization { status in
-                if status == .authorized {
-                    // Save the movie file to the photo library and cleanup.
-                    PHPhotoLibrary.shared().performChanges({
-                        let options = PHAssetResourceCreationOptions()
-                        options.shouldMoveFile = true
-                        let creationRequest = PHAssetCreationRequest.forAsset()
-                        creationRequest.addResource(with: .video, fileURL: outputFileURL, options: options)
-                    }, completionHandler: { success, error in
-                        if !success {
-                            print("AVCam couldn't save the movie to your photo library: \(String(describing: error))")
-                        }
-                        cleanup()
-                    }
-                    )
-                } else {
-                    cleanup()
-                }
+            saveVideoToDatabase(url: outputFileURL) { (success) in
+                print("test")
+                cleanup()
+            } failure: { (error) in
+                print(error)
+                cleanup()
             }
+            
+
+
+//            print(outputFileURL)
+//            // Check the authorization status.
+//            PHPhotoLibrary.requestAuthorization { status in
+//                if status == .authorized {
+//                    // Save the movie file to the photo library and cleanup.
+//                    PHPhotoLibrary.shared().performChanges({
+//                        let options = PHAssetResourceCreationOptions()
+//                        options.shouldMoveFile = true
+//                        let creationRequest = PHAssetCreationRequest.forAsset()
+//                        creationRequest.addResource(with: .video, fileURL: outputFileURL, options: options)
+//                    }, completionHandler: { success, error in
+//                        if !success {
+//                            print("AVCam couldn't save the movie to your photo library: \(String(describing: error))")
+//                        }
+//                        cleanup()
+//                    }
+//                    )
+//                } else {
+//                    cleanup()
+//                }
+//            }
         } else {
             cleanup()
         }
+    }
+    
+    
+    func saveVideoToDatabase(url: URL,
+                             success : @escaping (String) -> Void,
+                             failure : @escaping (Error) -> Void) {
+        // Data in memory
+        let data = Data()
+        print(url)
+        do{
+            try data.write(to: url, options: [.atomic])
+            } catch {
+                print("error with video!")
+            }
+        // Create a reference to the file you want to upload
+        let riversRef = Storage.storage().reference().child("videos").child("video.mp4")
+
+        // Upload the file to the path "images/rivers.jpg"
+        riversRef.putFile(from: url, metadata: nil, completion:  { (metadata, error) in
+            if error == nil {
+                            print("Successful video upload")
+                        } else {
+                            print(error?.localizedDescription)
+                        }
+        })
+    }
+    
+    
+    func uploadToFireBaseVideo(url: URL,
+                                      success : @escaping (String) -> Void,
+                                      failure : @escaping (Error) -> Void) {
+
+        let name = "\(Int(Date().timeIntervalSince1970)).mp4"
+        let path = NSTemporaryDirectory() + name
+
+        let dispatchgroup = DispatchGroup()
+
+        dispatchgroup.enter()
+
+        let documentsURL = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask)[0]
+        let outputurl = documentsURL.appendingPathComponent(name)
+        var ur = outputurl
+       
+        let data = NSData(contentsOf: ur as URL)
+
+        do {
+
+            try data?.write(to: URL(fileURLWithPath: path), options: .atomic)
+
+        } catch {
+
+            print(error)
+        }
+
+        let storageRef = Storage.storage().reference().child("Videos").child(name)
+        if let uploadData = data as Data? {
+            storageRef.putData(uploadData, metadata: nil
+                , completion: { (metadata, error) in
+                    if let error = error {
+                        failure(error)
+                    }else{
+//                        let strPic: String = (metadata?.downloadURL()?.absoluteString)!
+//                        success(strPic)
+                    }
+            })
+        }
+    }
+    
+    func convertVideo(toMPEG4FormatForVideo inputURL: URL, outputURL: URL, handler: @escaping (AVAssetExportSession) -> Void) {
+        try! FileManager.default.removeItem(at: outputURL as URL)
+        let asset = AVURLAsset(url: inputURL as URL, options: nil)
+
+        let exportSession = AVAssetExportSession(asset: asset, presetName: AVAssetExportPresetHighestQuality)!
+        exportSession.outputURL = outputURL
+        exportSession.outputFileType = .mp4
+        exportSession.exportAsynchronously(completionHandler: {
+            handler(exportSession)
+        })
     }
 }

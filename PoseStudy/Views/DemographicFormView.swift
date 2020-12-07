@@ -9,9 +9,11 @@ import SwiftUI
 import FirebaseDatabase
 
 struct DemographicFormView: View {
-    @State var age: String = ""
+    @State private var age: String = ""
     @State private var male = false
     @State private var female = false
+    
+    @State private var next = true
     
     @Binding var data: Dataset
     
@@ -21,7 +23,7 @@ struct DemographicFormView: View {
                 
         VStack {
             Text("Persönliche Angaben").titleStyle()
-        
+            
             GroupBox(label: Text("Gender")) {
                 Toggle(isOn: m) {
                     Text("Männlich")
@@ -29,13 +31,7 @@ struct DemographicFormView: View {
                 Toggle(isOn: w) {
                     Text("Weiblich")
                 }.toggleStyle(CheckboxToggleStyle())
-            }.padding()
-            /*GroupBox(label: Text("Geschlecht")) {
-                Picker(selection: /*@START_MENU_TOKEN@*/.constant(1)/*@END_MENU_TOKEN@*/, label: Text("Picker")) {
-                    Text("männlich").tag(1)
-                    Text("weiblich").tag(2)
-                }
-            }.padding()*/
+            }.padding().padding(.top, 40)
             GroupBox(label: Text("Alter")) {
                 TextField("Gib dein Alter an", text: $age)
             }.padding()
@@ -43,27 +39,39 @@ struct DemographicFormView: View {
             Spacer()
             NavigationLink(
                 destination: HealthFormView(data: $data).navigationBarHidden(true),
+                isActive: $next,
                 label: {
                     Text("Weiter")
                 }).buttonStyle(CustomButtonStyle()).simultaneousGesture(TapGesture().onEnded{
                     save()
                 })
-            
-            /*ProgressView(value: /*@START_MENU_TOKEN@*/0.5/*@END_MENU_TOKEN@*/).accentColor(Color("darkgreen"))*/
         }
     }
     
     private func save() {
-        let ref: DatabaseReference = Database.database().reference().child("Participant \(data.participantID)")
-        ref.updateChildValues(["Age": age, "Gender": male ? "männlich" : "weiblich"])
+        if (male == true || female == true) && age != "" {
+            //let ref: DatabaseReference = Database.database().reference().child("Participant \(data.participantID)")
+            //ref.updateChildValues(["Age": age, "Gender": male ? "männlich" : "weiblich"])
+            
+            self.next = false
+        }
     }
-    
 }
 
 
 
-/*struct DemographicFormView_Previews: PreviewProvider {
+struct DemographicFormView_Previews: PreviewProvider {
+    @State var data: Dataset = Dataset()
+    
     static var previews: some View {
-        DemographicFormView()
+        Preview()
     }
-}*/
+    
+    struct Preview: View {
+        @State var data: Dataset = Dataset()
+        
+        var body: some View {
+            DemographicFormView(data: $data)
+            }
+    }
+}

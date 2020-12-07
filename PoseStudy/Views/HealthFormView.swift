@@ -19,12 +19,12 @@ struct HealthFormView: View {
     
     @Binding var data: Dataset
     
+    @State var next = true
+    
     var body: some View {
         let yes = Binding<Bool>(get: { self.medicaments }, set: { self.medicaments = $0; self.nomedicaments = false})
         let no = Binding<Bool>(get: { self.nomedicaments }, set: { self.medicaments = false; self.nomedicaments = $0})
         
-        NavigationView {
-            ScrollView(.vertical) {
                 VStack {
                     Text("Angaben zum Gesundheitszustand").titleStyle()
                     GroupBox(label: Text("Hast du eine der folgenden Krankheiten")) {
@@ -40,7 +40,7 @@ struct HealthFormView: View {
                         Toggle(isOn: $nothing) {
                             Text("Nichts")
                         }.toggleStyle(CheckboxToggleStyle())
-                    }.padding()
+                    }.padding().padding(.top, 40)
                     GroupBox(label: Text("Nimmst du regelmäßig Medikamente")) {
                         Toggle(isOn: yes) {
                             Text("Ja")
@@ -49,28 +49,46 @@ struct HealthFormView: View {
                             Text("Nein")
                         }.toggleStyle(CheckboxToggleStyle())
                     }.padding()
+                    Spacer()
                     NavigationLink(
                         destination: WarmUpView().navigationBarHidden(true),
+                        isActive: $next,
                         label: {
                             Text("Weiter")
                         }).buttonStyle(CustomButtonStyle()).simultaneousGesture(TapGesture().onEnded{
                             save()
                         })
                 }
-            }
-        }
+            
+        
     }
     
     private func save() {
-        let ref: DatabaseReference = Database.database().reference().child("Participant \(self.data.participantID)")
-        //ref.updateChildValues(["Age": age, "Gender": male ? "männlich" : "weiblich"])
+        
+        if (nomedicaments || medicaments) && (cardiovascular || musculoskeletal || neuromuscular || nothing) {
+            
+            //let ref: DatabaseReference = Database.database().reference().child("Participant \(self.data.participantID)")
+            //ref.updateChildValues(["Medicaments": medicaments, "Her-Kreislauf": cardiovascular, "Muskel-Erkrankung": musculoskeletal, "Neuromuskuläre Erkrankung": neuromuscular, "Nichts": nothing])
+            
+            self.next = false
+        }
     }
     
 }
 
 
-/*struct HealthFormView_Previews: PreviewProvider {
+struct HealthFormView_Previews: PreviewProvider {
+    @State var data: Dataset = Dataset()
+    
     static var previews: some View {
-        HealthFormView(data: $data)
+        Preview()
     }
-}*/
+    
+    struct Preview: View {
+        @State var data: Dataset = Dataset()
+        
+        var body: some View {
+            HealthFormView(data: $data)
+            }
+    }
+}

@@ -9,23 +9,22 @@ import SwiftUI
 
 struct WarmUpView: View {
     var body: some View {
-        NavigationView {
-            VStack {
-                VStack {
-                    Text("Aufwärmen").titleStyle()
-                    Image("jumpingjack")
-                    Text("Wärme dich kurz auf, bevor du mit den Übungen beginnst:")
-                    Text("Mache 30 Hampelmänner")
-                    Text("Wenn du fertig bist kanns los gehen.")
-                    Spacer()
-                    NavigationLink(
-                        destination: InstructionView().navigationBarHidden(true),
-                        label: {
-                            Text("Weiter")
-                            
-                        }).buttonStyle(CustomButtonStyle())
-                }
-            }
+        
+        VStack {
+            Text("Aufwärmen").titleStyle()
+            Spacer()
+            Text("Wärme dich kurz auf, bevor du mit den Übungen beginnst")
+            Image("jumpingjack")
+            Text("30 Hampelmänner").padding()
+            Spacer()
+            Text("Wenn du fertig bist kanns los gehen.")
+            NavigationLink(
+                destination: InstructionView().navigationBarHidden(true),
+                label: {
+                    Text("Weiter")
+                    
+                }).buttonStyle(CustomButtonStyle())
+        
         }
     }
 }

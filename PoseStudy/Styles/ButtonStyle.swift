@@ -23,6 +23,21 @@ struct CustomButtonStyle: ButtonStyle {
     }
 }
 
+struct VideoButtonStyle: ButtonStyle {
+ 
+    func makeBody(configuration: Self.Configuration) -> some View {
+        configuration.label
+            .frame(minWidth: 0, maxWidth: .infinity)
+            .padding()
+            .foregroundColor(.white)
+            .background(LinearGradient(gradient: Gradient(colors: [Color("darkgreen"), Color("lightgreen")]), startPoint: .leading, endPoint: .trailing))
+            .cornerRadius(40)
+            .padding(.horizontal, 40)
+            .padding(.vertical, 30)
+            .scaleEffect(configuration.isPressed ? 0.9 : 1.0)
+    }
+}
+
 struct RecordButtonView: View {
     @State private var animationAmount: CGFloat = 1
     @Binding var isRecording: Bool
@@ -33,7 +48,7 @@ struct RecordButtonView: View {
             .background(Color.red)
             .foregroundColor(.white)
             .clipShape(Circle())
-            .scaleEffect(isRecording ? 0.7 : 0.9)
+            .scaleEffect(isRecording ? 0.6 : 0.9)
             .overlay(
                 Circle()
                     .stroke(Color.white, lineWidth: 4)
