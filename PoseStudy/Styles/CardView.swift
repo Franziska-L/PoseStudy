@@ -19,7 +19,12 @@ struct CardView: View {
                             .scaledToFit()
                             .frame(width: geometry.size.width, height: geometry.size.height * 0.75)
                             .clipped()
-                        Text(instruction).padding().font(.title2)
+                        Text(instruction)
+                            .padding()
+                            .font(.title2)
+                            .lineLimit(3)
+                            .multilineTextAlignment(.leading)
+                            .fixedSize(horizontal: false, vertical: true)
                     }
                     .padding(.bottom)
                     .background(Color.white)

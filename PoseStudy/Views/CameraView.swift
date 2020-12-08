@@ -32,7 +32,7 @@ struct CameraView: View {
                         .padding(.horizontal, 5)
                         .padding(.vertical, 3)
                         .background(Color.red)
-                        .foregroundColor(.white).zIndex(2.0)
+                        .foregroundColor(.white).zIndex(2.0).cornerRadius(3.0)
                 }
                 CameraRepresentable(isRecording: $isRecording, didTap: $didTap).edgesIgnoringSafeArea(.top)
                 

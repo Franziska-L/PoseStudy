@@ -7,12 +7,8 @@
 
 import SwiftUI
 
-class GlobalState: ObservableObject {
-    @Published var isSecondRun: String = "first"
-}
-
 struct WarmUpView: View {
-    @ObservedObject var status = GlobalState()
+    @EnvironmentObject var status: GlobalState
     
     var body: some View {
         NavigationView {

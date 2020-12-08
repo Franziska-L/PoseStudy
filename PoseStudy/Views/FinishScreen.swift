@@ -10,8 +10,8 @@ import SwiftUI
 struct FinishScreen: View {
     var body: some View {
         VStack {
-            Text("Geschafft!").titleStyle()
-            Image("jumpingjack")
+            Text("Geschafft!").titleStyle().padding(.bottom, 50)
+            Image("done").resizable().scaledToFit()
             Text("Danke für deine Teilnahme!").titleStyle()
         }
     }

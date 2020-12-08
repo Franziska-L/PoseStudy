@@ -8,25 +8,31 @@
 import SwiftUI
 import FirebaseDatabase
 
-struct WelcomeView: View {
 
+class GlobalState: ObservableObject {
+    @Published var isSecondRun: String = "first"
+    @Published var participantID: String = ""
+}
+
+struct WelcomeView: View {
+    @ObservedObject var status = GlobalState()
+    
     @State private var selection: String? = nil
     //TODO: info.plist photo library wieder löschen wenn videos in firebase gescpeichert werden
-    @State var code: String = ""
+    @State var ID: String = ""
     @State var isCodeValide = false
     @State var codeExists = false
     @State var codeList = ["1", "2", "3", "4", "5", "6", "7", "8", "9", "10"]
-    @State var data: Dataset = Dataset()
     
     var body: some View {
         NavigationView {
             VStack {
-                NavigationLink(destination: DemographicFormView(data: $data), tag: "Demographic", selection: $selection) { EmptyView() }
+                NavigationLink(destination: DemographicFormView(), tag: "Demographic", selection: $selection) { EmptyView() }
                 NavigationLink(destination: WarmUpView(), tag: "WarmUp", selection: $selection) { EmptyView() }
                 
                 Text("Willkommen zur Studie.").titleStyle()
                 Spacer()
-                TextField("Gib deine ID ein", text: $code)
+                TextField("Gib deine ID ein", text: $ID)
                     .padding(.horizontal, 40)
                     .multilineTextAlignment(TextAlignment.center)
                     .textFieldStyle(RoundedBorderTextFieldStyle())
@@ -36,7 +42,7 @@ struct WelcomeView: View {
                     Text("Los gehts")
                 }.buttonStyle(CustomButtonStyle())
             }
-        }.navigationBarBackButtonHidden(true)
+        }.navigationBarBackButtonHidden(true).environmentObject(status)
     }
     
     
@@ -44,14 +50,14 @@ struct WelcomeView: View {
         var ref: DatabaseReference = Database.database().reference()
         ref.observeSingleEvent(of: .value, with: { (snapshot) in
             
-            if snapshot.hasChild("Participant \(code)") {
-                data.participantID = code
+            if snapshot.hasChild("Participant \(ID)") {
+                self.status.participantID = ID
                 self.selection = "WarmUp"
             } else {
-                if !code.isEmpty && codeList.contains(code) {
-                    ref = ref.child("Participant \(code)")
-                    ref.setValue(["Participant ID": code])
-                    data.participantID = code
+                if !ID.isEmpty && codeList.contains(ID) {
+                    ref = ref.child("Participant \(ID)")
+                    ref.setValue(["Participant ID": ID])
+                    self.status.participantID = ID
                     self.selection = "Demographic"
                 }
             }

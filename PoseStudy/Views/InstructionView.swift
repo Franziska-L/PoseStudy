@@ -8,8 +8,8 @@
 import SwiftUI
 
 struct InstructionView: View {
-    @State var img = ["jumpingjack", "jumpingjack", "jumpingjack", "jumpingjack", "jumpingjack"]
-    @State var instructions = ["Lege jetzt den Brustgurt an", "Positioniere das Handy seitlich sodass dein ganzer Körper zu sehen ist.", "Positioniere das Handy seitlich sodass dein ganzer Körper zu sehen ist.", "Stelle Hände unter die Schultern", "Achte auf eine Körperspannung in der Mitte"]
+    @State var img = ["pulsgurt", "position", "jumpingjack", "jumpingjack", "jumpingjack"]
+    @State var instructions = ["Lege jetzt das Pulsmessgerät unterhalb deiner Brust an.", "Positioniere das Handy seitlich sodass dein ganzer Körper zu sehen ist.", "Positioniere das Handy seitlich sodass dein ganzer Körper zu sehen ist.", "Stelle Hände unter die Schultern", "Achte auf eine Körperspannung in der Mitte"]
 
     @State var step = 0
     @State private var offset: CGFloat = 0
@@ -22,12 +22,13 @@ struct InstructionView: View {
             VStack {
                 Text("Anweisungen").titleStyle().offset(y: -100)
                 Spacer()
+                Text("Gleich kannst du starten. Vorab noch einige Answeisungen. Bitte lies sie dir aufmerksam durch.")
                 GeometryReader { geometry in
                     return ScrollView(.horizontal, showsIndicators: true) {
                         HStack(spacing: self.spacing) {
                             ForEach(0 ..< instructions.count) { position in
                                 CardView(image: $img[position], instruction: $instructions[position])
-                                    .frame(width: geometry.size.width).frame(height: 200)
+                                    .frame(width: geometry.size.width).frame(height: 300)
                             }
                         }
                     }
@@ -70,6 +71,6 @@ struct InstructionView: View {
 
 struct InstructionView_Previews: PreviewProvider {
     static var previews: some View {
-        InstructionView()
+        InstructionView().environmentObject(GlobalState())
     }
 }
