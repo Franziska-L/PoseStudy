@@ -8,6 +8,7 @@
 import SwiftUI
 
 struct CameraView: View {
+    @State private var selection: String? = nil
     
     @State var isRecording: Bool = false
     @State var didTap: Bool = false
@@ -17,15 +18,15 @@ struct CameraView: View {
     @State var timeSeconds: String = "00"
     @State var timeMinutes: String = "00"
     @State var timer: Timer? = nil
-    //@State var currentDate = Date()
     
-    @State var isFirstTime = true
-    
-    @Binding var secondRun: Bool
+    @EnvironmentObject var status: GlobalState
     
     var body: some View {
         VStack {
+            NavigationLink(destination: PauseView().navigationBarHidden(true), tag: "Pause", selection: $selection) { EmptyView() }
+            NavigationLink(destination: FinishScreen().navigationBarHidden(true), tag: "Finish", selection: $selection) { EmptyView() }
             ZStack(alignment: .top) {
+               
                 if isRecording {
                     Text("\(timeMinutes):\(timeSeconds)")
                         .padding(.horizontal, 5)
@@ -33,69 +34,70 @@ struct CameraView: View {
                         .background(Color.red)
                         .foregroundColor(.white).zIndex(2.0)
                 }
-                CameraRepresentable(didTapCapture: $isRecording, didTap: $didTap).edgesIgnoringSafeArea(.top)
+                CameraRepresentable(isRecording: $isRecording, didTap: $didTap).edgesIgnoringSafeArea(.top)
                 
             }
-            RecordButtonView(isRecording: $isRecording).onTapGesture {
-                countTimer()
-                if self.isRecording {
-                   
+            Button(action: onClick, label: {
+                Image(systemName: isRecording ? "pause" : "video")
+            }).buttonStyle(VideoButtonStyle(isRecording: $isRecording))
+        }.environmentObject(status)
+    }
+    
+    func onClick() {
+        if self.isRecording {
+            self.stopTimer()
+            self.isRecording = !self.isRecording
+            if status.isSecondRun == "second" {
+                self.selection = "Finish"
+            } else {
+                self.selection = "Pause"
+            }
+        } else {
+            self.didTap = true
+            self.isRecording = !self.isRecording
+            startTimer()
+        }
+    }
+    
+    private func startTimer() {
+        timer = Timer.scheduledTimer(withTimeInterval: 1, repeats: true) { tempTimer in
+            
+            if self.seconds == 59 {
+                self.seconds = 0
+                if self.minutes == 59 {
+                    self.minutes = 0
                 } else {
-                    self.isRecording = !self.isRecording
-                    self.didTap = true
+                    self.minutes = self.minutes + 1
                 }
-               
+            } else {
+                self.seconds = self.seconds + 1
+            }
+            if minutes < 10 {
+                timeMinutes = "0\(minutes)"
+            } else {
+                timeMinutes = "\(minutes)"
+            }
+            if seconds < 10 {
+                timeSeconds = "0\(seconds)"
+            } else {
+                timeSeconds = "\(seconds)"
             }
         }
-        
-        
     }
     
-    func getDestination() {
-        
-    }
-    
-    func countTimer() {
-        if isRecording {
-            timer = Timer.scheduledTimer(withTimeInterval: 1, repeats: true){ tempTimer in
-                  // 2. Check time to add to H:M:S
-                  if self.seconds == 59 {
-                    self.seconds = 0
-                    if self.minutes == 59 {
-                      self.minutes = 0
-                    } else {
-                      self.minutes = self.minutes + 1
-                    }
-                  } else {
-                    self.seconds = self.seconds + 1
-                  }
-                if minutes < 10 {
-                    timeMinutes = "0\(minutes)"
-                } else {
-                    timeMinutes = "\(minutes)"
-                }
-                if seconds < 10 {
-                    timeSeconds = "0\(seconds)"
-                } else {
-                    timeSeconds = "\(seconds)"
-                }
-                
-                }
-        }
-        else {
-            timer?.invalidate()
-            timer = nil
-            minutes = 0
-            seconds = 0
-            timeSeconds = "0\(seconds)"
-            timeMinutes = "0\(minutes)"
-        }
+    private func stopTimer() {
+        timer?.invalidate()
+        timer = nil
+        minutes = 0
+        seconds = 0
+        timeSeconds = "0\(seconds)"
+        timeMinutes = "0\(minutes)"
     }
 }
 
 
-/*struct CameraView_Previews: PreviewProvider {
+struct CameraView_Previews: PreviewProvider {
     static var previews: some View {
         CameraView()
     }
-}*/
+}

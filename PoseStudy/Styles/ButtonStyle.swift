@@ -24,17 +24,19 @@ struct CustomButtonStyle: ButtonStyle {
 }
 
 struct VideoButtonStyle: ButtonStyle {
- 
+    @Binding var isRecording: Bool
+    
     func makeBody(configuration: Self.Configuration) -> some View {
         configuration.label
-            .frame(minWidth: 0, maxWidth: .infinity)
-            .padding()
+            .padding(30)
+            .font(.title)
+            .background(Color.red)
             .foregroundColor(.white)
-            .background(LinearGradient(gradient: Gradient(colors: [Color("darkgreen"), Color("lightgreen")]), startPoint: .leading, endPoint: .trailing))
-            .cornerRadius(40)
-            .padding(.horizontal, 40)
-            .padding(.vertical, 30)
-            .scaleEffect(configuration.isPressed ? 0.9 : 1.0)
+            .clipShape(Circle())
+            .scaleEffect(isRecording ? 0.6 : 0.9)
+            .overlay(
+                Circle()
+                    .stroke(Color.white, lineWidth: 4))
     }
 }
 

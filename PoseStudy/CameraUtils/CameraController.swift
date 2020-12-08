@@ -163,6 +163,19 @@ class CameraController: NSObject, AVCaptureFileOutputRecordingDelegate {
     }
     
     func fileOutput(_ output: AVCaptureFileOutput, didFinishRecordingTo outputFileURL: URL, from connections: [AVCaptureConnection], error: Error?) {
+        
+        /*if let error = error { self.photoCaptureCompletionBlock?(nil, error) }
+                    
+                else if let buffer = photoSampleBuffer, let data = AVCapturePhotoOutput.jpegPhotoDataRepresentation(forJPEGSampleBuffer: buffer, previewPhotoSampleBuffer: nil),
+                    let image = UIImage(data: data) {
+                    
+                    self.photoCaptureCompletionBlock?(image, nil)
+                }
+                    
+                else {
+                    self.photoCaptureCompletionBlock?(nil, CameraControllerError.unknown)
+                }*/
+        
         print("stop recording")
         // Note: Because we use a unique file path for each recording, a new recording won't overwrite a recording mid-save.
         func cleanup() {
@@ -193,14 +206,14 @@ class CameraController: NSObject, AVCaptureFileOutputRecordingDelegate {
         
         if success {
             
-            saveVideoToDatabase(url: outputFileURL) { (success) in
-                print("test")
-                cleanup()
-            } failure: { (error) in
-                print(error)
-                cleanup()
-            }
-            
+//            saveVideoToDatabase(url: outputFileURL) { (success) in
+//                print("test")
+//                cleanup()
+//            } failure: { (error) in
+//                print(error)
+//                cleanup()
+//            }
+//            
 
 
 //            print(outputFileURL)
@@ -227,6 +240,14 @@ class CameraController: NSObject, AVCaptureFileOutputRecordingDelegate {
         } else {
             cleanup()
         }
+    }
+    
+    func stopSession() throws {
+        guard let session = self.session else {
+            throw CameraControllerError.captureSessionIsMissing
+        }
+        session.stopRunning()
+        print(session.isRunning)
     }
     
     

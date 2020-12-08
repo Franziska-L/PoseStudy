@@ -7,25 +7,32 @@
 
 import SwiftUI
 
+class GlobalState: ObservableObject {
+    @Published var isSecondRun: String = "first"
+}
+
 struct WarmUpView: View {
+    @ObservedObject var status = GlobalState()
+    
     var body: some View {
-        
-        VStack {
-            Text("Aufwärmen").titleStyle()
-            Spacer()
-            Text("Wärme dich kurz auf, bevor du mit den Übungen beginnst")
-            Image("jumpingjack")
-            Text("30 Hampelmänner").padding()
-            Spacer()
-            Text("Wenn du fertig bist kanns los gehen.")
-            NavigationLink(
-                destination: InstructionView().navigationBarHidden(true),
-                label: {
-                    Text("Weiter")
-                    
-                }).buttonStyle(CustomButtonStyle())
-        
-        }
+        NavigationView {
+            VStack {
+                Text("Aufwärmen").titleStyle()
+                Spacer()
+                Text("Wärme dich kurz auf, bevor du mit den Übungen beginnst")
+                Image("jumpingjack")
+                Text("30 Hampelmänner").padding()
+                Spacer()
+                Text("Wenn du fertig bist kanns los gehen.")
+                NavigationLink(
+                    destination: InstructionView().navigationBarHidden(true),
+                    label: {
+                        Text("Weiter")
+                    }).buttonStyle(CustomButtonStyle())
+            
+            }
+        }.environmentObject(status)
+        .navigationBarBackButtonHidden(true)
     }
 }
 

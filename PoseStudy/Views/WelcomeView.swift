@@ -36,7 +36,7 @@ struct WelcomeView: View {
                     Text("Los gehts")
                 }.buttonStyle(CustomButtonStyle())
             }
-        }
+        }.navigationBarBackButtonHidden(true)
     }
     
     

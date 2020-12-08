@@ -47,7 +47,7 @@ struct CameraRepresentable: UIViewControllerRepresentable {
     typealias UIViewControllerType = CameraViewController
     
     
-    @Binding var didTapCapture: Bool
+    @Binding var isRecording: Bool
     @Binding var didTap: Bool
     
     public func makeUIViewController(context: Context) -> CameraViewController {
@@ -59,11 +59,9 @@ struct CameraRepresentable: UIViewControllerRepresentable {
             uiViewController.cameraController.recording()
             print(didTap)
             self.didTap = false
-            
         }
-        
+        if !isRecording {
+            try? uiViewController.cameraController.stopSession()
+        }
     }
-        
- 
-    
 }

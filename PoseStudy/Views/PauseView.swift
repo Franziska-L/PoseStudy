@@ -8,25 +8,31 @@
 import SwiftUI
 
 struct PauseView: View {
+    @State private var selection: String? = nil
+    @EnvironmentObject var status: GlobalState
     
-    @State var didPause = false
+    
     
     var body: some View {
         VStack {
+            NavigationLink(destination: InstructionView().navigationBarHidden(true), tag: "next", selection: $selection) { EmptyView() }
             Text("Pause").titleStyle()
             Spacer()
             Image("brake")
             Text("Mache mind. 5 Minuten Pause bevor du mit der zweiten Runde beginnst").padding()
             Spacer()
             Text("Ausgeruht? Dann starte in die 2. Runde")
-            NavigationLink(
-                destination: InstructionView().navigationBarHidden(true),
-                label: {
-                    Text("Los")
-                    
-                }).buttonStyle(CustomButtonStyle())
-        
-        }
+            Button(action: {
+                setState()
+            }) {
+                Text("Los")
+            }.buttonStyle(CustomButtonStyle())
+        }.environmentObject(status)
+    }
+    
+    fileprivate func setState() {
+        self.status.isSecondRun = "second"
+        self.selection = "next"
     }
 }
 
