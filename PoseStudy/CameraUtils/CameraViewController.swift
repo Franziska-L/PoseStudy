@@ -56,9 +56,10 @@ struct CameraRepresentable: UIViewControllerRepresentable {
     
     public func updateUIViewController(_ uiViewController: CameraViewController, context: Context) {
         if(self.didTap) {
-            uiViewController.cameraController.recording()
-            print(didTap)
-            self.didTap = false
+            DispatchQueue.main.async {
+                uiViewController.cameraController.recording()
+                self.didTap = false
+            }
         }
         if !isRecording {
             try? uiViewController.cameraController.stopSession()
