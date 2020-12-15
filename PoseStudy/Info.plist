@@ -20,6 +20,10 @@
 	<string>1</string>
 	<key>LSRequiresIPhoneOS</key>
 	<true/>
+	<key>NSBluetoothAlwaysUsageDescription</key>
+	<string>This app needs access to bleutooth to connect to polar device</string>
+	<key>NSBluetoothPeripheralUsageDescription</key>
+	<string></string>
 	<key>NSCameraUsageDescription</key>
 	<string>This app use camera to capture videos.</string>
 	<key>NSPhotoLibraryUsageDescription</key>
@@ -31,6 +35,10 @@
 	</dict>
 	<key>UIApplicationSupportsIndirectInputEvents</key>
 	<true/>
+	<key>UIBackgroundModes</key>
+	<array>
+		<string>bluetooth-central</string>
+	</array>
 	<key>UILaunchScreen</key>
 	<dict/>
 	<key>UIRequiredDeviceCapabilities</key>

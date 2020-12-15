@@ -47,6 +47,17 @@ struct WelcomeView: View {
     
     
     func start() {
+//        var refID: DatabaseReference = Database.database().reference().child("IDs")
+//        refID.observeSingleEvent(of: .value, with: { (snapshot) in
+//            for i in 0..<snapshot.childrenCount {
+//                print(i)
+//            }
+//            if snapshot.hasChild(ID) {
+//                
+//            }
+//        }) { (error) in
+//            print(error.localizedDescription)
+//        }
         var ref: DatabaseReference = Database.database().reference()
         ref.observeSingleEvent(of: .value, with: { (snapshot) in
             

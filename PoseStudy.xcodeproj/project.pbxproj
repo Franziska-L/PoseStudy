@@ -19,12 +19,18 @@
 		737328592574E50F0081FCA2 /* CameraViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 737328582574E50F0081FCA2 /* CameraViewController.swift */; };
 		737328C525754B6B0081FCA2 /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 737328C425754B6B0081FCA2 /* GoogleService-Info.plist */; };
 		7382394A257E94C400E23A8B /* Test.swift in Sources */ = {isa = PBXBuildFile; fileRef = 73823949257E94C400E23A8B /* Test.swift */; };
+		7392A6942588ECB00079AEDE /* Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7392A6932588ECB00079AEDE /* Extensions.swift */; };
 		739B9DE8256FEFA100CE1F4A /* HealthFormView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 739B9DE7256FEFA100CE1F4A /* HealthFormView.swift */; };
 		73A2BF7E256ED2DB00A592E3 /* InstructionView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 73A2BF7D256ED2DB00A592E3 /* InstructionView.swift */; };
 		73D6030C25778A9B00ABC437 /* CardView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 73D6030B25778A9B00ABC437 /* CardView.swift */; };
 		73D603112577C4AB00ABC437 /* ButtonStyle.swift in Sources */ = {isa = PBXBuildFile; fileRef = 73D603102577C4AB00ABC437 /* ButtonStyle.swift */; };
 		73D6031F2577D5AA00ABC437 /* PauseView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 73D6031E2577D5AA00ABC437 /* PauseView.swift */; };
 		73D60327257E62CB00ABC437 /* FinishScreen.swift in Sources */ = {isa = PBXBuildFile; fileRef = 73D60326257E62CB00ABC437 /* FinishScreen.swift */; };
+		73DDC02B2587671700B864AA /* PolarBleSdk.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 73DDC02A2587671700B864AA /* PolarBleSdk.framework */; };
+		73DDC02C2587671700B864AA /* PolarBleSdk.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 73DDC02A2587671700B864AA /* PolarBleSdk.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
+		73DDC0312587672200B864AA /* RxSwift.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 73DDC0302587672200B864AA /* RxSwift.framework */; };
+		73DDC0322587672200B864AA /* RxSwift.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 73DDC0302587672200B864AA /* RxSwift.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
+		73DDC0C12587767E00B864AA /* PolarApiWrapper.swift in Sources */ = {isa = PBXBuildFile; fileRef = 73DDC0C02587767E00B864AA /* PolarApiWrapper.swift */; };
 		73F92244256E87B80005D25F /* Style.swift in Sources */ = {isa = PBXBuildFile; fileRef = 73F92243256E87B80005D25F /* Style.swift */; };
 		73F9224C256E89BC0005D25F /* DemographicFormView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 73F9224B256E89BC0005D25F /* DemographicFormView.swift */; };
 		73F9226E256EC2F50005D25F /* WarmUpView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 73F9226D256EC2F50005D25F /* WarmUpView.swift */; };
@@ -49,6 +55,21 @@
 		};
 /* End PBXContainerItemProxy section */
 
+/* Begin PBXCopyFilesBuildPhase section */
+		73DDC02D2587671800B864AA /* Embed Frameworks */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 2147483647;
+			dstPath = "";
+			dstSubfolderSpec = 10;
+			files = (
+				73DDC0322587672200B864AA /* RxSwift.framework in Embed Frameworks */,
+				73DDC02C2587671700B864AA /* PolarBleSdk.framework in Embed Frameworks */,
+			);
+			name = "Embed Frameworks";
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXCopyFilesBuildPhase section */
+
 /* Begin PBXFileReference section */
 		17A881476E8ABA90C92891C2 /* Pods-PoseStudyTests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-PoseStudyTests.debug.xcconfig"; path = "Target Support Files/Pods-PoseStudyTests/Pods-PoseStudyTests.debug.xcconfig"; sourceTree = "<group>"; };
 		32415346BFA81D66A2B13266 /* Pods-PoseStudy.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-PoseStudy.release.xcconfig"; path = "Target Support Files/Pods-PoseStudy/Pods-PoseStudy.release.xcconfig"; sourceTree = "<group>"; };
@@ -70,14 +91,18 @@
 		7373281F2572EE6D0081FCA2 /* CameraView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CameraView.swift; sourceTree = "<group>"; };
 		737328532574E3CF0081FCA2 /* CameraController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CameraController.swift; sourceTree = "<group>"; };
 		737328582574E50F0081FCA2 /* CameraViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CameraViewController.swift; sourceTree = "<group>"; };
-		737328C425754B6B0081FCA2 /* GoogleService-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; name = "GoogleService-Info.plist"; path = "../../../../../../Downloads/GoogleService-Info.plist"; sourceTree = "<group>"; };
+		737328C425754B6B0081FCA2 /* GoogleService-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "GoogleService-Info.plist"; sourceTree = "<group>"; };
 		73823949257E94C400E23A8B /* Test.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Test.swift; sourceTree = "<group>"; };
+		7392A6932588ECB00079AEDE /* Extensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Extensions.swift; sourceTree = "<group>"; };
 		739B9DE7256FEFA100CE1F4A /* HealthFormView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HealthFormView.swift; sourceTree = "<group>"; };
 		73A2BF7D256ED2DB00A592E3 /* InstructionView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InstructionView.swift; sourceTree = "<group>"; };
 		73D6030B25778A9B00ABC437 /* CardView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CardView.swift; sourceTree = "<group>"; };
 		73D603102577C4AB00ABC437 /* ButtonStyle.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ButtonStyle.swift; sourceTree = "<group>"; };
 		73D6031E2577D5AA00ABC437 /* PauseView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PauseView.swift; sourceTree = "<group>"; };
 		73D60326257E62CB00ABC437 /* FinishScreen.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FinishScreen.swift; sourceTree = "<group>"; };
+		73DDC02A2587671700B864AA /* PolarBleSdk.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = PolarBleSdk.framework; path = "../polar-sdk-ios/PolarBleSdk.framework"; sourceTree = "<group>"; };
+		73DDC0302587672200B864AA /* RxSwift.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = RxSwift.framework; path = "../polar-sdk-ios/RxSwift.framework"; sourceTree = "<group>"; };
+		73DDC0C02587767E00B864AA /* PolarApiWrapper.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PolarApiWrapper.swift; sourceTree = "<group>"; };
 		73F92243256E87B80005D25F /* Style.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Style.swift; sourceTree = "<group>"; };
 		73F9224B256E89BC0005D25F /* DemographicFormView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DemographicFormView.swift; sourceTree = "<group>"; };
 		73F9226D256EC2F50005D25F /* WarmUpView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WarmUpView.swift; sourceTree = "<group>"; };
@@ -92,7 +117,9 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				73DDC02B2587671700B864AA /* PolarBleSdk.framework in Frameworks */,
 				E6E701C2EBBFE964F01BAA97 /* Pods_PoseStudy.framework in Frameworks */,
+				73DDC0312587672200B864AA /* RxSwift.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -153,7 +180,7 @@
 		7336A319256E790D00CB090D /* PoseStudy */ = {
 			isa = PBXGroup;
 			children = (
-				737328612574EFB50081FCA2 /* CameraUtils */,
+				737328612574EFB50081FCA2 /* Utils */,
 				73F92254256E89CD0005D25F /* Styles */,
 				73F92253256E89C60005D25F /* Views */,
 				7336A31A256E790D00CB090D /* PoseStudyApp.swift */,
@@ -191,13 +218,15 @@
 			path = PoseStudyUITests;
 			sourceTree = "<group>";
 		};
-		737328612574EFB50081FCA2 /* CameraUtils */ = {
+		737328612574EFB50081FCA2 /* Utils */ = {
 			isa = PBXGroup;
 			children = (
 				737328532574E3CF0081FCA2 /* CameraController.swift */,
 				737328582574E50F0081FCA2 /* CameraViewController.swift */,
+				73DDC0C02587767E00B864AA /* PolarApiWrapper.swift */,
+				7392A6932588ECB00079AEDE /* Extensions.swift */,
 			);
-			path = CameraUtils;
+			path = Utils;
 			sourceTree = "<group>";
 		};
 		73F92253256E89C60005D25F /* Views */ = {
@@ -229,6 +258,8 @@
 		9707D9758A9B020836602E5F /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				73DDC0302587672200B864AA /* RxSwift.framework */,
+				73DDC02A2587671700B864AA /* PolarBleSdk.framework */,
 				46EC5516776EF4DE30CDB32C /* Pods_PoseStudy.framework */,
 				BE9A3FA94F4463C0C2F8DDFF /* Pods_PoseStudy_PoseStudyUITests.framework */,
 				7FAD7612A66F668D26824F3C /* Pods_PoseStudyTests.framework */,
@@ -248,6 +279,7 @@
 				7336A314256E790D00CB090D /* Frameworks */,
 				7336A315256E790D00CB090D /* Resources */,
 				07A2D401E1A7F274789E1340 /* [CP] Embed Pods Frameworks */,
+				73DDC02D2587671800B864AA /* Embed Frameworks */,
 			);
 			buildRules = (
 			);
@@ -501,10 +533,12 @@
 				73F92244256E87B80005D25F /* Style.swift in Sources */,
 				73D6030C25778A9B00ABC437 /* CardView.swift in Sources */,
 				73A2BF7E256ED2DB00A592E3 /* InstructionView.swift in Sources */,
+				73DDC0C12587767E00B864AA /* PolarApiWrapper.swift in Sources */,
 				73D60327257E62CB00ABC437 /* FinishScreen.swift in Sources */,
 				739B9DE8256FEFA100CE1F4A /* HealthFormView.swift in Sources */,
 				7336A31B256E790D00CB090D /* PoseStudyApp.swift in Sources */,
 				73D6031F2577D5AA00ABC437 /* PauseView.swift in Sources */,
+				7392A6942588ECB00079AEDE /* Extensions.swift in Sources */,
 				737328202572EE6D0081FCA2 /* CameraView.swift in Sources */,
 				73D603112577C4AB00ABC437 /* ButtonStyle.swift in Sources */,
 			);
@@ -664,18 +698,41 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
 				DEVELOPMENT_ASSET_PATHS = "\"PoseStudy/Preview Content\"";
 				DEVELOPMENT_TEAM = NC67T52M5C;
 				ENABLE_PREVIEWS = YES;
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(inherited)",
+					"\"${PODS_CONFIGURATION_BUILD_DIR}/FirebaseCore\"",
+					"\"${PODS_CONFIGURATION_BUILD_DIR}/FirebaseCoreDiagnostics\"",
+					"\"${PODS_CONFIGURATION_BUILD_DIR}/FirebaseDatabase\"",
+					"\"${PODS_CONFIGURATION_BUILD_DIR}/FirebaseInstallations\"",
+					"\"${PODS_CONFIGURATION_BUILD_DIR}/FirebaseStorage\"",
+					"\"${PODS_CONFIGURATION_BUILD_DIR}/GTMSessionFetcher\"",
+					"\"${PODS_CONFIGURATION_BUILD_DIR}/GoogleDataTransport\"",
+					"\"${PODS_CONFIGURATION_BUILD_DIR}/GoogleDataTransportCCTSupport\"",
+					"\"${PODS_CONFIGURATION_BUILD_DIR}/GoogleUtilities\"",
+					"\"${PODS_CONFIGURATION_BUILD_DIR}/PromisesObjC\"",
+					"\"${PODS_CONFIGURATION_BUILD_DIR}/leveldb-library\"",
+					"\"${PODS_CONFIGURATION_BUILD_DIR}/nanopb\"",
+					"\"${PODS_ROOT}/FirebaseAnalytics/Frameworks\"",
+					"\"${PODS_ROOT}/GoogleAppMeasurement/Frameworks\"",
+					"$(PROJECT_DIR)/../polar-sdk-ios/",
+					"$(PROJECT_DIR)/../",
+					"$(PROJECT_DIR)",
+				);
 				INFOPLIST_FILE = PoseStudy/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 14.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
+					"@executable_path/Frameworks/PolarBleSdk.framework",
 				);
-				PRODUCT_BUNDLE_IDENTIFIER = lang.de.PoseStudy;
+				PRODUCT_BUNDLE_IDENTIFIER = de.lang.PoseStudy;
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				PROVISIONING_PROFILE_SPECIFIER = "";
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
 			};
@@ -687,18 +744,41 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
 				DEVELOPMENT_ASSET_PATHS = "\"PoseStudy/Preview Content\"";
 				DEVELOPMENT_TEAM = NC67T52M5C;
 				ENABLE_PREVIEWS = YES;
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(inherited)",
+					"\"${PODS_CONFIGURATION_BUILD_DIR}/FirebaseCore\"",
+					"\"${PODS_CONFIGURATION_BUILD_DIR}/FirebaseCoreDiagnostics\"",
+					"\"${PODS_CONFIGURATION_BUILD_DIR}/FirebaseDatabase\"",
+					"\"${PODS_CONFIGURATION_BUILD_DIR}/FirebaseInstallations\"",
+					"\"${PODS_CONFIGURATION_BUILD_DIR}/FirebaseStorage\"",
+					"\"${PODS_CONFIGURATION_BUILD_DIR}/GTMSessionFetcher\"",
+					"\"${PODS_CONFIGURATION_BUILD_DIR}/GoogleDataTransport\"",
+					"\"${PODS_CONFIGURATION_BUILD_DIR}/GoogleDataTransportCCTSupport\"",
+					"\"${PODS_CONFIGURATION_BUILD_DIR}/GoogleUtilities\"",
+					"\"${PODS_CONFIGURATION_BUILD_DIR}/PromisesObjC\"",
+					"\"${PODS_CONFIGURATION_BUILD_DIR}/leveldb-library\"",
+					"\"${PODS_CONFIGURATION_BUILD_DIR}/nanopb\"",
+					"\"${PODS_ROOT}/FirebaseAnalytics/Frameworks\"",
+					"\"${PODS_ROOT}/GoogleAppMeasurement/Frameworks\"",
+					"$(PROJECT_DIR)/../polar-ble-sdk-master/polar-sdk-ios/",
+					"$(PROJECT_DIR)/../",
+					"$(PROJECT_DIR)",
+				);
 				INFOPLIST_FILE = PoseStudy/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 14.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
+					"@executable_path/Frameworks/PolarBleSdk.framework",
 				);
-				PRODUCT_BUNDLE_IDENTIFIER = lang.de.PoseStudy;
+				PRODUCT_BUNDLE_IDENTIFIER = de.lang.PoseStudy;
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				PROVISIONING_PROFILE_SPECIFIER = "";
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
 			};

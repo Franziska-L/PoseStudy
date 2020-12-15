@@ -19,19 +19,13 @@ struct Test: View {
     
     @ObservedObject var status = GlobalState2()
     
+    @State var img = "jumpingjack"
+    @State var title = "Test"
+    @State var instr = ["Hebe und senke deinen Körper mit den Armen bis zum Boden.", "Halte dabei den Rücken gerade und den Kopf in Verlängerung der Wirbelsäule.", "Körpermitte ist fest." ,"Wenn die Übung auf den Beinen zu anstrengend ist, gehe gerne auf die Knie."]
     var body: some View {
         NavigationView {
                     VStack {
-                        NavigationLink(destination: SubView(), tag: "Second", selection: $selection) { EmptyView() }
-                        NavigationLink(destination: SubViewTwo(), tag: "Third", selection: $selection) { EmptyView() }
-                        TextField(/*@START_MENU_TOKEN@*/"Placeholder"/*@END_MENU_TOKEN@*/, text: $code)
-                        Text(status.currentTopic)
-                        Button("Tap to show second") {
-                            change()
-                        }
-                        Button("Tap to show third") {
-                            self.selection = "Third"
-                        }
+                        ConnectingCardView2(instruction: $title).frame(width: 300, height: 300, alignment: .center)
                     }
                     .navigationBarTitle("Navigation")
                 }.environmentObject(status)
@@ -44,6 +38,35 @@ struct Test: View {
             selection = "Third"
         }
     }
+}
+
+struct ConnectingCardView2: View {
+    @Binding var instruction: String
+    @State var connectionState: ConnectionState = .disconnected
+    //var api = PolarApiWrapper()
+    var body: some View {
+        GeometryReader { geometry in
+            VStack(alignment: .leading) {
+                Text(instruction)
+                    .padding()
+                    .lineLimit(nil)
+                    .multilineTextAlignment(.leading)
+                    .fixedSize(horizontal: false, vertical: true)
+                if connectionState == .connected {
+                    
+                }
+                Button(action: { print("start connecting") }, label: {
+                    Text("Verbinden")
+                }).buttonStyle(CustomButtonStyle())
+            }
+            .padding(.bottom)
+            .background(Color.white)
+            .cornerRadius(10)
+            .shadow(radius: 5)
+        }
+    }
+    
+    
 }
 
 
@@ -87,6 +110,42 @@ struct SubViewThree: View {
             Button(action: {self.state.currentTopic = "new topic" }) {
                 Text("Change state")
             }
+        }
+    }
+}
+
+
+struct ExerciseCardView1: View {
+    @Binding var image: String
+    @Binding var instruction: String
+    @Binding var exerciseInst: [String]
+
+    var body: some View {
+        GeometryReader { geometry in
+            VStack(alignment: .leading) {
+                Image(image)
+                    .resizable()
+                    .scaledToFit()
+                    .frame(width: geometry.size.width, height: geometry.size.height * 0.5)
+                    .clipped()
+                Text(instruction)
+                    .padding()
+                    .lineLimit(nil)
+                    .multilineTextAlignment(.leading)
+                    .fixedSize(horizontal: false, vertical: true)
+                ForEach(0..<exerciseInst.count) { position in
+                    Text("\(exerciseInst[position])")
+                        .padding(.top, 10).padding(.leading, 10)
+                        .lineLimit(nil)
+                        .foregroundColor(.darkgray)
+                        .multilineTextAlignment(.leading)
+                        .fixedSize(horizontal: false, vertical: true)
+                }
+            }
+            .padding(.bottom)
+            .background(Color.white)
+            .cornerRadius(10)
+            .shadow(radius: 5)
         }
     }
 }
