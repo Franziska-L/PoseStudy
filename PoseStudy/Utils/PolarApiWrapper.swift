@@ -11,6 +11,7 @@ import RxSwift
 
 enum ConnectionState {
     case connected
+    case connecting
     case disconnected
     case failure
 }
@@ -79,6 +80,7 @@ class PolarApiWrapper: ObservableObject, PolarBleApiObserver, PolarBleApiPowerSt
     ///PolarBleApiObserver
     func deviceConnecting(_ identifier: PolarDeviceInfo) {
         NSLog("DEVICE CONNECTING: \(identifier)")
+        connetionState = .connecting
     }
     
     func deviceConnected(_ identifier: PolarDeviceInfo) {

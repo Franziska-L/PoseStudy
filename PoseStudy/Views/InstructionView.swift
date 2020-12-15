@@ -8,10 +8,10 @@
 import SwiftUI
 
 struct InstructionView: View {
-    @State var img = ["pulsgurt", "position", "jumpingjack", "jumpingjack"]
+    var img = ["pulsgurt", "position", "jumpingjack", "jumpingjack"]
     
-    @State var image = "jumpingjack"
-    @State var instr = [String.exerciseInstr1, String.exerciseInstr2, String.exerciseInstr3, String.exerciseInstr4]
+    var image = "jumpingjack"
+    var instr = [String.exerciseInstr1, String.exerciseInstr2, String.exerciseInstr3, String.exerciseInstr4]
 
 
     @State var step = 0
@@ -20,57 +20,56 @@ struct InstructionView: View {
     let totalInstructions = 5
     
     @EnvironmentObject var status: GlobalState
+    @EnvironmentObject var polarApi: PolarApiWrapper
     
     var body: some View {
-            VStack {
-                Text("Anweisungen").titleStyle()
-                //Text("Gleich kannst du starten. Vorab noch einige Answeisungen. Bitte lies sie dir aufmerksam durch.")
-                GeometryReader { geometry in
-                    return ScrollView(.horizontal, showsIndicators: true) {
-                        HStack(spacing: self.spacing) {
-                            CardView(image: "position", instruction: String.startInstr)
-                                .frame(width: geometry.size.width).frame(height: 300)
-                            ExerciseCardView(image: "position", instruction: String.exerciseInstr, exerciseInst: instr).frame(width: geometry.size.width).frame(height: 300)
-                            CardView(image: "pulsgurt", instruction: String.polarDeviceIntr)
-                                .frame(width: geometry.size.width).frame(height: 300)
-                            ConnectingCardView(instruction: String.connectInstr).frame(width: geometry.size.width).frame(height: 300)
-                            CardView(image: "position", instruction: String.positionInstr)
-                                .frame(width: geometry.size.width).frame(height: 300)
-                        }
-                    }
-                    .content.offset(x: self.offset)
-                    .frame(width: geometry.size.width, alignment: .leading)
-                    .gesture(
-                        DragGesture()
-                            .onChanged({ value in
-                                self.offset = value.translation.width - geometry.size.width * CGFloat(self.step)
-                            })
-                            .onEnded({ value in
-                                if -value.predictedEndTranslation.width > geometry.size.width / 2, self.step < self.totalInstructions - 1 {
-                                    self.step += 1
-                                }
-                                if value.predictedEndTranslation.width > geometry.size.width / 2, self.step > 0 {
-                                    self.step -= 1
-                                }
-                                print("\(self.step)  \(totalInstructions)")
-                                withAnimation { self.offset = -(geometry.size.width + self.spacing) * CGFloat(self.step) }
-                            })
-                    )
-                }.padding(.top, 32)
-                HStack(spacing: 10) {
-                    ForEach(0 ..< totalInstructions) { position in
-                        Image(systemName: position == self.step ? "circle.fill" : "circle").scaleEffect(position == self.step ? 1 : 0.65).foregroundColor(Color("darkgreen"))
+        VStack {
+            Text("Anweisungen").titleStyle()
+            //Text("Gleich kannst du starten. Vorab noch einige Answeisungen. Bitte lies sie dir aufmerksam durch.")
+            GeometryReader { geometry in
+                return ScrollView(.horizontal, showsIndicators: true) {
+                    HStack(spacing: self.spacing) {
+                        CardView(image: "position", instruction: String.startInstr)
+                            .frame(width: geometry.size.width).frame(height: 300)
+                        ExerciseCardView(image: "position", instruction: String.exerciseInstr, exerciseInst: instr).frame(width: geometry.size.width).frame(height: 300)
+                        CardView(image: "pulsgurt", instruction: String.polarDeviceIntr)
+                            .frame(width: geometry.size.width).frame(height: 300)
+                        ConnectingCardView(instruction: String.connectInstr).frame(width: geometry.size.width).frame(height: 300)
+                        CardView(image: "position", instruction: String.positionInstr)
+                            .frame(width: geometry.size.width).frame(height: 300)
                     }
                 }
-                NavigationLink(
-                    destination: CameraView().navigationBarHidden(true),
-                    label: {
-                        Text("Los")
-                    }).buttonStyle(CustomButtonStyle()).disabled((self.step >= totalInstructions - 1) ? false : true)
-            }.environmentObject(status)
-            .navigationBarBackButtonHidden(true)
-        }
-    
+                .content.offset(x: self.offset)
+                .frame(width: geometry.size.width, alignment: .leading)
+                .gesture(
+                    DragGesture()
+                        .onChanged({ value in
+                            self.offset = value.translation.width - geometry.size.width * CGFloat(self.step)
+                        })
+                        .onEnded({ value in
+                            if -value.predictedEndTranslation.width > geometry.size.width / 2, self.step < self.totalInstructions - 1 {
+                                self.step += 1
+                            }
+                            if value.predictedEndTranslation.width > geometry.size.width / 2, self.step > 0 {
+                                self.step -= 1
+                            }
+                            withAnimation { self.offset = -(geometry.size.width + self.spacing) * CGFloat(self.step) }
+                        })
+                )
+            }.padding(.top, 32)
+            HStack(spacing: 10) {
+                ForEach(0 ..< totalInstructions) { position in
+                    Image(systemName: position == self.step ? "circle.fill" : "circle").scaleEffect(position == self.step ? 1 : 0.65).foregroundColor(Color("darkgreen"))
+                }
+            }
+            NavigationLink(
+                destination: CameraView().navigationBarHidden(true),
+                label: {
+                    Text("Los")
+                }).buttonStyle(CustomButtonStyle()).disabled((self.step >= totalInstructions - 1) ? false : true)
+        }.environmentObject(status).environmentObject(polarApi)
+        .navigationBarBackButtonHidden(true)
+    }
 }
 
 

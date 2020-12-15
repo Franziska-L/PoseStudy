@@ -16,6 +16,7 @@ class GlobalState: ObservableObject {
 
 struct WelcomeView: View {
     @ObservedObject var status = GlobalState()
+    @ObservedObject var polarApi = PolarApiWrapper()
     
     @State private var selection: String? = nil
     //TODO: info.plist photo library wieder löschen wenn videos in firebase gescpeichert werden
@@ -45,7 +46,7 @@ struct WelcomeView: View {
         }
         .navigationBarHidden(true)
         .navigationBarBackButtonHidden(true)
-        .environmentObject(status)
+        .environmentObject(status).environmentObject(polarApi)
     }
     
     

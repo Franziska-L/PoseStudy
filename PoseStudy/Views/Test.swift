@@ -57,7 +57,7 @@ struct ConnectingCardView2: View {
                 }
                 Button(action: { print("start connecting") }, label: {
                     Text("Verbinden")
-                }).buttonStyle(CustomButtonStyle())
+                }).buttonStyle(CustomButtonStyle()).padding(.horizontal, 60)
             }
             .padding(.bottom)
             .background(Color.white)

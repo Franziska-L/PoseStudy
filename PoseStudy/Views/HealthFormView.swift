@@ -10,6 +10,7 @@ import FirebaseDatabase
 
 struct HealthFormView: View {
     @EnvironmentObject var status: GlobalState
+    @EnvironmentObject var polarApi: PolarApiWrapper
     
     @State private var selection: String? = nil
     
@@ -54,7 +55,7 @@ struct HealthFormView: View {
             Button(action: save, label: {
                 Text("Weiter")
             }).buttonStyle(CustomButtonStyle())
-        }.environmentObject(status)
+        }.environmentObject(status).environmentObject(polarApi)
     }
     
     private func save() {

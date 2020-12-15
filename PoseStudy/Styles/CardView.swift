@@ -35,24 +35,42 @@ struct CardView: View {
 
 struct ConnectingCardView: View {
     var instruction: String
+    @EnvironmentObject var status: GlobalState
+    @EnvironmentObject var polarApi: PolarApiWrapper
     
     var body: some View {
         GeometryReader { geometry in
-            VStack(alignment: .leading) {
+            VStack {
                 Text(instruction)
                     .padding()
                     .lineLimit(nil)
                     .multilineTextAlignment(.leading)
                     .fixedSize(horizontal: false, vertical: true)
-                Button(action: { print("start connecting") }, label: {
-                    Text("Verbinden")
-                }).buttonStyle(CustomButtonStyle())
+                VStack(alignment: .center) {
+                    if polarApi.connetionState == .connected {
+                        Text("Erfolgreich Verbunden").foregroundColor((Color("lightgreen")))
+                    }
+                    if polarApi.connetionState == .connecting {
+                        ProgressView().progressViewStyle(CircularProgressViewStyle())
+                    }
+                    if polarApi.connetionState == .disconnected {
+                        Button(action: connectToDevice, label: {
+                            Text("Verbinden")
+                        }).buttonStyle(CustomButtonStyle()).padding(.horizontal, 40)
+                    }
+                }
+                
+               
             }
             .padding(.bottom)
             .background(Color.white)
             .cornerRadius(10)
             .shadow(radius: 5)
         }
+    }
+    
+    func connectToDevice() {
+        polarApi.autoConnectToDevice()
     }
 }
 

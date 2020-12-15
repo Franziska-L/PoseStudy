@@ -20,6 +20,7 @@ struct CameraView: View {
     @State var timer: Timer? = nil
     
     @EnvironmentObject var status: GlobalState
+    @EnvironmentObject var polarApi: PolarApiWrapper
     
     var body: some View {
         VStack {
@@ -40,7 +41,7 @@ struct CameraView: View {
             Button(action: onClick, label: {
                 Image(systemName: isRecording ? "pause" : "video")
             }).buttonStyle(VideoButtonStyle(isRecording: $isRecording))
-        }.environmentObject(status)
+        }.environmentObject(status).environmentObject(polarApi)
     }
     
     func onClick() {

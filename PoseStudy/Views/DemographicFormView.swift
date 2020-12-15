@@ -10,6 +10,7 @@ import FirebaseDatabase
 
 struct DemographicFormView: View {
     @EnvironmentObject var status: GlobalState
+    @EnvironmentObject var polarApi: PolarApiWrapper
     
     @State private var age: String = ""
     @State private var male = false
@@ -45,7 +46,7 @@ struct DemographicFormView: View {
                 }).buttonStyle(CustomButtonStyle()).simultaneousGesture(TapGesture().onEnded{
                     save()
                 })
-        }.environmentObject(status)
+        }.environmentObject(status).environmentObject(polarApi)
     }
     
     private func save() {

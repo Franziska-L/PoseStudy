@@ -10,7 +10,7 @@ import SwiftUI
 struct PauseView: View {
     @State private var selection: String? = nil
     @EnvironmentObject var status: GlobalState
-    
+    @EnvironmentObject var polarApi: PolarApiWrapper
     
     
     var body: some View {
@@ -27,7 +27,7 @@ struct PauseView: View {
             }) {
                 Text("Los")
             }.buttonStyle(CustomButtonStyle())
-        }.environmentObject(status)
+        }.environmentObject(status).environmentObject(polarApi)
     }
     
     fileprivate func setState() {

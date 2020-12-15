@@ -9,6 +9,7 @@ import SwiftUI
 
 struct WarmUpView: View {
     @EnvironmentObject var status: GlobalState
+    @EnvironmentObject var polarApi: PolarApiWrapper
     
     var body: some View {
             VStack {
@@ -25,7 +26,7 @@ struct WarmUpView: View {
                         Text("Weiter")
                     }).buttonStyle(CustomButtonStyle())
             
-            }.environmentObject(status)
+            }.environmentObject(status).environmentObject(polarApi)
             .navigationBarBackButtonHidden(true)
     }
 }
