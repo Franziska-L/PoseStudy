@@ -11,7 +11,6 @@ struct WarmUpView: View {
     @EnvironmentObject var status: GlobalState
     
     var body: some View {
-        NavigationView {
             VStack {
                 Text("Aufwärmen").titleStyle()
                 Spacer()
@@ -26,9 +25,8 @@ struct WarmUpView: View {
                         Text("Weiter")
                     }).buttonStyle(CustomButtonStyle())
             
-            }
-        }.environmentObject(status)
-        .navigationBarBackButtonHidden(true)
+            }.environmentObject(status)
+            .navigationBarBackButtonHidden(true)
     }
 }
 

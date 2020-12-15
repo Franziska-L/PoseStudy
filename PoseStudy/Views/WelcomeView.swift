@@ -42,7 +42,10 @@ struct WelcomeView: View {
                     Text("Los gehts")
                 }.buttonStyle(CustomButtonStyle())
             }
-        }.navigationBarBackButtonHidden(true).environmentObject(status)
+        }
+        .navigationBarHidden(true)
+        .navigationBarBackButtonHidden(true)
+        .environmentObject(status)
     }
     
     
