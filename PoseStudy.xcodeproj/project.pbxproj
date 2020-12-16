@@ -14,6 +14,10 @@
 		7336A322256E790F00CB090D /* Preview Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 7336A321256E790F00CB090D /* Preview Assets.xcassets */; };
 		7336A32D256E790F00CB090D /* PoseStudyTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7336A32C256E790F00CB090D /* PoseStudyTests.swift */; };
 		7336A338256E790F00CB090D /* PoseStudyUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7336A337256E790F00CB090D /* PoseStudyUITests.swift */; };
+		7362BC822589E98700330783 /* PolarBleSdk.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 73DDC02A2587671700B864AA /* PolarBleSdk.framework */; };
+		7362BC832589E98700330783 /* PolarBleSdk.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 73DDC02A2587671700B864AA /* PolarBleSdk.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
+		7362BC882589E99500330783 /* RxSwift.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 73DDC0302587672200B864AA /* RxSwift.framework */; };
+		7362BC892589E99500330783 /* RxSwift.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 73DDC0302587672200B864AA /* RxSwift.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		737328202572EE6D0081FCA2 /* CameraView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7373281F2572EE6D0081FCA2 /* CameraView.swift */; };
 		737328542574E3CF0081FCA2 /* CameraController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 737328532574E3CF0081FCA2 /* CameraController.swift */; };
 		737328592574E50F0081FCA2 /* CameraViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 737328582574E50F0081FCA2 /* CameraViewController.swift */; };
@@ -23,13 +27,9 @@
 		739B9DE8256FEFA100CE1F4A /* HealthFormView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 739B9DE7256FEFA100CE1F4A /* HealthFormView.swift */; };
 		73A2BF7E256ED2DB00A592E3 /* InstructionView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 73A2BF7D256ED2DB00A592E3 /* InstructionView.swift */; };
 		73D6030C25778A9B00ABC437 /* CardView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 73D6030B25778A9B00ABC437 /* CardView.swift */; };
-		73D603112577C4AB00ABC437 /* ButtonStyle.swift in Sources */ = {isa = PBXBuildFile; fileRef = 73D603102577C4AB00ABC437 /* ButtonStyle.swift */; };
+		73D603112577C4AB00ABC437 /* Buttons.swift in Sources */ = {isa = PBXBuildFile; fileRef = 73D603102577C4AB00ABC437 /* Buttons.swift */; };
 		73D6031F2577D5AA00ABC437 /* PauseView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 73D6031E2577D5AA00ABC437 /* PauseView.swift */; };
 		73D60327257E62CB00ABC437 /* FinishScreen.swift in Sources */ = {isa = PBXBuildFile; fileRef = 73D60326257E62CB00ABC437 /* FinishScreen.swift */; };
-		73DDC02B2587671700B864AA /* PolarBleSdk.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 73DDC02A2587671700B864AA /* PolarBleSdk.framework */; };
-		73DDC02C2587671700B864AA /* PolarBleSdk.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 73DDC02A2587671700B864AA /* PolarBleSdk.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
-		73DDC0312587672200B864AA /* RxSwift.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 73DDC0302587672200B864AA /* RxSwift.framework */; };
-		73DDC0322587672200B864AA /* RxSwift.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 73DDC0302587672200B864AA /* RxSwift.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		73DDC0C12587767E00B864AA /* PolarApiWrapper.swift in Sources */ = {isa = PBXBuildFile; fileRef = 73DDC0C02587767E00B864AA /* PolarApiWrapper.swift */; };
 		73F92244256E87B80005D25F /* Style.swift in Sources */ = {isa = PBXBuildFile; fileRef = 73F92243256E87B80005D25F /* Style.swift */; };
 		73F9224C256E89BC0005D25F /* DemographicFormView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 73F9224B256E89BC0005D25F /* DemographicFormView.swift */; };
@@ -62,8 +62,8 @@
 			dstPath = "";
 			dstSubfolderSpec = 10;
 			files = (
-				73DDC0322587672200B864AA /* RxSwift.framework in Embed Frameworks */,
-				73DDC02C2587671700B864AA /* PolarBleSdk.framework in Embed Frameworks */,
+				7362BC892589E99500330783 /* RxSwift.framework in Embed Frameworks */,
+				7362BC832589E98700330783 /* PolarBleSdk.framework in Embed Frameworks */,
 			);
 			name = "Embed Frameworks";
 			runOnlyForDeploymentPostprocessing = 0;
@@ -97,7 +97,7 @@
 		739B9DE7256FEFA100CE1F4A /* HealthFormView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HealthFormView.swift; sourceTree = "<group>"; };
 		73A2BF7D256ED2DB00A592E3 /* InstructionView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InstructionView.swift; sourceTree = "<group>"; };
 		73D6030B25778A9B00ABC437 /* CardView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CardView.swift; sourceTree = "<group>"; };
-		73D603102577C4AB00ABC437 /* ButtonStyle.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ButtonStyle.swift; sourceTree = "<group>"; };
+		73D603102577C4AB00ABC437 /* Buttons.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Buttons.swift; sourceTree = "<group>"; };
 		73D6031E2577D5AA00ABC437 /* PauseView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PauseView.swift; sourceTree = "<group>"; };
 		73D60326257E62CB00ABC437 /* FinishScreen.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FinishScreen.swift; sourceTree = "<group>"; };
 		73DDC02A2587671700B864AA /* PolarBleSdk.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = PolarBleSdk.framework; path = "../polar-sdk-ios/PolarBleSdk.framework"; sourceTree = "<group>"; };
@@ -117,9 +117,9 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				73DDC02B2587671700B864AA /* PolarBleSdk.framework in Frameworks */,
 				E6E701C2EBBFE964F01BAA97 /* Pods_PoseStudy.framework in Frameworks */,
-				73DDC0312587672200B864AA /* RxSwift.framework in Frameworks */,
+				7362BC822589E98700330783 /* PolarBleSdk.framework in Frameworks */,
+				7362BC882589E99500330783 /* RxSwift.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -249,7 +249,7 @@
 			isa = PBXGroup;
 			children = (
 				73F92243256E87B80005D25F /* Style.swift */,
-				73D603102577C4AB00ABC437 /* ButtonStyle.swift */,
+				73D603102577C4AB00ABC437 /* Buttons.swift */,
 				73D6030B25778A9B00ABC437 /* CardView.swift */,
 			);
 			path = Styles;
@@ -540,7 +540,7 @@
 				73D6031F2577D5AA00ABC437 /* PauseView.swift in Sources */,
 				7392A6942588ECB00079AEDE /* Extensions.swift in Sources */,
 				737328202572EE6D0081FCA2 /* CameraView.swift in Sources */,
-				73D603112577C4AB00ABC437 /* ButtonStyle.swift in Sources */,
+				73D603112577C4AB00ABC437 /* Buttons.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -735,6 +735,7 @@
 				PROVISIONING_PROFILE_SPECIFIER = "";
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
+				VALIDATE_WORKSPACE = YES;
 			};
 			name = Debug;
 		};
@@ -781,6 +782,7 @@
 				PROVISIONING_PROFILE_SPECIFIER = "";
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
+				VALIDATE_WORKSPACE = YES;
 			};
 			name = Release;
 		};

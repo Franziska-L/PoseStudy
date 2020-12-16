@@ -15,7 +15,7 @@ struct WarmUpView: View {
             VStack {
                 Text("Aufwärmen").titleStyle()
                 Spacer()
-                Text("Wärme dich kurz auf, bevor du mit den Übungen beginnst")
+                Text(String.warmup)
                 Image("jumpingjack")
                 Text("30 Hampelmänner").padding()
                 Spacer()

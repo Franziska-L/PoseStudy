@@ -10,9 +10,14 @@ import SwiftUI
 
 extension Color {
     static let darkgray = Color("darkgray")
+    static let darkgreen = Color ("darkgreen")
+    static let lightgreen = Color ("lightgreen")
 }
 
 extension String {
+    //Warm up
+    static let warmup = "Wärme dich kurz auf, bevor du mit den Übungen beginnst"
+    
     static let exerciseInstr = "Richtige Ausführung:"
     static let exerciseInstr1 = "Hebe und senke deinen Körper mit den Armen bis zum Boden."
     static let exerciseInstr2 = "Halte dabei den Rücken gerade und den Kopf in Verlängerung der Wirbelsäule."

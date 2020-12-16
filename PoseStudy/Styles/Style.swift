@@ -14,11 +14,11 @@ struct CheckboxToggleStyle: ToggleStyle {
             Image(systemName: configuration.isOn ? "checkmark.circle.fill" : "circle")
                 .resizable()
                 .frame(width: 22, height: 22)
-                .foregroundColor(Color("darkgreen"))
+                .foregroundColor(.darkgreen)
                 .onTapGesture { configuration.isOn.toggle() }
             configuration
                 .label
-                .foregroundColor(configuration.isOn ? Color("darkgreen") : .black)
+                .foregroundColor(configuration.isOn ? .darkgreen : .black)
             Spacer()
         }
         .padding(10)
@@ -32,7 +32,7 @@ struct Title: ViewModifier {
         content
             .padding(.top, 40)
             .font(.title)
-            .foregroundColor(Color("darkgreen"))
+            .foregroundColor(.darkgreen)
     }
 }
 

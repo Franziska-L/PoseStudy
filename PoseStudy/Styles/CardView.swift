@@ -48,7 +48,7 @@ struct ConnectingCardView: View {
                     .fixedSize(horizontal: false, vertical: true)
                 VStack(alignment: .center) {
                     if polarApi.connetionState == .connected {
-                        Text("Erfolgreich Verbunden").foregroundColor((Color("lightgreen")))
+                        Text("Erfolgreich Verbunden").foregroundColor(.darkgreen)
                     }
                     if polarApi.connetionState == .connecting {
                         ProgressView().progressViewStyle(CircularProgressViewStyle())

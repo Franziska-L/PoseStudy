@@ -59,7 +59,7 @@ struct InstructionView: View {
             }.padding(.top, 32)
             HStack(spacing: 10) {
                 ForEach(0 ..< totalInstructions) { position in
-                    Image(systemName: position == self.step ? "circle.fill" : "circle").scaleEffect(position == self.step ? 1 : 0.65).foregroundColor(Color("darkgreen"))
+                    Image(systemName: position == self.step ? "circle.fill" : "circle").scaleEffect(position == self.step ? 1 : 0.65).foregroundColor(.darkgreen)
                 }
             }
             NavigationLink(
