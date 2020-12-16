@@ -6,6 +6,7 @@
 //
 
 import SwiftUI
+import FirebaseDatabase
 
 struct CameraView: View {
     @State private var selection: String? = nil
@@ -31,10 +32,12 @@ struct CameraView: View {
                
                 if camera.isRecording {
                     Text("\(timeMinutes):\(timeSeconds)")
-                        .padding(.horizontal, 5)
-                        .padding(.vertical, 3)
+                        .fixedSize(horizontal: true, vertical: true)
+                        .frame(width: 70, height: 32, alignment: .center)
                         .background(Color.darkgreen)
-                        .foregroundColor(.white).zIndex(2.0).cornerRadius(3.0)
+                        .foregroundColor(.white)
+                        .zIndex(2.0)
+                        .cornerRadius(15.0)
                 }
                 CameraPreview(camera: camera)
                     .ignoresSafeArea(.all, edges: .all)
@@ -54,21 +57,26 @@ struct CameraView: View {
     }
     
     func onClick() {
-        camera.startRecording()
-        if !camera.isRecording {
-            self.didTap = true
-            self.startTimer()
-            self.polarApi.startStreaming()
-        }
-        else {
-            camera.stopSession()
-            self.stopTimer()
-            self.polarApi.stopStream()
-            if status.isSecondRun == "second" {
-                self.selection = "Finish"
-            } else {
-                self.selection = "Pause"
+        if camera.authState {
+            camera.startRecording()
+            if !camera.isRecording {
+                self.didTap = true
+                self.startTimer()
+                self.polarApi.startStreaming()
             }
+            else {
+                camera.stopSession()
+                self.stopTimer()
+                self.polarApi.stopStream()
+                self.saveToDatabase()
+                if status.session == "second" {
+                    self.selection = "Finish"
+                } else {
+                    self.selection = "Pause"
+                }
+            }
+        } else {
+            camera.checkAuth()
         }
     }
     
@@ -108,7 +116,9 @@ struct CameraView: View {
     }
     
     private func saveToDatabase() {
-        
+        print(polarApi.hrDataStream)
+        let ref = Database.database().reference().child("Participant \(status.participantID)").child("Day").child("Session").child("HR_Data")
+        ref.updateChildValues(["Test" : "test", "Noch ein test" : "testtest"])
     }
 }
 

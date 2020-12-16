@@ -10,7 +10,7 @@ import FirebaseDatabase
 
 
 class GlobalState: ObservableObject {
-    @Published var isSecondRun: String = "first"
+    @Published var session: String = "first"
     @Published var participantID: String = ""
 }
 

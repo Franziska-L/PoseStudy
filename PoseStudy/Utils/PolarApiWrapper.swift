@@ -8,6 +8,7 @@
 import Foundation
 import PolarBleSdk
 import RxSwift
+import FirebaseDatabase
 
 enum ConnectionState {
     case connected
@@ -37,8 +38,8 @@ class PolarApiWrapper: ObservableObject, PolarBleApiObserver, PolarBleApiPowerSt
     var ecgToggle: Disposable?
     var deviceId = "74D5EB20"
     
-    var ecgDataStream: [Int32] = [Int32]()
-    var hrDataStream: [UInt8] = [UInt8]()
+    @Published var ecgDataStream: [Int32] = [Int32]()
+    @Published var hrDataStream: [UInt8] = [UInt8]()
     
     
     init() {

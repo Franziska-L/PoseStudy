@@ -31,7 +31,7 @@ struct PauseView: View {
     }
     
     fileprivate func setState() {
-        self.status.isSecondRun = "second"
+        self.status.session = "second"
         self.selection = "next"
     }
 }
