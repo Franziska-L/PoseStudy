@@ -15,7 +15,7 @@ struct CustomButtonStyle: ButtonStyle {
             .frame(minWidth: 0, maxWidth: .infinity)
             .padding()
             .foregroundColor(.white)
-            .background(LinearGradient(gradient: Gradient(colors: [Color("darkgreen"), Color("lightgreen")]), startPoint: .leading, endPoint: .trailing))
+            .background(LinearGradient(gradient: Gradient(colors: [.darkgreen, .lightgreen]), startPoint: .leading, endPoint: .trailing))
             .cornerRadius(40)
             .padding(.horizontal, 40)
             .padding(.vertical, 30)
