@@ -7,6 +7,29 @@
 
 import SwiftUI
 import AVFoundation
+import UIKit
+
+public class CameraState : NSObject, ObservableObject {
+    @Published public var capturedImage : UIImage?
+    @Published public var capturedImageError : Error?
+}
+
+public protocol CameraViewDelegate {
+    func cameraAccessGranted()
+    func cameraAccessDenied()
+    func noCameraDetected()
+    func cameraSessionStarted()
+}
+
+enum Camera {
+   case captureSessionAlreadyRunning
+   case captureSessionIsMissing
+   case inputsAreInvalid
+   case invalidOperation
+   case noCamerasAvailable
+   case unknown
+}
+
 
 struct Test: View {
     
@@ -20,55 +43,26 @@ struct Test: View {
 
 struct CameraView2: View {
     
-    @StateObject var camera = CameraModel()
+    @ObservedObject var camera = CameraModel()
     
     var body: some View{
         
-        ZStack{
-            
-            // Going to Be Camera preview...
+        ZStack {
             CameraPreview(camera: camera)
                 .ignoresSafeArea(.all, edges: .all)
-            
-            VStack{
+            Button(action: startRecording, label: {
                 
-                if camera.isTaken{
+                ZStack{
                     
-                    HStack {
-                        
-                        Spacer()
-                        
-                        Button(action: camera.reTake, label: {
-
-                            Image(systemName: "arrow.triangle.2.circlepath.camera")
-                                .foregroundColor(.black)
-                                .padding()
-                                .background(Color.white)
-                                .clipShape(Circle())
-                        })
-                        .padding(.trailing,10)
-                    }
+                    Circle()
+                        .fill(Color.white)
+                        .frame(width: 65, height: 65)
+                    
+                    Circle()
+                        .stroke(Color.white,lineWidth: 2)
+                        .frame(width: 75, height: 75)
                 }
-                
-                Spacer()
-                
-                HStack{
-                    Button(action: camera.takePic, label: {
-                        
-                        ZStack{
-                            
-                            Circle()
-                                .fill(Color.white)
-                                .frame(width: 65, height: 65)
-                            
-                            Circle()
-                                .stroke(Color.white,lineWidth: 2)
-                                .frame(width: 75, height: 75)
-                        }
-                    })
-                }
-                .frame(height: 75)
-            }
+            })
         }
         .onAppear(perform: {
             
@@ -78,28 +72,34 @@ struct CameraView2: View {
             Alert(title: Text("Please Enable Camera Access"))
         }
     }
+    
+    func startRecording() {
+        print(camera.isRecording)
+//        if camera.isRecording {
+//            camera.stopSession()
+//        } else {
+//            camera.startRecording()
+//        }
+        camera.startRecording()
+    }
 }
 
 // Camera Model...
 
-class CameraModel: NSObject,ObservableObject,AVCapturePhotoCaptureDelegate{
-    
-    @Published var isTaken = false
-    
+class CameraModel: NSObject,ObservableObject,AVCaptureFileOutputRecordingDelegate{
+    @Published var isRecording = false
+    @Published var stoppedRecording = false
     
     @Published var alert = false
     
     @Published var session = AVCaptureSession()
-    @Published var output = AVCapturePhotoOutput()
-    @Published var preview : AVCaptureVideoPreviewLayer!
-    
-    // Pic Data...
-    
-    @Published var isSaved = false
-    
-    @Published var picData = Data(count: 0)
-    
-    func checkAuth(){
+    @Published var output = AVCaptureMovieFileOutput()
+    @Published var previewLayer : AVCaptureVideoPreviewLayer!
+    var frontCamera: AVCaptureDevice?
+    var frontCameraInput: AVCaptureDeviceInput?
+    var backgroundRecordingID: UIBackgroundTaskIdentifier?
+       
+    func checkAuth() {
         
         // Check if camera has permission
         switch AVCaptureDevice.authorizationStatus(for: .video) {
@@ -122,93 +122,150 @@ class CameraModel: NSObject,ObservableObject,AVCapturePhotoCaptureDelegate{
     }
     
     func setUpCamera() {
-        
-        do{
-            
+        do {
+            func createCaptureSession() {
+                self.session = AVCaptureSession()
+            }
             // setting configs...
             self.session.beginConfiguration()
-            
+
             // change for your own...
-            
+
             let device = AVCaptureDevice.default(.builtInWideAngleCamera, for: .video, position: .front)
-            
-            let input = try AVCaptureDeviceInput(device: device!)
-            
-            // checking and adding to session...
-            
-            if self.session.canAddInput(input){
-                self.session.addInput(input)
+
+            guard device != nil, let deviceInput = try? AVCaptureDeviceInput(device: device!), session.canAddInput(deviceInput) else {
+                        return
             }
             
+            if self.session.canAddInput(deviceInput){
+                self.session.addInput(deviceInput)
+            }
+
             // same for output....
-            
+
             if self.session.canAddOutput(self.output){
                 self.session.addOutput(self.output)
             }
-            
+
             self.session.commitConfiguration()
-        }
-        catch {
-            print(error.localizedDescription)
+            self.session.startRunning()
         }
     }
     
     // take and retake functions...
     
-    func takePic(){
+    func startRecording(){
         
-        self.output.capturePhoto(with: AVCapturePhotoSettings(), delegate: self)
+        print("recording")
+        let videoPreviewLayerOrientation = previewLayer?.connection?.videoOrientation
         
-        DispatchQueue.global(qos: .background).async {
-            
-            self.session.stopRunning()
-            
-            DispatchQueue.main.async {
+        DispatchQueue(label: "session queue").async {
+            if !self.output.isRecording {
+                DispatchQueue.main.async {
+                    self.isRecording = true
+                }
+                if UIDevice.current.isMultitaskingSupported {
+                    //self.backgroundRecordingID = UIApplication.shared.beginBackgroundTask(expirationHandler: nil)
+                }
                 
-                withAnimation{self.isTaken.toggle()}
+                // Update the orientation on the movie file output video connection before recording.
+                let movieFileOutputConnection = self.output.connection(with: .video)
+                movieFileOutputConnection?.videoOrientation = videoPreviewLayerOrientation!
+                
+                let availableVideoCodecTypes = self.output.availableVideoCodecTypes
+                
+                if availableVideoCodecTypes.contains(.hevc) {
+                    self.output.setOutputSettings([AVVideoCodecKey: AVVideoCodecType.hevc], for: movieFileOutputConnection!)
+                }
+                
+                // Start recording video to a temporary file.
+                let outputFileName = NSUUID().uuidString
+                let outputFilePath = (NSTemporaryDirectory() as NSString).appendingPathComponent((outputFileName as NSString).appendingPathExtension("mp4")!)
+                self.output.startRecording(to: URL(fileURLWithPath: outputFilePath), recordingDelegate: self)
+            } else {
+                DispatchQueue.main.async {
+                    self.isRecording = false
+                }
+                self.output.stopRecording()
             }
         }
     }
     
-    func reTake(){
-        
-        DispatchQueue.global(qos: .background).async {
+    func stopSession() {
+        self.session.stopRunning()
+        print(session.isRunning)
+    }
+    
+    func fileOutput(_ output: AVCaptureFileOutput, didFinishRecordingTo outputFileURL: URL, from connections: [AVCaptureConnection], error: Error?) {
+        print("end")
+        stoppedRecording = true
+        print("stop recording")
+        // Note: Because we use a unique file path for each recording, a new recording won't overwrite a recording mid-save.
+        func cleanup() {
+            let path = outputFileURL.path
+            if FileManager.default.fileExists(atPath: path) {
+                do {
+                    try FileManager.default.removeItem(atPath: path)
+                } catch {
+                    print("Could not remove file at url: \(outputFileURL)")
+                }
+            }
             
-            self.session.startRunning()
-            
-            DispatchQueue.main.async {
-                withAnimation{self.isTaken.toggle()}
-                //clearing ...
-                self.isSaved = false
-                self.picData = Data(count: 0)
+            if let currentBackgroundRecordingID = backgroundRecordingID {
+                backgroundRecordingID = UIBackgroundTaskIdentifier.invalid
+                
+                if currentBackgroundRecordingID != UIBackgroundTaskIdentifier.invalid {
+                    UIApplication.shared.endBackgroundTask(currentBackgroundRecordingID)
+                }
             }
         }
-    }
-    
-    func photoOutput(_ output: AVCapturePhotoOutput, didFinishProcessingPhoto photo: AVCapturePhoto, error: Error?) {
         
-        if error != nil{
-            return
+        var success = true
+
+        if error != nil {
+            print("Movie file finishing error: \(String(describing: error))")
+            success = (((error! as NSError).userInfo[AVErrorRecordingSuccessfullyFinishedKey] as AnyObject).boolValue)!
         }
         
-        print("pic taken...")
-        
-        guard let imageData = photo.fileDataRepresentation() else{return}
-        
-        self.picData = imageData
+        if success {
+            
+//            saveVideoToDatabase(url: outputFileURL) { (success) in
+//                print("test")
+//                cleanup()
+//            } failure: { (error) in
+//                print(error)
+//                cleanup()
+//            }
+//
+
+
+//            print(outputFileURL)
+//            // Check the authorization status.
+//            PHPhotoLibrary.requestAuthorization { status in
+//                if status == .authorized {
+//                    // Save the movie file to the photo library and cleanup.
+//                    PHPhotoLibrary.shared().performChanges({
+//                        let options = PHAssetResourceCreationOptions()
+//                        options.shouldMoveFile = true
+//                        let creationRequest = PHAssetCreationRequest.forAsset()
+//                        creationRequest.addResource(with: .video, fileURL: outputFileURL, options: options)
+//                    }, completionHandler: { success, error in
+//                        if !success {
+//                            print("AVCam couldn't save the movie to your photo library: \(String(describing: error))")
+//                        }
+//                        cleanup()
+//                    }
+//                    )
+//                } else {
+//                    cleanup()
+//                }
+//            }
+        } else {
+            cleanup()
+        }
     }
     
-    func savePic(){
-        
-        guard let image = UIImage(data: self.picData) else{return}
-        
-        // saving Image...
-        UIImageWriteToSavedPhotosAlbum(image, nil, nil, nil)
-        
-        self.isSaved = true
-        
-        print("saved Successfully....")
-    }
+    
 }
 
 // setting view for preview...
@@ -221,27 +278,17 @@ struct CameraPreview: UIViewRepresentable {
      
         let view = UIView(frame: UIScreen.main.bounds)
         
-        camera.preview = AVCaptureVideoPreviewLayer(session: camera.session)
-        camera.preview.frame = view.frame
+        camera.previewLayer = AVCaptureVideoPreviewLayer(session: camera.session)
+        camera.previewLayer.frame = view.frame
         
         // Your Own Properties...
-        camera.preview.videoGravity = .resizeAspectFill
-        view.layer.addSublayer(camera.preview)
-        
-        // starting session
-        camera.session.startRunning()
+        camera.previewLayer.videoGravity = .resizeAspectFill
+        view.layer.addSublayer(camera.previewLayer)
         
         return view
     }
     
     func updateUIView(_ uiView: UIView, context: Context) {
         
-    }
-}
-
-
-struct Test_Previews: PreviewProvider {
-    static var previews: some View {
-        Test()
     }
 }

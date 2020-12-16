@@ -89,6 +89,7 @@ class CameraController: NSObject, AVCaptureFileOutputRecordingDelegate {
                 throw CameraControllerError.captureSessionIsMissing
             }
             session.startRunning()
+            print("session started")
         }
            
         DispatchQueue(label: "prepare").async {
@@ -338,17 +339,5 @@ class CameraController: NSObject, AVCaptureFileOutputRecordingDelegate {
                     }
             })
         }
-    }
-    
-    func convertVideo(toMPEG4FormatForVideo inputURL: URL, outputURL: URL, handler: @escaping (AVAssetExportSession) -> Void) {
-        try! FileManager.default.removeItem(at: outputURL as URL)
-        let asset = AVURLAsset(url: inputURL as URL, options: nil)
-
-        let exportSession = AVAssetExportSession(asset: asset, presetName: AVAssetExportPresetHighestQuality)!
-        exportSession.outputURL = outputURL
-        exportSession.outputFileType = .mp4
-        exportSession.exportAsynchronously(completionHandler: {
-            handler(exportSession)
-        })
     }
 }

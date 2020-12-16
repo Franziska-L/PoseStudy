@@ -14,7 +14,7 @@ struct PoseStudyApp: App {
     
     var body: some Scene {
         WindowGroup {
-            Test().navigationBarHidden(true)
+            WelcomeView().navigationBarHidden(true)
         }
     }
 }

@@ -10,7 +10,6 @@ import SwiftUI
 struct CameraView: View {
     @State private var selection: String? = nil
     
-    @State var isRecording: Bool = false
     @State var didTap: Bool = false
     
     @State var minutes: Int = 0
@@ -22,43 +21,54 @@ struct CameraView: View {
     @EnvironmentObject var status: GlobalState
     @EnvironmentObject var polarApi: PolarApiWrapper
     
+    @ObservedObject var camera = CameraModel()
+    
     var body: some View {
         VStack {
             NavigationLink(destination: PauseView().navigationBarHidden(true), tag: "Pause", selection: $selection) { EmptyView() }
             NavigationLink(destination: FinishScreen().navigationBarHidden(true), tag: "Finish", selection: $selection) { EmptyView() }
             ZStack(alignment: .top) {
                
-                if isRecording {
+                if camera.isRecording {
                     Text("\(timeMinutes):\(timeSeconds)")
                         .padding(.horizontal, 5)
                         .padding(.vertical, 3)
                         .background(Color.darkgreen)
                         .foregroundColor(.white).zIndex(2.0).cornerRadius(3.0)
                 }
-                CameraRepresentable(isRecording: $isRecording, didTap: $didTap).edgesIgnoringSafeArea(.top)
+                CameraPreview(camera: camera)
+                    .ignoresSafeArea(.all, edges: .all)
                 
             }
             Button(action: onClick, label: {
-                Image(systemName: isRecording ? "pause" : "video")
-            }).buttonStyle(VideoButtonStyle(isRecording: $isRecording))
+                Image(systemName: camera.isRecording ? "pause" : "video")
+            }).buttonStyle(VideoButtonStyle(isRecording: $camera.isRecording))
         }.environmentObject(status).environmentObject(polarApi)
+        .onAppear(perform: {
+            
+            camera.checkAuth()
+        })
+        .alert(isPresented: $camera.alert) {
+            Alert(title: Text("Please Enable Camera Access"))
+        }
     }
     
     func onClick() {
-        if self.isRecording {
+        camera.startRecording()
+        if !camera.isRecording {
+            self.didTap = true
+            self.startTimer()
+            self.polarApi.startStreaming()
+        }
+        else {
+            camera.stopSession()
             self.stopTimer()
             self.polarApi.stopStream()
-            self.isRecording = !self.isRecording
             if status.isSecondRun == "second" {
                 self.selection = "Finish"
             } else {
                 self.selection = "Pause"
             }
-        } else {
-            self.didTap = true
-            self.isRecording = !self.isRecording
-            self.startTimer()
-            self.polarApi.startStreaming()
         }
     }
     
