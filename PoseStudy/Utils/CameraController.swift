@@ -126,6 +126,30 @@ class CameraController: NSObject, AVCaptureFileOutputRecordingDelegate {
         view.layer.insertSublayer(self.previewLayer!, at: 0)
     }
     
+//    func checkPermission() {
+//            
+//        // first checking camerahas got permission...
+//        switch AVCaptureDevice.authorizationStatus(for: .video) {
+//        case .authorized:
+//            setUp()
+//            return
+//            // Setting Up Session
+//        case .notDetermined:
+//            // retusting for permission....
+//            AVCaptureDevice.requestAccess(for: .video) { (status) in
+//                
+//                if status{
+//                    self.setUp()
+//                }
+//            }
+//        case .denied:
+//            self.alert.toggle()
+//            return
+//            
+//        default:
+//            return
+//        }
+//    }
     
     func recording() {
         guard let movieFileOutput = self.videoOutput else {

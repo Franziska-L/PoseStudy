@@ -6,149 +6,239 @@
 //
 
 import SwiftUI
-
-class GlobalState2 : ObservableObject {
-    @Published var currentTopic: String = "Ho ho"
-}
-
-
+import AVFoundation
 
 struct Test: View {
-    @State private var selection: String? = nil
-    @State var code: String = ""
     
-    @ObservedObject var status = GlobalState2()
-    
-    @State var img = "jumpingjack"
-    @State var title = "Test"
-    @State var instr = ["Hebe und senke deinen Körper mit den Armen bis zum Boden.", "Halte dabei den Rücken gerade und den Kopf in Verlängerung der Wirbelsäule.", "Körpermitte ist fest." ,"Wenn die Übung auf den Beinen zu anstrengend ist, gehe gerne auf die Knie."]
     var body: some View {
-        NavigationView {
-                    VStack {
-                        ConnectingCardView2(instruction: $title).frame(width: 300, height: 300, alignment: .center)
-                    }
-                    .navigationBarTitle("Navigation")
-                }.environmentObject(status)
-    }
-    
-    func change() {
-        if code == "" {
-            selection = "Second"
-        } else {
-            selection = "Third"
+        VStack {
+            CameraView2()
         }
     }
 }
 
-struct ConnectingCardView2: View {
-    @Binding var instruction: String
-    @State var connectionState: ConnectionState = .disconnected
-    //var api = PolarApiWrapper()
-    var body: some View {
-        GeometryReader { geometry in
-            VStack(alignment: .leading) {
-                Text(instruction)
-                    .padding()
-                    .lineLimit(nil)
-                    .multilineTextAlignment(.leading)
-                    .fixedSize(horizontal: false, vertical: true)
-                if connectionState == .connected {
+
+struct CameraView2: View {
+    
+    @StateObject var camera = CameraModel()
+    
+    var body: some View{
+        
+        ZStack{
+            
+            // Going to Be Camera preview...
+            CameraPreview(camera: camera)
+                .ignoresSafeArea(.all, edges: .all)
+            
+            VStack{
+                
+                if camera.isTaken{
                     
-                }
-                Button(action: { print("start connecting") }, label: {
-                    Text("Verbinden")
-                }).buttonStyle(CustomButtonStyle()).padding(.horizontal, 60)
-            }
-            .padding(.bottom)
-            .background(Color.white)
-            .cornerRadius(10)
-            .shadow(radius: 5)
-        }
-    }
-    
-    
-}
+                    HStack {
+                        
+                        Spacer()
+                        
+                        Button(action: camera.reTake, label: {
 
-
-struct SubView: View {
-    @EnvironmentObject var state: GlobalState2
-    
-    var body: some View {
-        VStack {
-            Text("\(self.state.currentTopic)")
-        }
-    }
-}
-
-struct SubViewTwo: View {
-    @EnvironmentObject var state: GlobalState2
-    var body: some View {
-        VStack {
-            NavigationLink(
-                destination: SubViewThree(),
-                label: {
-                    /*@START_MENU_TOKEN@*/Text("Navigate")/*@END_MENU_TOKEN@*/
-                })
-            Text(state.currentTopic)
-        }.environmentObject(state)
-       
-    }
-}
-
-struct SubViewThree: View {
-    @EnvironmentObject var state: GlobalState2
-    
-    var body: some View {
-        VStack {
-            NavigationLink(
-                destination: SubViewTwo(),
-                label: {
-                    Button(action: {self.state.currentTopic = "new topic" }) {
-                        Text("Go back")
+                            Image(systemName: "arrow.triangle.2.circlepath.camera")
+                                .foregroundColor(.black)
+                                .padding()
+                                .background(Color.white)
+                                .clipShape(Circle())
+                        })
+                        .padding(.trailing,10)
                     }
-                })
-            Button(action: {self.state.currentTopic = "new topic" }) {
-                Text("Change state")
+                }
+                
+                Spacer()
+                
+                HStack{
+                    Button(action: camera.takePic, label: {
+                        
+                        ZStack{
+                            
+                            Circle()
+                                .fill(Color.white)
+                                .frame(width: 65, height: 65)
+                            
+                            Circle()
+                                .stroke(Color.white,lineWidth: 2)
+                                .frame(width: 75, height: 75)
+                        }
+                    })
+                }
+                .frame(height: 75)
             }
+        }
+        .onAppear(perform: {
+            
+            camera.checkAuth()
+        })
+        .alert(isPresented: $camera.alert) {
+            Alert(title: Text("Please Enable Camera Access"))
         }
     }
 }
 
+// Camera Model...
 
-struct ExerciseCardView1: View {
-    @Binding var image: String
-    @Binding var instruction: String
-    @Binding var exerciseInst: [String]
-
-    var body: some View {
-        GeometryReader { geometry in
-            VStack(alignment: .leading) {
-                Image(image)
-                    .resizable()
-                    .scaledToFit()
-                    .frame(width: geometry.size.width, height: geometry.size.height * 0.5)
-                    .clipped()
-                Text(instruction)
-                    .padding()
-                    .lineLimit(nil)
-                    .multilineTextAlignment(.leading)
-                    .fixedSize(horizontal: false, vertical: true)
-                ForEach(0..<exerciseInst.count) { position in
-                    Text("\(exerciseInst[position])")
-                        .padding(.top, 10).padding(.leading, 10)
-                        .lineLimit(nil)
-                        .foregroundColor(.darkgray)
-                        .multilineTextAlignment(.leading)
-                        .fixedSize(horizontal: false, vertical: true)
+class CameraModel: NSObject,ObservableObject,AVCapturePhotoCaptureDelegate{
+    
+    @Published var isTaken = false
+    
+    
+    @Published var alert = false
+    
+    @Published var session = AVCaptureSession()
+    @Published var output = AVCapturePhotoOutput()
+    @Published var preview : AVCaptureVideoPreviewLayer!
+    
+    // Pic Data...
+    
+    @Published var isSaved = false
+    
+    @Published var picData = Data(count: 0)
+    
+    func checkAuth(){
+        
+        // Check if camera has permission
+        switch AVCaptureDevice.authorizationStatus(for: .video) {
+        case .authorized:
+            setUpCamera()
+            return
+        case .notDetermined:
+            // retusting for permission
+            AVCaptureDevice.requestAccess(for: .video) { (status) in
+                if status {
+                    self.setUpCamera()
                 }
             }
-            .padding(.bottom)
-            .background(Color.white)
-            .cornerRadius(10)
-            .shadow(radius: 5)
+        case .denied:
+            self.alert.toggle()
+            return
+        default:
+            return
         }
     }
+    
+    func setUpCamera() {
+        
+        do{
+            
+            // setting configs...
+            self.session.beginConfiguration()
+            
+            // change for your own...
+            
+            let device = AVCaptureDevice.default(.builtInWideAngleCamera, for: .video, position: .front)
+            
+            let input = try AVCaptureDeviceInput(device: device!)
+            
+            // checking and adding to session...
+            
+            if self.session.canAddInput(input){
+                self.session.addInput(input)
+            }
+            
+            // same for output....
+            
+            if self.session.canAddOutput(self.output){
+                self.session.addOutput(self.output)
+            }
+            
+            self.session.commitConfiguration()
+        }
+        catch {
+            print(error.localizedDescription)
+        }
+    }
+    
+    // take and retake functions...
+    
+    func takePic(){
+        
+        self.output.capturePhoto(with: AVCapturePhotoSettings(), delegate: self)
+        
+        DispatchQueue.global(qos: .background).async {
+            
+            self.session.stopRunning()
+            
+            DispatchQueue.main.async {
+                
+                withAnimation{self.isTaken.toggle()}
+            }
+        }
+    }
+    
+    func reTake(){
+        
+        DispatchQueue.global(qos: .background).async {
+            
+            self.session.startRunning()
+            
+            DispatchQueue.main.async {
+                withAnimation{self.isTaken.toggle()}
+                //clearing ...
+                self.isSaved = false
+                self.picData = Data(count: 0)
+            }
+        }
+    }
+    
+    func photoOutput(_ output: AVCapturePhotoOutput, didFinishProcessingPhoto photo: AVCapturePhoto, error: Error?) {
+        
+        if error != nil{
+            return
+        }
+        
+        print("pic taken...")
+        
+        guard let imageData = photo.fileDataRepresentation() else{return}
+        
+        self.picData = imageData
+    }
+    
+    func savePic(){
+        
+        guard let image = UIImage(data: self.picData) else{return}
+        
+        // saving Image...
+        UIImageWriteToSavedPhotosAlbum(image, nil, nil, nil)
+        
+        self.isSaved = true
+        
+        print("saved Successfully....")
+    }
 }
+
+// setting view for preview...
+
+struct CameraPreview: UIViewRepresentable {
+    
+    @ObservedObject var camera : CameraModel
+    
+    func makeUIView(context: Context) ->  UIView {
+     
+        let view = UIView(frame: UIScreen.main.bounds)
+        
+        camera.preview = AVCaptureVideoPreviewLayer(session: camera.session)
+        camera.preview.frame = view.frame
+        
+        // Your Own Properties...
+        camera.preview.videoGravity = .resizeAspectFill
+        view.layer.addSublayer(camera.preview)
+        
+        // starting session
+        camera.session.startRunning()
+        
+        return view
+    }
+    
+    func updateUIView(_ uiView: UIView, context: Context) {
+        
+    }
+}
+
 
 struct Test_Previews: PreviewProvider {
     static var previews: some View {

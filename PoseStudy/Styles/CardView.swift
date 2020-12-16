@@ -90,7 +90,7 @@ struct ExerciseCardView: View {
                     .fixedSize(horizontal: false, vertical: true)
                 ForEach(0..<exerciseInst.count) { position in
                     Text("\(exerciseInst[position])")
-                        .padding(.top, 10).padding(.leading, 10)
+                        .padding(.top, 10).padding(.horizontal, 10)
                         .lineLimit(nil)
                         .foregroundColor(.darkgray)
                         .multilineTextAlignment(.leading)

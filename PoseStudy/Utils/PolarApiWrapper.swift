@@ -37,6 +37,10 @@ class PolarApiWrapper: ObservableObject, PolarBleApiObserver, PolarBleApiPowerSt
     var ecgToggle: Disposable?
     var deviceId = "74D5EB20"
     
+    var ecgDataStream: [Int32] = [Int32]()
+    var hrDataStream: [UInt8] = [UInt8]()
+    
+    
     init() {
         self.api = PolarBleApiDefaultImpl.polarImplementation(DispatchQueue.main, features: Features.allFeatures.rawValue)
         self.api.observer = self
@@ -55,25 +59,49 @@ class PolarApiWrapper: ObservableObject, PolarBleApiObserver, PolarBleApiPowerSt
     }
     
     func startStreaming() {
-        if ecgToggle == nil {
-            ecgToggle = api.requestEcgSettings(deviceId).asObservable().flatMap({ (settings) -> Observable<PolarEcgData> in
-                return self.api.startEcgStreaming(self.deviceId, settings: settings.maxSettings())
-            }).observeOn(MainScheduler.instance).subscribe{ e in
-                switch e {
-                case .next(let data):
-                    for µv in data.samples {
-                        NSLog("    µV: \(µv)")
-                    }
-                case .error(let err):
-                    NSLog("start ecg error: \(err)")
-                    self.ecgToggle = nil
-                case .completed:
-                    break
+        //Start ECG Stream
+        ecgToggle = api.requestEcgSettings(deviceId).asObservable().flatMap({ (settings) -> Observable<PolarEcgData> in
+            return self.api.startEcgStreaming(self.deviceId, settings: settings.maxSettings())
+        }).observeOn(MainScheduler.instance).subscribe{ e in
+            switch e {
+            case .next(let data):
+                for µv in data.samples {
+                    NSLog("    µV: \(µv)")
+                    self.ecgDataStream.append(µv)
                 }
+            case .error(let err):
+                NSLog("start ecg error: \(err)")
+                self.ecgToggle = nil
+            case .completed:
+                break
             }
-        } else {
-            ecgToggle?.dispose()
-            ecgToggle = nil
+        }
+        
+        //Start HR Stream
+        broadcast = api.startListenForPolarHrBroadcasts(nil).observeOn(MainScheduler.instance).subscribe{ e in
+            switch e {
+            case .completed:
+                NSLog("completed")
+            case .error(let err):
+                NSLog("listening error: \(err)")
+            case .next(let broadcast):
+                NSLog("\(broadcast.deviceInfo.name) HR BROADCAST: \(broadcast.hr)")
+                self.hrDataStream.append(broadcast.hr)
+            }
+        }
+    }
+    
+    func stopStream() {
+        //Stop HR Stream
+        broadcast?.dispose()
+        broadcast = nil
+        
+        //Stop ECG Stream
+        ecgToggle?.dispose()
+        ecgToggle = nil
+        
+        for sample in ecgDataStream {
+            print(sample)
         }
     }
     

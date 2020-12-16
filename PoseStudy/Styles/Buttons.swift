@@ -30,7 +30,7 @@ struct VideoButtonStyle: ButtonStyle {
         configuration.label
             .padding(30)
             .font(.title)
-            .background(Color.red)
+            .background(Color.darkgreen)
             .foregroundColor(.white)
             .clipShape(Circle())
             .scaleEffect(isRecording ? 0.6 : 0.9)

@@ -32,7 +32,7 @@ struct CameraView: View {
                     Text("\(timeMinutes):\(timeSeconds)")
                         .padding(.horizontal, 5)
                         .padding(.vertical, 3)
-                        .background(Color.red)
+                        .background(Color.darkgreen)
                         .foregroundColor(.white).zIndex(2.0).cornerRadius(3.0)
                 }
                 CameraRepresentable(isRecording: $isRecording, didTap: $didTap).edgesIgnoringSafeArea(.top)
@@ -47,6 +47,7 @@ struct CameraView: View {
     func onClick() {
         if self.isRecording {
             self.stopTimer()
+            self.polarApi.stopStream()
             self.isRecording = !self.isRecording
             if status.isSecondRun == "second" {
                 self.selection = "Finish"
@@ -56,7 +57,8 @@ struct CameraView: View {
         } else {
             self.didTap = true
             self.isRecording = !self.isRecording
-            startTimer()
+            self.startTimer()
+            self.polarApi.startStreaming()
         }
     }
     
@@ -93,6 +95,10 @@ struct CameraView: View {
         seconds = 0
         timeSeconds = "0\(seconds)"
         timeMinutes = "0\(minutes)"
+    }
+    
+    private func saveToDatabase() {
+        
     }
 }
 
