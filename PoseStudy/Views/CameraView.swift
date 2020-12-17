@@ -8,11 +8,17 @@
 import SwiftUI
 import FirebaseDatabase
 
+struct CamView: View {
+    var body: some View {
+        CameraView()
+    }
+}
+
+
+
 struct CameraView: View {
     @State private var selection: String? = nil
-    
-    @State var didTap: Bool = false
-    
+        
     @State var minutes: Int = 0
     @State var seconds: Int = 0
     @State var timeSeconds: String = "00"
@@ -25,6 +31,8 @@ struct CameraView: View {
     @ObservedObject var camera = CameraModel()
     
     var body: some View {
+        print(self.camera.hash)
+        return (
         VStack {
             NavigationLink(destination: PauseView().navigationBarHidden(true), tag: "Pause", selection: $selection) { EmptyView() }
             NavigationLink(destination: FinishScreen().navigationBarHidden(true), tag: "Finish", selection: $selection) { EmptyView() }
@@ -53,22 +61,23 @@ struct CameraView: View {
         })
         .alert(isPresented: $camera.alert) {
             Alert(title: Text("Please Enable Camera Access"))
-        }
+        })
     }
     
     func onClick() {
-        if camera.authState {
+        if camera.authState && camera.cameraAvailable {
             camera.startRecording()
             if !camera.isRecording {
-                self.didTap = true
                 self.startTimer()
-                self.polarApi.startStreaming()
+                DispatchQueue.global(qos: .background).async {
+                    self.polarApi.startStreaming()
+                }
             }
             else {
                 camera.stopSession()
                 self.stopTimer()
                 self.polarApi.stopStream()
-                self.saveToDatabase()
+                //self.saveToDatabase()
                 if status.session == "second" {
                     self.selection = "Finish"
                 } else {
@@ -116,9 +125,25 @@ struct CameraView: View {
     }
     
     private func saveToDatabase() {
+        let ref: DatabaseReference = Database.database().reference().child("Participant \(status.participantID)")
+        ref.observeSingleEvent(of: .value, with: { (snapshot) in
+            print(polarApi.hrDataStream)
+            
+            for i in 1...3 {
+                if snapshot.hasChild("Day \(i)") {
+                    continue
+                } else {
+                    ref.child("Day \(i)").child("Session \(status.$session)").updateChildValues(["HR" : polarApi.hrDataStream, "ECG" : polarApi.ecgDataStream])
+                    break
+                }
+            }
+        }) { (error) in
+            print(error.localizedDescription)
+        }
+        
         print(polarApi.hrDataStream)
-        let ref = Database.database().reference().child("Participant \(status.participantID)").child("Day").child("Session").child("HR_Data")
-        ref.updateChildValues(["Test" : "test", "Noch ein test" : "testtest"])
+//        let ref = Database.database().reference().child("Participant \(status.participantID)").child("Day").child("Session").child("HR_Data")
+//        ref.updateChildValues(["Test" : "test", "Noch ein test" : "testtest"])
     }
 }
 

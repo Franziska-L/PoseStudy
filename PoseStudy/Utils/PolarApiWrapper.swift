@@ -22,12 +22,15 @@ enum BlePowerState {
     case off
 }
 
-//class State: ObservableObject {
-//    @Published var isConnected = false
-//    @Published var streamStarted = false
-//}
-
-class PolarApiWrapper: ObservableObject, PolarBleApiObserver, PolarBleApiPowerStateObserver, PolarBleApiDeviceHrObserver {
+class PolarApiWrapper: ObservableObject,
+                       PolarBleApiObserver,
+                       PolarBleApiPowerStateObserver,
+                       PolarBleApiDeviceHrObserver,
+//                       PolarBleApiDeviceInfoObserver
+                       PolarBleApiDeviceFeaturesObserver
+//                       PolarBleApiLogger,
+//                       PolarBleApiCCCWriteObserver
+{
     @Published var connetionState: ConnectionState = .disconnected
     @Published var blePowerState: BlePowerState = .off
     @Published var streanStarded: Bool = false
@@ -45,10 +48,12 @@ class PolarApiWrapper: ObservableObject, PolarBleApiObserver, PolarBleApiPowerSt
     init() {
         self.api = PolarBleApiDefaultImpl.polarImplementation(DispatchQueue.main, features: Features.allFeatures.rawValue)
         self.api.observer = self
+        self.api.powerStateObserver = self
+        self.api.deviceHrObserver = self 
     }
     
     func autoConnectToDevice() {
-        autoConnect?.dispose()
+        stopAutoConnectToDevice()
         autoConnect = api.startAutoConnectToDevice(-55, service: nil, polarDeviceType: nil).subscribe() { e in
             switch e {
             case .completed:
@@ -57,6 +62,11 @@ class PolarApiWrapper: ObservableObject, PolarBleApiObserver, PolarBleApiPowerSt
                 NSLog("auto connect failed: \(err)")
             }
         }
+    }
+    
+    func stopAutoConnectToDevice() {
+        autoConnect?.dispose()
+        autoConnect = nil
     }
     
     func startStreaming() {
@@ -137,7 +147,32 @@ class PolarApiWrapper: ObservableObject, PolarBleApiObserver, PolarBleApiPowerSt
     
     ///PolarBleApiDeviceHrObserver
     func hrValueReceived(_ identifier: String, data: PolarHrData) {
-        print("(\(identifier)) HR notification: \(data.hr) rrs: \(data.rrs) rrsMs: \(data.rrsMs) c: \(data.contact) s: \(data.contactSupported)")
+        NSLog("(\(identifier)) HR notification: \(data.hr) rrs: \(data.rrs) rrsMs: \(data.rrsMs) c: \(data.contact) s: \(data.contactSupported)")
     }
     
+    
+    ///PolarBleApiDeviceFeaturesObserver
+    func hrFeatureReady(_ identifier: String) {
+        NSLog("HR READY")
+    }
+    
+    func ecgFeatureReady(_ identifier: String) {
+        NSLog("ECG READY")
+    }
+    
+    func accFeatureReady(_ identifier: String) {
+        NSLog("ACC READY")
+    }
+    
+    func ohrPPGFeatureReady(_ identifier: String) {
+        NSLog("PPG READY")
+    }
+    
+    func ohrPPIFeatureReady(_ identifier: String) {
+        NSLog("PPI READY")
+    }
+    
+    func ftpFeatureReady(_ identifier: String) {
+        NSLog("FTP READY")
+    }
 }

@@ -28,4 +28,8 @@ extension String {
     static let polarDeviceIntr = "Lege jetzt den Brustgurt an. Befeuchte dazu zunächst den Elektrodenbereich des Gurtes. Lege den Gurt um die Brust und stelle ihn so ein, dass er fest sitzt."
     static let connectInstr = "Verbinde das Pulsmessgerät mit dem Handy."
     static let positionInstr = "Stelle das Handy auf dem Handyhalter und positioniere diesen so, dass dein gesamter Körper seitlich zu sehen ist.\n\nWenn alles bereit ist kann es los gehen."
+    
+    //Buttons
+    static let next = "Weiter"
+    static let go = "Los"
 }

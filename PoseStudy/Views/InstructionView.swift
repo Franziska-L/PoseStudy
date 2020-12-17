@@ -63,12 +63,18 @@ struct InstructionView: View {
                 }
             }
             NavigationLink(
-                destination: CameraView().navigationBarHidden(true),
+                destination: CamView().navigationBarHidden(true),
                 label: {
-                    Text("Los")
+                    Button(action: test) { Text("Los") }
                 }).buttonStyle(CustomButtonStyle()).disabled((self.step >= totalInstructions - 1) ? false : true)
         }.environmentObject(status).environmentObject(polarApi)
         .navigationBarBackButtonHidden(true)
+    }
+    
+    func test() {
+        if polarApi.connetionState == .connected {
+            
+        }
     }
 }
 

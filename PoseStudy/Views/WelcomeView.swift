@@ -12,6 +12,7 @@ import FirebaseDatabase
 class GlobalState: ObservableObject {
     @Published var session: String = "first"
     @Published var participantID: String = ""
+    @Published var day: Int = 0
 }
 
 struct WelcomeView: View {

@@ -15,6 +15,7 @@ struct PoseStudyApp: App {
     var body: some Scene {
         WindowGroup {
             WelcomeView().navigationBarHidden(true)
+//                .environmentObject(GlobalState()).environmentObject(PolarApiWrapper())
         }
     }
 }

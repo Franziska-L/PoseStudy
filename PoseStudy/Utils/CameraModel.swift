@@ -19,9 +19,10 @@ import FirebaseStorage
 //   case unknown
 //}
 
-class CameraModel: NSObject,ObservableObject,AVCaptureFileOutputRecordingDelegate{
+
+class CameraModel: NSObject, ObservableObject, AVCaptureFileOutputRecordingDelegate{
     @Published var isRecording = false
-    @Published var stoppedRecording = false
+    @Published var cameraAvailable = false
     @Published var authState = false
     @Published var alert = false
     
@@ -46,7 +47,9 @@ class CameraModel: NSObject,ObservableObject,AVCaptureFileOutputRecordingDelegat
             AVCaptureDevice.requestAccess(for: .video) { (status) in
                 if status {
                     self.setUpCamera()
-                    self.authState = true
+                    DispatchQueue.main.async {
+                        self.authState = true
+                    }
                 }
             }
         case .denied:
@@ -70,7 +73,8 @@ class CameraModel: NSObject,ObservableObject,AVCaptureFileOutputRecordingDelegat
             let device = AVCaptureDevice.default(.builtInWideAngleCamera, for: .video, position: .front)
 
             guard device != nil, let deviceInput = try? AVCaptureDeviceInput(device: device!), session.canAddInput(deviceInput) else {
-                        return
+                print("nicht availbale")
+                return
             }
             
             if self.session.canAddInput(deviceInput){
@@ -85,6 +89,7 @@ class CameraModel: NSObject,ObservableObject,AVCaptureFileOutputRecordingDelegat
 
             self.session.commitConfiguration()
             self.session.startRunning()
+            self.cameraAvailable = true
         }
     }
     
@@ -97,9 +102,6 @@ class CameraModel: NSObject,ObservableObject,AVCaptureFileOutputRecordingDelegat
         
         DispatchQueue(label: "session queue").async {
             if !self.output.isRecording {
-                DispatchQueue.main.async {
-                    self.isRecording = true
-                }
                 if UIDevice.current.isMultitaskingSupported {
                     //self.backgroundRecordingID = UIApplication.shared.beginBackgroundTask(expirationHandler: nil)
                 }
@@ -127,6 +129,13 @@ class CameraModel: NSObject,ObservableObject,AVCaptureFileOutputRecordingDelegat
         }
     }
     
+    func fileOutput(_ output: AVCaptureFileOutput, didStartRecordingTo fileURL: URL, from connections: [AVCaptureConnection]) {
+        print("recording started")
+        DispatchQueue.main.async {
+            self.isRecording = true
+        }
+    }
+    
     func stopSession() {
         self.session.stopRunning()
         print(session.isRunning)
@@ -134,7 +143,6 @@ class CameraModel: NSObject,ObservableObject,AVCaptureFileOutputRecordingDelegat
     
     func fileOutput(_ output: AVCaptureFileOutput, didFinishRecordingTo outputFileURL: URL, from connections: [AVCaptureConnection], error: Error?) {
         print("end")
-        stoppedRecording = true
         print("stop recording")
         // Note: Because we use a unique file path for each recording, a new recording won't overwrite a recording mid-save.
         func cleanup() {

@@ -9,27 +9,6 @@ import SwiftUI
 import AVFoundation
 import UIKit
 
-public class CameraState : NSObject, ObservableObject {
-    @Published public var capturedImage : UIImage?
-    @Published public var capturedImageError : Error?
-}
-
-public protocol CameraViewDelegate {
-    func cameraAccessGranted()
-    func cameraAccessDenied()
-    func noCameraDetected()
-    func cameraSessionStarted()
-}
-
-enum Camera {
-   case captureSessionAlreadyRunning
-   case captureSessionIsMissing
-   case inputsAreInvalid
-   case invalidOperation
-   case noCamerasAvailable
-   case unknown
-}
-
 
 struct Test: View {
     
@@ -41,19 +20,7 @@ struct Test: View {
     
     var body: some View {
         VStack {
-            Button(action: startTimer, label: {
-                Text("Start")
-            }).padding()
-            Button(action: stopTimer, label: {
-                Text("Stop")
-            }).padding()
-            Text("\(timeMinutes):\(timeSeconds)")
-                .fixedSize(horizontal: true, vertical: true)
-                .frame(width: 70, height: 32, alignment: .center)
-                .background(Color.darkgreen)
-                .foregroundColor(.white)
-                .zIndex(2.0)
-                .cornerRadius(15.0)
+            CameraView()
         }
     }
     
@@ -90,50 +57,6 @@ struct Test: View {
         seconds = 0
         timeSeconds = "0\(seconds)"
         timeMinutes = "0\(minutes)"
-    }
-}
-
-
-struct CameraView2: View {
-    
-    @ObservedObject var camera = CameraModel()
-    
-    var body: some View{
-        
-        ZStack {
-            CameraPreview(camera: camera)
-                .ignoresSafeArea(.all, edges: .all)
-            Button(action: startRecording, label: {
-                
-                ZStack{
-                    
-                    Circle()
-                        .fill(Color.white)
-                        .frame(width: 65, height: 65)
-                    
-                    Circle()
-                        .stroke(Color.white,lineWidth: 2)
-                        .frame(width: 75, height: 75)
-                }
-            })
-        }
-        .onAppear(perform: {
-            
-            camera.checkAuth()
-        })
-        .alert(isPresented: $camera.alert) {
-            Alert(title: Text("Please Enable Camera Access"))
-        }
-    }
-    
-    func startRecording() {
-        print(camera.isRecording)
-//        if camera.isRecording {
-//            camera.stopSession()
-//        } else {
-//            camera.startRecording()
-//        }
-        camera.startRecording()
     }
 }
 
