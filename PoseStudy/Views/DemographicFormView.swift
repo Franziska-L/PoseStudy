@@ -16,7 +16,7 @@ struct DemographicFormView: View {
     @State private var male = false
     @State private var female = false
     
-    @State private var next = true
+    @State private var next = false
         
     var body: some View {
         let m = Binding<Bool>(get: { self.male }, set: { self.male = $0; self.female = false})
@@ -39,14 +39,25 @@ struct DemographicFormView: View {
             
             Spacer()
             NavigationLink(
-                destination: HealthFormView().navigationBarHidden(true),
+                destination: HealthFormView(),
                 isActive: $next,
                 label: {
                     Text("Weiter")
                 }).buttonStyle(CustomButtonStyle()).simultaneousGesture(TapGesture().onEnded{
                     save()
                 })
-        }.environmentObject(status).environmentObject(polarApi)
+        }
+        .navigationBarHidden(true)
+        .navigationBarBackButtonHidden(true)
+        .environmentObject(status)
+        .environmentObject(polarApi)
+        .onTapGesture {
+            self.endEditing()
+        }
+    }
+    
+    private func endEditing() {
+        UIApplication.shared.endEditing()
     }
     
     private func save() {
@@ -54,11 +65,25 @@ struct DemographicFormView: View {
             //let ref: DatabaseReference = Database.database().reference().child("Participant \(status.participantID)")
             //ref.updateChildValues(["Age": age, "Gender": male ? "männlich" : "weiblich"])
             
-            self.next = false
+            self.next = true
         }
     }
 }
 
+
+struct Background<Content: View>: View {
+    private var content: Content
+
+    init(@ViewBuilder content: @escaping () -> Content) {
+        self.content = content()
+    }
+
+    var body: some View {
+        Color.white
+        .frame(width: UIScreen.main.bounds.width, height: UIScreen.main.bounds.height)
+        .overlay(content)
+    }
+}
 
 
 struct DemographicFormView_Previews: PreviewProvider {

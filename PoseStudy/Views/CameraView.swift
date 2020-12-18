@@ -77,7 +77,7 @@ struct CameraView: View {
                 camera.stopSession()
                 self.stopTimer()
                 self.polarApi.stopStream()
-                //self.saveToDatabase()
+                self.saveToDatabase()
                 if status.session == "second" {
                     self.selection = "Finish"
                 } else {
@@ -125,21 +125,27 @@ struct CameraView: View {
     }
     
     private func saveToDatabase() {
-        let ref: DatabaseReference = Database.database().reference().child("Participant \(status.participantID)")
-        ref.observeSingleEvent(of: .value, with: { (snapshot) in
-            print(polarApi.hrDataStream)
-            
-            for i in 1...3 {
-                if snapshot.hasChild("Day \(i)") {
-                    continue
-                } else {
-                    ref.child("Day \(i)").child("Session \(status.$session)").updateChildValues(["HR" : polarApi.hrDataStream, "ECG" : polarApi.ecgDataStream])
-                    break
+        if !self.polarApi.hrDataStream.isEmpty && !self.polarApi.ecgDataStream.isEmpty {
+            print("nicht empty")
+            print("Session: \(status.session)")
+            var ref: DatabaseReference = Database.database().reference().child("Participant \(status.participantID)")
+            ref.observeSingleEvent(of: .value, with: { (snapshot) in
+                
+                for i in 1...3 {
+                    if snapshot.hasChild("Day \(i)") {
+                        continue
+                    } else {
+                        ref = ref.child("Day \(i)").child("Session \(status.$session)")
+                            
+                        ref.updateChildValues(["HR" : polarApi.hrDataStream, "ECG" : polarApi.ecgDataStream])
+                        break
+                    }
                 }
+            }) { (error) in
+                print(error.localizedDescription)
             }
-        }) { (error) in
-            print(error.localizedDescription)
         }
+        
         
         print(polarApi.hrDataStream)
 //        let ref = Database.database().reference().child("Participant \(status.participantID)").child("Day").child("Session").child("HR_Data")
