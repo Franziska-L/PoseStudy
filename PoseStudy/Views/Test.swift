@@ -8,21 +8,50 @@
 import SwiftUI
 import AVFoundation
 import UIKit
+import FirebaseDatabase
+import Network
 
+
+class Dataset: NSObject {
+    
+    var participantID: String = ""
+    var Day: Int = 1
+
+}
 
 
 struct Test: View {
     
     @State private var name: String = ""
-
+    @State var ID = ""
         var body: some View {
             Background {
                 VStack {
                     Text("Hello \(self.name)")
                     TextField("Name...", text: self.$name).keyboardType(.numberPad)
                 }
+            }.onAppear() {
+                checkConnection()
+                
             }
         }
+    
+    func checkConnection() {
+        let monitor = NWPathMonitor()
+        let queue = DispatchQueue(label: "InternetConnectionMonitor")
+        
+        monitor.pathUpdateHandler = { pathUpdateHandler in
+                    if pathUpdateHandler.status == .satisfied {
+                        print("Internet connection is on.")
+                    } else {
+                        print("There's no internet connection.")
+                    }
+                }
+
+            
+        monitor.start(queue: queue)
+    }
+    
 
        
 }

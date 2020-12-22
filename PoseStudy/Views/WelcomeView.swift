@@ -7,7 +7,7 @@
 
 import SwiftUI
 import FirebaseDatabase
-
+import Network
 
 class GlobalState: ObservableObject {
     @Published var session: String = "first"
@@ -25,6 +25,8 @@ struct WelcomeView: View {
     @State var isCodeValide = false
     @State var codeExists = false
     @State var codeList = ["1", "2", "3", "4", "5", "6", "7", "8", "9", "10"]
+    
+    @State var hasInternetConnection = false
     
     var body: some View {
         NavigationView {
@@ -47,38 +49,70 @@ struct WelcomeView: View {
         }
         .navigationBarHidden(true)
         .navigationBarBackButtonHidden(true)
-        .environmentObject(status).environmentObject(polarApi)
+        .environmentObject(status)
+        .environmentObject(polarApi)
+        .onAppear() {
+            checkConnection()
+        }
+        .alert(isPresented: $hasInternetConnection, content: {
+            Alert(title: Text("Bitte stelle eine Verbindung zum Internet her."))
+        })
     }
     
+    func checkConnection() {
+        let monitor = NWPathMonitor()
+        let queue = DispatchQueue(label: "InternetConnectionMonitor")
+        
+        monitor.pathUpdateHandler = { pathUpdateHandler in
+            if pathUpdateHandler.status == .satisfied {
+                print("Internet connection is on.")
+                hasInternetConnection = true
+            } else {
+                print("There's no internet connection.")
+                hasInternetConnection = false
+            }
+        }
+
+            
+        monitor.start(queue: queue)
+    }
     
     func start() {
-//        var refID: DatabaseReference = Database.database().reference().child("IDs")
-//        refID.observeSingleEvent(of: .value, with: { (snapshot) in
-//            for i in 0..<snapshot.childrenCount {
-//                print(i)
-//            }
-//            if snapshot.hasChild(ID) {
-//                
-//            }
-//        }) { (error) in
-//            print(error.localizedDescription)
-//        }
-        var ref: DatabaseReference = Database.database().reference()
-        ref.observeSingleEvent(of: .value, with: { (snapshot) in
+        if hasInternetConnection {
+            let ref: DatabaseReference = Database.database().reference()
             
-            if snapshot.hasChild("Participant \(ID)") {
-                self.status.participantID = ID
-                self.selection = "WarmUp"
-            } else {
-                if !ID.isEmpty && codeList.contains(ID) {
-                    ref = ref.child("Participant \(ID)")
-                    ref.setValue(["Participant ID": ID])
+            var refParticipants = ref.child("Participants")
+            refParticipants.observeSingleEvent(of: .value, with: { (snapshot) in
+                if snapshot.hasChild("Participant \(ID)") {
                     self.status.participantID = ID
-                    self.selection = "Demographic"
+                    self.selection = "WarmUp"
+                    let refDay = refParticipants.child("Participant \(ID)").child("Day")
+                    refDay.observeSingleEvent(of: .value) { (snap) in
+                        if let value = snap.value as? Int {
+                            self.status.day = value + 1
+                            refDay.setValue(value + 1)
+                        }
+                    }
+                } else {
+                    let refID = ref.child("IDs")
+                    refID.observeSingleEvent(of: .value) { (snap) in
+                        snap.children.forEach({ (child) in
+                            if let child = child as? DataSnapshot, let value = child.value {
+                                print(value)
+                            }
+                        })
+                        if snap.hasChild(ID) && !ID.isEmpty {
+                            refParticipants = refParticipants.child("Participant \(ID)")
+                            refParticipants.setValue(["Participant ID": ID, "Day": 1])
+                            self.status.participantID = ID
+                            self.status.day = 1
+                            self.selection = "Demographic"
+                        }
+                    }
                 }
+            }) { (error) in
+                print(error.localizedDescription)
             }
-        }) { (error) in
-            print(error.localizedDescription)
         }
     }
 }

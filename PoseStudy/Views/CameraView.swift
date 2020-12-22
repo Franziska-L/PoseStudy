@@ -60,7 +60,7 @@ struct CameraView: View {
             camera.checkAuth()
         })
         .alert(isPresented: $camera.alert) {
-            Alert(title: Text("Please Enable Camera Access"))
+            Alert(title: Text("Bitte erlaube Zugriff auf Kamera in den Einstellungen."))
         })
     }
     
@@ -125,28 +125,10 @@ struct CameraView: View {
     }
     
     private func saveToDatabase() {
-        if !self.polarApi.hrDataStream.isEmpty && !self.polarApi.ecgDataStream.isEmpty {
-            print("nicht empty")
-            print("Session: \(status.session)")
-            var ref: DatabaseReference = Database.database().reference().child("Participant \(status.participantID)")
-            ref.observeSingleEvent(of: .value, with: { (snapshot) in
+        //if !self.polarApi.hrDataStream.isEmpty && !self.polarApi.ecgDataStream.isEmpty {
+        let ref: DatabaseReference = Database.database().reference().child("Participants").child("Participant \(status.participantID)").child("Day \(self.status.day)").child("Session \(status.session)")
+        ref.setValue(["HR" : polarApi.hrDataStream, "ECG" : polarApi.ecgDataStream])
                 
-                for i in 1...3 {
-                    if snapshot.hasChild("Day \(i)") {
-                        continue
-                    } else {
-                        ref = ref.child("Day \(i)").child("Session \(status.$session)")
-                            
-                        ref.updateChildValues(["HR" : polarApi.hrDataStream, "ECG" : polarApi.ecgDataStream])
-                        break
-                    }
-                }
-            }) { (error) in
-                print(error.localizedDescription)
-            }
-        }
-        
-        
         print(polarApi.hrDataStream)
 //        let ref = Database.database().reference().child("Participant \(status.participantID)").child("Day").child("Session").child("HR_Data")
 //        ref.updateChildValues(["Test" : "test", "Noch ein test" : "testtest"])

@@ -62,8 +62,8 @@ struct DemographicFormView: View {
     
     private func save() {
         if (male == true || female == true) && age != "" {
-            //let ref: DatabaseReference = Database.database().reference().child("Participant \(status.participantID)")
-            //ref.updateChildValues(["Age": age, "Gender": male ? "männlich" : "weiblich"])
+            let ref: DatabaseReference = Database.database().reference().child("Participants").child("Participant \(status.participantID)")
+            ref.updateChildValues(["Age": age, "Gender": male ? "männlich" : "weiblich"])
             
             self.next = true
         }
