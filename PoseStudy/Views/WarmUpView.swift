@@ -23,7 +23,7 @@ struct WarmUpView: View {
                 NavigationLink(
                     destination: InstructionView().navigationBarHidden(true),
                     label: {
-                        Text("Weiter")
+                        Text(String.next)
                     }).buttonStyle(CustomButtonStyle())
             
             }.environmentObject(status).environmentObject(polarApi)

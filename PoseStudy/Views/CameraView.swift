@@ -53,7 +53,7 @@ struct CameraView: View {
             }
             Button(action: onClick, label: {
                 Image(systemName: camera.isRecording ? "pause" : "video")
-            }).buttonStyle(VideoButtonStyle(isRecording: $camera.isRecording))
+            }).buttonStyle(VideoButtonStyle(isRecording: $camera.isRecording)).padding(.bottom, 20)
         }.environmentObject(status).environmentObject(polarApi)
         .onAppear(perform: {
             
@@ -125,13 +125,8 @@ struct CameraView: View {
     }
     
     private func saveToDatabase() {
-        //if !self.polarApi.hrDataStream.isEmpty && !self.polarApi.ecgDataStream.isEmpty {
         let ref: DatabaseReference = Database.database().reference().child("Participants").child("Participant \(status.participantID)").child("Day \(self.status.day)").child("Session \(status.session)")
-        ref.setValue(["HR" : polarApi.hrDataStream, "ECG" : polarApi.ecgDataStream])
-                
-        print(polarApi.hrDataStream)
-//        let ref = Database.database().reference().child("Participant \(status.participantID)").child("Day").child("Session").child("HR_Data")
-//        ref.updateChildValues(["Test" : "test", "Noch ein test" : "testtest"])
+        ref.setValue(["HR" : polarApi.hrDataStream, "ECG" : polarApi.ecgDataStream, "HR Timestamp" : polarApi.hrDataTimestamp, "ECG Timestamp" : polarApi.ecgDataTimestamp, "RR" : polarApi.rrsDataStream, "RRMs" : polarApi.rrMsDataStream, "RR Timestamp" : polarApi.rrDataTimestamp])
     }
 }
 

@@ -44,6 +44,14 @@ class PolarApiWrapper: ObservableObject,
     @Published var ecgDataStream: [Int32] = [Int32]()
     @Published var hrDataStream: [UInt8] = [UInt8]()
     
+    @Published var ecgDataTimestamp = [Int64]()
+    @Published var hrDataTimestamp = [Int64]()
+    
+    @Published var rrsDataStream: [Int] = [Int]()
+    @Published var rrMsDataStream: [Int] = [Int]()
+    
+    @Published var rrDataTimestamp = [Int64]()
+    
     
     init() {
         self.api = PolarBleApiDefaultImpl.polarImplementation(DispatchQueue.main, features: Features.allFeatures.rawValue)
@@ -79,6 +87,9 @@ class PolarApiWrapper: ObservableObject,
                 for µv in data.samples {
                     NSLog("    µV: \(µv)")
                     self.ecgDataStream.append(µv)
+                    
+                    let timestamp = Date().toMillis()
+                    self.ecgDataTimestamp.append(timestamp)
                 }
             case .error(let err):
                 NSLog("start ecg error: \(err)")
@@ -98,6 +109,9 @@ class PolarApiWrapper: ObservableObject,
             case .next(let broadcast):
                 NSLog("\(broadcast.deviceInfo.name) HR BROADCAST: \(broadcast.hr)")
                 self.hrDataStream.append(broadcast.hr)
+                
+                let timestamp = Date().toMillis()
+                self.hrDataTimestamp.append(timestamp)
             }
         }
     }
@@ -148,6 +162,11 @@ class PolarApiWrapper: ObservableObject,
     ///PolarBleApiDeviceHrObserver
     func hrValueReceived(_ identifier: String, data: PolarHrData) {
         NSLog("(\(identifier)) HR notification: \(data.hr) rrs: \(data.rrs) rrsMs: \(data.rrsMs) c: \(data.contact) s: \(data.contactSupported)")
+        rrsDataStream = data.rrs
+        rrMsDataStream = data.rrsMs
+        
+        let timestamp = Date().toMillis()
+        rrDataTimestamp.append(timestamp)
     }
     
     

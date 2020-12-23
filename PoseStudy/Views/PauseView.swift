@@ -25,7 +25,7 @@ struct PauseView: View {
             Button(action: {
                 setState()
             }) {
-                Text("Los")
+                Text(String.go)
             }.buttonStyle(CustomButtonStyle())
         }.environmentObject(status).environmentObject(polarApi)
     }

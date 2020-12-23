@@ -15,6 +15,20 @@ extension Color {
 }
 
 extension String {
+    static let participants = "Participants"
+    //Personal Questions
+    static let gender = "Geschlecht"
+    static let male = "männlich"
+    static let female = "weiblich"
+    static let age = "Alter"
+    
+    //Health
+    static let medicaments = "Medikamente"
+    static let heartDesease = "Herz-Kreislauf"
+    static let musculoskeletal = "Muskel-Erkrankung"
+    static let neuromuscular = "Neuromuskuläre Erkrankung"
+    static let nothing = "Nichts"
+    
     //Warm up
     static let warmup = "Wärme dich kurz auf, bevor du mit den Übungen beginnst"
     
@@ -40,3 +54,26 @@ extension UIApplication {
         sendAction(#selector(UIResponder.resignFirstResponder), to: nil, from: nil, for: nil)
     }
 }
+
+extension Date {
+    var millisecondsSince1970:Int64 {
+        return Int64((self.timeIntervalSince1970 * 1000.0))
+    }
+    
+    init(milliseconds: Int64) {
+        self = Date(timeIntervalSince1970: TimeInterval(milliseconds / 1000))
+    }
+    
+    func toString(millisec: Int64) -> String {
+        let date = Date(timeIntervalSince1970: TimeInterval(millisec / 1000))
+        let formatter = DateFormatter()
+        formatter.dateFormat = "y-MM-dd HH:mm:ss.SSSSSS"
+        
+        return formatter.string(from: date)
+    }
+    
+    func toMillis() -> Int64 {
+        return Int64(self.timeIntervalSince1970 * 1000.0)
+    }
+}
+

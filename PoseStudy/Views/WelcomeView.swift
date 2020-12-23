@@ -24,9 +24,10 @@ struct WelcomeView: View {
     @State var ID: String = ""
     @State var isCodeValide = false
     @State var codeExists = false
-    @State var codeList = ["1", "2", "3", "4", "5", "6", "7", "8", "9", "10"]
     
     @State var hasInternetConnection = false
+    @State var alertConnection = false
+    @State var alertID = false
     
     var body: some View {
         NavigationView {
@@ -43,7 +44,7 @@ struct WelcomeView: View {
                 Spacer()
                 
                 Button(action: start) {
-                    Text("Los gehts")
+                    Text(String.next)
                 }.buttonStyle(CustomButtonStyle())
             }
         }
@@ -54,8 +55,11 @@ struct WelcomeView: View {
         .onAppear() {
             checkConnection()
         }
-        .alert(isPresented: $hasInternetConnection, content: {
+        .alert(isPresented: $alertConnection, content: {
             Alert(title: Text("Bitte stelle eine Verbindung zum Internet her."))
+        })
+        .alert(isPresented: $alertID, content: {
+            Alert(title: Text("Bitte gib deine ID ein."))
         })
     }
     
@@ -65,54 +69,69 @@ struct WelcomeView: View {
         
         monitor.pathUpdateHandler = { pathUpdateHandler in
             if pathUpdateHandler.status == .satisfied {
-                print("Internet connection is on.")
                 hasInternetConnection = true
             } else {
-                print("There's no internet connection.")
+                NSLog("There's no internet connection.")
                 hasInternetConnection = false
             }
         }
-
-            
         monitor.start(queue: queue)
     }
     
     func start() {
-        if hasInternetConnection {
-            let ref: DatabaseReference = Database.database().reference()
-            
-            var refParticipants = ref.child("Participants")
-            refParticipants.observeSingleEvent(of: .value, with: { (snapshot) in
-                if snapshot.hasChild("Participant \(ID)") {
-                    self.status.participantID = ID
-                    self.selection = "WarmUp"
-                    let refDay = refParticipants.child("Participant \(ID)").child("Day")
-                    refDay.observeSingleEvent(of: .value) { (snap) in
-                        if let value = snap.value as? Int {
-                            self.status.day = value + 1
-                            refDay.setValue(value + 1)
-                        }
-                    }
-                } else {
-                    let refID = ref.child("IDs")
-                    refID.observeSingleEvent(of: .value) { (snap) in
-                        snap.children.forEach({ (child) in
-                            if let child = child as? DataSnapshot, let value = child.value {
-                                print(value)
+        if hasInternetConnection && !ID.isEmpty {
+            saveToDatabase()
+        } else if !hasInternetConnection {
+            alertConnection = true
+        } else if ID.isEmpty {
+            alertID = true
+        }
+    }
+    
+    func saveToDatabase() {
+        let ref: DatabaseReference = Database.database().reference()
+        
+        var refParticipants = ref.child("Participants")
+        refParticipants.observeSingleEvent(of: .value, with: { (snapshot) in
+            if snapshot.hasChild("Participant \(ID)") {
+                let ref1 = refParticipants.child("Participant \(ID)")
+                ref1.observeSingleEvent(of: .value) { (snap) in
+                    if snap.hasChild(String.gender) && snap.hasChild(String.age) {
+                        self.status.participantID = ID
+                        self.selection = "WarmUp"
+                        let refDay = refParticipants.child("Participant \(ID)").child("Day")
+                        refDay.observeSingleEvent(of: .value) { (snap) in
+                            if let value = snap.value as? Int {
+                                self.status.day = value + 1
+                                refDay.setValue(value + 1)
                             }
-                        })
-                        if snap.hasChild(ID) && !ID.isEmpty {
-                            refParticipants = refParticipants.child("Participant \(ID)")
-                            refParticipants.setValue(["Participant ID": ID, "Day": 1])
-                            self.status.participantID = ID
-                            self.status.day = 1
-                            self.selection = "Demographic"
                         }
+                    } else {
+                        self.selection = "Demographic"
+                        self.status.day = 1
+                        self.status.participantID = ID
                     }
                 }
-            }) { (error) in
-                print(error.localizedDescription)
+                
+            } else {
+                let refID = ref.child("IDs")
+                refID.observeSingleEvent(of: .value) { (snap) in
+                    snap.children.forEach({ (child) in
+                        if let child = child as? DataSnapshot, let value = child.value {
+                            print(value)
+                        }
+                    })
+                    if snap.hasChild(ID) {
+                        refParticipants = refParticipants.child("Participant \(ID)")
+                        refParticipants.setValue(["Participant ID": ID, "Day": 1])
+                        self.status.participantID = ID
+                        self.status.day = 1
+                        self.selection = "Demographic"
+                    }
+                }
             }
+        }) { (error) in
+            print(error.localizedDescription)
         }
     }
 }

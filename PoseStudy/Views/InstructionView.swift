@@ -65,7 +65,7 @@ struct InstructionView: View {
             NavigationLink(
                 destination: CamView().navigationBarHidden(true),
                 label: {
-                    Button(action: test) { Text("Los") }
+                    Button(action: test) { Text(String.go) }
                 }).buttonStyle(CustomButtonStyle()).disabled((self.step >= totalInstructions - 1) ? false : true)
         }.environmentObject(status).environmentObject(polarApi)
         .navigationBarBackButtonHidden(true)

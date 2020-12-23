@@ -75,7 +75,9 @@ class CameraModel: NSObject, ObservableObject, AVCaptureFileOutputRecordingDeleg
 
             self.session.commitConfiguration()
             self.session.startRunning()
-            self.cameraAvailable = true
+            DispatchQueue.main.async {
+                self.cameraAvailable = true
+            }
         }
     }
     

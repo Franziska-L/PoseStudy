@@ -25,15 +25,15 @@ struct DemographicFormView: View {
         VStack {
             Text("Persönliche Angaben").titleStyle()
             
-            GroupBox(label: Text("Gender")) {
+            GroupBox(label: Text(String.gender)) {
                 Toggle(isOn: m) {
-                    Text("Männlich")
+                    Text(String.male)
                 }.toggleStyle(CheckboxToggleStyle())
                 Toggle(isOn: w) {
-                    Text("Weiblich")
+                    Text(String.female)
                 }.toggleStyle(CheckboxToggleStyle())
             }.padding().padding(.top, 40)
-            GroupBox(label: Text("Alter")) {
+            GroupBox(label: Text(String.age)) {
                 TextField("Gib dein Alter an", text: $age).keyboardType(.numberPad)
             }.padding()
             
@@ -42,7 +42,7 @@ struct DemographicFormView: View {
                 destination: HealthFormView(),
                 isActive: $next,
                 label: {
-                    Text("Weiter")
+                    Text(String.next)
                 }).buttonStyle(CustomButtonStyle()).simultaneousGesture(TapGesture().onEnded{
                     save()
                 })
@@ -62,8 +62,8 @@ struct DemographicFormView: View {
     
     private func save() {
         if (male == true || female == true) && age != "" {
-            let ref: DatabaseReference = Database.database().reference().child("Participants").child("Participant \(status.participantID)")
-            ref.updateChildValues(["Age": age, "Gender": male ? "männlich" : "weiblich"])
+            let ref: DatabaseReference = Database.database().reference().child(String.participants).child("Participant \(status.participantID)")
+            ref.updateChildValues(["\(String.age)": age, "\(String.gender)": male ? "männlich" : "weiblich"])
             
             self.next = true
         }
