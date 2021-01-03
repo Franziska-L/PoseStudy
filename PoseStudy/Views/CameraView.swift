@@ -125,8 +125,18 @@ struct CameraView: View {
     }
     
     private func saveToDatabase() {
-        let ref: DatabaseReference = Database.database().reference().child("Participants").child("Participant \(status.participantID)").child("Day \(self.status.day)").child("Session \(status.session)")
+        let ref: DatabaseReference = Database.database().reference().child(String.participants).child("Participant \(status.participantID)").child("Day \(self.status.day)").child("Session \(status.session)")
         ref.setValue(["HR" : polarApi.hrDataStream, "ECG" : polarApi.ecgDataStream, "HR Timestamp" : polarApi.hrDataTimestamp, "ECG Timestamp" : polarApi.ecgDataTimestamp, "RR" : polarApi.rrsDataStream, "RRMs" : polarApi.rrMsDataStream, "RR Timestamp" : polarApi.rrDataTimestamp])
+        
+        polarApi.hrDataStream.removeAll()
+        polarApi.ecgDataStream.removeAll()
+        
+        polarApi.hrDataTimestamp.removeAll()
+        polarApi.ecgDataTimestamp.removeAll()
+        
+        polarApi.rrsDataStream.removeAll()
+        polarApi.rrMsDataStream.removeAll()
+        polarApi.rrDataTimestamp.removeAll()
     }
 }
 

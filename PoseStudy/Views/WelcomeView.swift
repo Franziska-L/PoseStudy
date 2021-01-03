@@ -99,11 +99,12 @@ struct WelcomeView: View {
                     if snap.hasChild(String.gender) && snap.hasChild(String.age) {
                         self.status.participantID = ID
                         self.selection = "WarmUp"
+                        //TODO lösche tag -> wird in finish screen gemanaged 
                         let refDay = refParticipants.child("Participant \(ID)").child("Day")
                         refDay.observeSingleEvent(of: .value) { (snap) in
                             if let value = snap.value as? Int {
-                                self.status.day = value + 1
-                                refDay.setValue(value + 1)
+                                self.status.day = value
+                                refDay.setValue(value)
                             }
                         }
                     } else {
@@ -112,13 +113,14 @@ struct WelcomeView: View {
                         self.status.participantID = ID
                     }
                 }
-                
             } else {
                 let refID = ref.child("IDs")
                 refID.observeSingleEvent(of: .value) { (snap) in
                     snap.children.forEach({ (child) in
-                        if let child = child as? DataSnapshot, let value = child.value {
-                            print(value)
+                        if let child = child as? DataSnapshot, let value = child.value as? String {
+                            if value == ID {
+                                print("ja, dann kopiere code hier rein!")
+                            }
                         }
                     })
                     if snap.hasChild(ID) {

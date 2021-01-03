@@ -33,7 +33,6 @@ class PolarApiWrapper: ObservableObject,
 {
     @Published var connetionState: ConnectionState = .disconnected
     @Published var blePowerState: BlePowerState = .off
-    @Published var streanStarded: Bool = false
     
     var api: PolarBleApi
     var broadcast: Disposable?
@@ -47,10 +46,12 @@ class PolarApiWrapper: ObservableObject,
     @Published var ecgDataTimestamp = [Int64]()
     @Published var hrDataTimestamp = [Int64]()
     
-    @Published var rrsDataStream: [Int] = [Int]()
-    @Published var rrMsDataStream: [Int] = [Int]()
+    @Published var rrsDataStream: [[Int]] = [[Int]]()
+    @Published var rrMsDataStream: [[Int]] = [[Int]]()
     
     @Published var rrDataTimestamp = [Int64]()
+    
+    @Published var isRecording = false
     
     
     init() {
@@ -91,6 +92,7 @@ class PolarApiWrapper: ObservableObject,
                     let timestamp = Date().toMillis()
                     self.ecgDataTimestamp.append(timestamp)
                 }
+                self.isRecording = true
             case .error(let err):
                 NSLog("start ecg error: \(err)")
                 self.ecgToggle = nil
@@ -124,10 +126,6 @@ class PolarApiWrapper: ObservableObject,
         //Stop ECG Stream
         ecgToggle?.dispose()
         ecgToggle = nil
-        
-        for sample in ecgDataStream {
-            print(sample)
-        }
     }
     
     ///PolarBleApiObserver
@@ -162,11 +160,13 @@ class PolarApiWrapper: ObservableObject,
     ///PolarBleApiDeviceHrObserver
     func hrValueReceived(_ identifier: String, data: PolarHrData) {
         NSLog("(\(identifier)) HR notification: \(data.hr) rrs: \(data.rrs) rrsMs: \(data.rrsMs) c: \(data.contact) s: \(data.contactSupported)")
-        rrsDataStream = data.rrs
-        rrMsDataStream = data.rrsMs
-        
-        let timestamp = Date().toMillis()
-        rrDataTimestamp.append(timestamp)
+        if isRecording {
+            rrsDataStream.append(data.rrs)
+            rrMsDataStream.append(data.rrsMs)
+            
+            let timestamp = Date().toMillis()
+            rrDataTimestamp.append(timestamp)
+        }
     }
     
     

@@ -22,7 +22,6 @@
 		737328542574E3CF0081FCA2 /* CameraModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 737328532574E3CF0081FCA2 /* CameraModel.swift */; };
 		737328592574E50F0081FCA2 /* CameraRepresentable.swift in Sources */ = {isa = PBXBuildFile; fileRef = 737328582574E50F0081FCA2 /* CameraRepresentable.swift */; };
 		737328C525754B6B0081FCA2 /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 737328C425754B6B0081FCA2 /* GoogleService-Info.plist */; };
-		7382394A257E94C400E23A8B /* Test.swift in Sources */ = {isa = PBXBuildFile; fileRef = 73823949257E94C400E23A8B /* Test.swift */; };
 		7392A6942588ECB00079AEDE /* Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7392A6932588ECB00079AEDE /* Extensions.swift */; };
 		739B9DE8256FEFA100CE1F4A /* HealthFormView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 739B9DE7256FEFA100CE1F4A /* HealthFormView.swift */; };
 		73A2BF7E256ED2DB00A592E3 /* InstructionView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 73A2BF7D256ED2DB00A592E3 /* InstructionView.swift */; };
@@ -92,7 +91,6 @@
 		737328532574E3CF0081FCA2 /* CameraModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CameraModel.swift; sourceTree = "<group>"; };
 		737328582574E50F0081FCA2 /* CameraRepresentable.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CameraRepresentable.swift; sourceTree = "<group>"; };
 		737328C425754B6B0081FCA2 /* GoogleService-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "GoogleService-Info.plist"; sourceTree = "<group>"; };
-		73823949257E94C400E23A8B /* Test.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Test.swift; sourceTree = "<group>"; };
 		7392A6932588ECB00079AEDE /* Extensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Extensions.swift; sourceTree = "<group>"; };
 		739B9DE7256FEFA100CE1F4A /* HealthFormView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HealthFormView.swift; sourceTree = "<group>"; };
 		73A2BF7D256ED2DB00A592E3 /* InstructionView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InstructionView.swift; sourceTree = "<group>"; };
@@ -240,7 +238,6 @@
 				7373281F2572EE6D0081FCA2 /* CameraView.swift */,
 				73D6031E2577D5AA00ABC437 /* PauseView.swift */,
 				73D60326257E62CB00ABC437 /* FinishScreen.swift */,
-				73823949257E94C400E23A8B /* Test.swift */,
 			);
 			path = Views;
 			sourceTree = "<group>";
@@ -529,7 +526,6 @@
 				73F9224C256E89BC0005D25F /* DemographicFormView.swift in Sources */,
 				7336A31D256E790D00CB090D /* WelcomeView.swift in Sources */,
 				737328542574E3CF0081FCA2 /* CameraModel.swift in Sources */,
-				7382394A257E94C400E23A8B /* Test.swift in Sources */,
 				73F92244256E87B80005D25F /* Style.swift in Sources */,
 				73D6030C25778A9B00ABC437 /* CardView.swift in Sources */,
 				73A2BF7E256ED2DB00A592E3 /* InstructionView.swift in Sources */,
@@ -730,7 +726,7 @@
 					"@executable_path/Frameworks",
 					"@executable_path/Frameworks/PolarBleSdk.framework",
 				);
-				PRODUCT_BUNDLE_IDENTIFIER = de.lang.PoseStudy;
+				PRODUCT_BUNDLE_IDENTIFIER = lang.de.PoseStudy;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE_SPECIFIER = "";
 				SWIFT_VERSION = 5.0;
@@ -777,7 +773,7 @@
 					"@executable_path/Frameworks",
 					"@executable_path/Frameworks/PolarBleSdk.framework",
 				);
-				PRODUCT_BUNDLE_IDENTIFIER = de.lang.PoseStudy;
+				PRODUCT_BUNDLE_IDENTIFIER = lang.de.PoseStudy;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE_SPECIFIER = "";
 				SWIFT_VERSION = 5.0;

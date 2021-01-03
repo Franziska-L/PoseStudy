@@ -19,7 +19,7 @@ struct PauseView: View {
             Text("Pause").titleStyle()
             Spacer()
             Image("brake")
-            Text("Mache mind. 5 Minuten Pause bevor du mit der zweiten Runde beginnst").padding()
+            Text("Mache eine kurze kurze Pause bevor du mit der zweiten Runde beginnst").padding()
             Spacer()
             Text("Ausgeruht? Dann starte in die 2. Runde")
             Button(action: {
