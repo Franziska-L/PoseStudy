@@ -27,7 +27,7 @@ struct WarmUpView: View {
                     }).buttonStyle(CustomButtonStyle())
             
             }.environmentObject(status).environmentObject(polarApi)
-            .navigationBarBackButtonHidden(true)
+            .navigationBarBackButtonHidden(true).navigationBarHidden(true)
     }
 }
 

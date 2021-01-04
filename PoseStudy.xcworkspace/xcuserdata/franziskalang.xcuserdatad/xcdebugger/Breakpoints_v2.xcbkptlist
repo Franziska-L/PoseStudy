@@ -62,8 +62,8 @@
             filePath = "PoseStudy/Views/CameraView.swift"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "128"
-            endingLineNumber = "128"
+            startingLineNumber = "127"
+            endingLineNumber = "127"
             landmarkName = "saveToDatabase()"
             landmarkType = "7">
          </BreakpointContent>
@@ -71,16 +71,16 @@
       <BreakpointProxy
          BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
          <BreakpointContent
-            uuid = "DC52BC56-0954-409A-BA88-9D52772E3DCC"
+            uuid = "07B5D1FC-A9EE-40FE-A4E4-722111FC42E5"
             shouldBeEnabled = "No"
             ignoreCount = "0"
             continueAfterRunningActions = "No"
-            filePath = "PoseStudy/Utils/PolarApiWrapper.swift"
+            filePath = "PoseStudy/Views/DemographicFormView.swift"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "164"
-            endingLineNumber = "164"
-            landmarkName = "hrValueReceived(_:data:)"
+            startingLineNumber = "64"
+            endingLineNumber = "64"
+            landmarkName = "save()"
             landmarkType = "7">
          </BreakpointContent>
       </BreakpointProxy>

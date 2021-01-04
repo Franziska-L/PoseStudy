@@ -10,7 +10,7 @@ import FirebaseDatabase
 import Network
 
 class GlobalState: ObservableObject {
-    @Published var session: String = "first"
+    @Published var session: Int = 1
     @Published var participantID: String = ""
     @Published var day: Int = 0
 }

@@ -6,6 +6,7 @@
 //
 
 import Foundation
+import SwiftUI
 import PolarBleSdk
 import RxSwift
 import FirebaseDatabase
@@ -41,7 +42,10 @@ class PolarApiWrapper: ObservableObject,
     var deviceId = "74D5EB20"
     
     @Published var ecgDataStream: [Int32] = [Int32]()
+    @Published var ecgDataStreamTest: [Int32] = [Int32]()
     @Published var hrDataStream: [UInt8] = [UInt8]()
+   
+    @Published var ecgDataStreamPerSecond: [[Int32]] = [[Int32]]()
     
     @Published var ecgDataTimestamp = [Int64]()
     @Published var hrDataTimestamp = [Int64]()
@@ -51,8 +55,16 @@ class PolarApiWrapper: ObservableObject,
     
     @Published var rrDataTimestamp = [Int64]()
     
+    @Published var hrDataStreamBreak: [UInt8] = [UInt8]()
+    @Published var hrDataTimestampBreak = [Int64]()
+    @Published var rrsDataStreamBreak: [[Int]] = [[Int]]()
+    @Published var rrMsDataStreamBreak: [[Int]] = [[Int]]()
+    
+    @Published var rrDataTimestampBreak = [Int64]()
+    
     @Published var isRecording = false
     
+    @State var timer: Timer? = nil
     
     init() {
         self.api = PolarBleApiDefaultImpl.polarImplementation(DispatchQueue.main, features: Features.allFeatures.rawValue)
@@ -80,17 +92,35 @@ class PolarApiWrapper: ObservableObject,
     
     func startStreaming() {
         //Start ECG Stream
+        DispatchQueue.main.async {
+            self.timer = Timer.scheduledTimer(withTimeInterval: 1.0, repeats: true) { time in
+                NSLog("     Timer \(time)")
+                self.ecgDataStreamPerSecond.append(self.ecgDataStreamTest)
+                self.ecgDataStreamTest.removeAll()
+                //self.timer?.invalidate()
+            }
+            self.timer?.fire()
+        }
+        
         ecgToggle = api.requestEcgSettings(deviceId).asObservable().flatMap({ (settings) -> Observable<PolarEcgData> in
             return self.api.startEcgStreaming(self.deviceId, settings: settings.maxSettings())
         }).observeOn(MainScheduler.instance).subscribe{ e in
             switch e {
             case .next(let data):
+                NSLog("      Timestamp: \(data.timeStamp)")
                 for µv in data.samples {
                     NSLog("    µV: \(µv)")
                     self.ecgDataStream.append(µv)
-                    
+                    self.ecgDataStreamTest.append(µv)
+
                     let timestamp = Date().toMillis()
                     self.ecgDataTimestamp.append(timestamp)
+                    //self.timer?.invalidate()
+//                    self.timer = Timer.scheduledTimer(withTimeInterval: 1.0, repeats: true) { time in
+//                        self.ecgDataStreamPerSecond.append(self.ecgDataStreamTest)
+//                        self.ecgDataStreamTest.removeAll()
+//                        //self.timer?.invalidate()
+//                    }
                 }
                 self.isRecording = true
             case .error(let err):
@@ -101,6 +131,7 @@ class PolarApiWrapper: ObservableObject,
             }
         }
         
+      
         //Start HR Stream
         broadcast = api.startListenForPolarHrBroadcasts(nil).observeOn(MainScheduler.instance).subscribe{ e in
             switch e {
@@ -126,6 +157,16 @@ class PolarApiWrapper: ObservableObject,
         //Stop ECG Stream
         ecgToggle?.dispose()
         ecgToggle = nil
+        
+        
+        if !ecgDataStreamTest.isEmpty {
+            //ecgDataStreamPerSecond.append(ecgDataStreamTest)
+        }
+        print(ecgDataStreamTest)
+
+        
+        timer?.invalidate()
+        timer = nil
     }
     
     ///PolarBleApiObserver
@@ -159,7 +200,7 @@ class PolarApiWrapper: ObservableObject,
     
     ///PolarBleApiDeviceHrObserver
     func hrValueReceived(_ identifier: String, data: PolarHrData) {
-        NSLog("(\(identifier)) HR notification: \(data.hr) rrs: \(data.rrs) rrsMs: \(data.rrsMs) c: \(data.contact) s: \(data.contactSupported)")
+        //NSLog("(\(identifier)) HR notification: \(data.hr) rrs: \(data.rrs) rrsMs: \(data.rrsMs) c: \(data.contact) s: \(data.contactSupported)")
         if isRecording {
             rrsDataStream.append(data.rrs)
             rrMsDataStream.append(data.rrsMs)

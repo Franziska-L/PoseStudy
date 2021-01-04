@@ -67,7 +67,7 @@ struct HealthFormView: View {
         if (nomedicaments || medicaments) && (cardiovascular || musculoskeletal || neuromuscular || nothing) {
             
             let ref: DatabaseReference = Database.database().reference().child("Participants").child("Participant \(self.status.participantID)")
-            ref.updateChildValues(["\(String.medicaments)": medicaments, "Herz-Kreislauf": cardiovascular, "Muskel-Erkrankung": musculoskeletal, "Neuromuskuläre Erkrankung": neuromuscular, "Nichts": nothing])
+            ref.updateChildValues(["\(String.medicaments)": medicaments, "Cardiovascular diseases": cardiovascular, "Musculoskeletal diseases": musculoskeletal, "Neuromuscular disorder": neuromuscular, "Nothing": nothing])
             
             self.selection = "WarmUp"
         }

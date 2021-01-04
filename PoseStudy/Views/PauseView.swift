@@ -27,11 +27,15 @@ struct PauseView: View {
             }) {
                 Text(String.go)
             }.buttonStyle(CustomButtonStyle())
-        }.environmentObject(status).environmentObject(polarApi)
+        }
+        .environmentObject(status)
+        .environmentObject(polarApi)
+        .navigationBarBackButtonHidden(true)
+        .navigationBarHidden(true)
     }
     
-    fileprivate func setState() {
-        self.status.session = "second"
+    func setState() {
+        self.status.session = 2
         self.selection = "next"
     }
 }

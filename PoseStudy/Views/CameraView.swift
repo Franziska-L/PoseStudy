@@ -31,7 +31,6 @@ struct CameraView: View {
     @ObservedObject var camera = CameraModel()
     
     var body: some View {
-        print(self.camera.hash)
         return (
         VStack {
             NavigationLink(destination: PauseView().navigationBarHidden(true), tag: "Pause", selection: $selection) { EmptyView() }
@@ -78,7 +77,7 @@ struct CameraView: View {
                 self.stopTimer()
                 self.polarApi.stopStream()
                 self.saveToDatabase()
-                if status.session == "second" {
+                if status.session == 2 {
                     self.selection = "Finish"
                 } else {
                     self.selection = "Pause"
@@ -90,7 +89,7 @@ struct CameraView: View {
     }
     
     private func startTimer() {
-        timer = Timer.scheduledTimer(withTimeInterval: 1, repeats: true) { tempTimer in
+        timer = Timer.scheduledTimer(withTimeInterval: 1, repeats: true) { _ in
             
             if self.seconds == 59 {
                 self.seconds = 0
@@ -126,7 +125,7 @@ struct CameraView: View {
     
     private func saveToDatabase() {
         let ref: DatabaseReference = Database.database().reference().child(String.participants).child("Participant \(status.participantID)").child("Day \(self.status.day)").child("Session \(status.session)")
-        ref.setValue(["HR" : polarApi.hrDataStream, "ECG" : polarApi.ecgDataStream, "HR Timestamp" : polarApi.hrDataTimestamp, "ECG Timestamp" : polarApi.ecgDataTimestamp, "RR" : polarApi.rrsDataStream, "RRMs" : polarApi.rrMsDataStream, "RR Timestamp" : polarApi.rrDataTimestamp])
+        ref.setValue(["HR" : polarApi.hrDataStream, "ECG" : polarApi.ecgDataStream, "ECGs" : polarApi.ecgDataStreamPerSecond, "HR Timestamp" : polarApi.hrDataTimestamp, "ECG Timestamp" : polarApi.ecgDataTimestamp, "RR" : polarApi.rrsDataStream, "RRMs" : polarApi.rrMsDataStream, "RR Timestamp" : polarApi.rrDataTimestamp])
         
         polarApi.hrDataStream.removeAll()
         polarApi.ecgDataStream.removeAll()
@@ -137,6 +136,9 @@ struct CameraView: View {
         polarApi.rrsDataStream.removeAll()
         polarApi.rrMsDataStream.removeAll()
         polarApi.rrDataTimestamp.removeAll()
+        
+        polarApi.ecgDataStreamPerSecond.removeAll()
+        polarApi.ecgDataStreamTest.removeAll()
     }
 }
 

@@ -15,14 +15,15 @@ struct DemographicFormView: View {
     @State private var age: String = ""
     @State private var male = false
     @State private var female = false
-    
-    @State private var next = false
+        
+    @State private var selection: String? = nil
         
     var body: some View {
         let m = Binding<Bool>(get: { self.male }, set: { self.male = $0; self.female = false})
         let w = Binding<Bool>(get: { self.female }, set: { self.male = false; self.female = $0})
                 
         VStack {
+            NavigationLink(destination: HealthFormView().navigationBarHidden(true), tag: "Form", selection: $selection) { EmptyView() }
             Text("Persönliche Angaben").titleStyle()
             
             GroupBox(label: Text(String.gender)) {
@@ -38,14 +39,9 @@ struct DemographicFormView: View {
             }.padding()
             
             Spacer()
-            NavigationLink(
-                destination: HealthFormView(),
-                isActive: $next,
-                label: {
-                    Text(String.next)
-                }).buttonStyle(CustomButtonStyle()).simultaneousGesture(TapGesture().onEnded{
-                    save()
-                })
+            Button(action: self.save, label: {
+                Text(String.next)
+            }).buttonStyle(CustomButtonStyle())
         }
         .navigationBarHidden(true)
         .navigationBarBackButtonHidden(true)
@@ -65,7 +61,7 @@ struct DemographicFormView: View {
             let ref: DatabaseReference = Database.database().reference().child(String.participants).child("Participant \(status.participantID)")
             ref.updateChildValues(["\(String.age)": age, "\(String.gender)": male ? "männlich" : "weiblich"])
             
-            self.next = true
+            self.selection = "Form"
         }
     }
 }

@@ -13,7 +13,8 @@ struct InstructionView: View {
     var image = "jumpingjack"
     var instr = [String.exerciseInstr1, String.exerciseInstr2, String.exerciseInstr3, String.exerciseInstr4]
 
-
+    @State private var selection: String? = nil
+    
     @State var step = 0
     @State private var offset: CGFloat = 0
     let spacing: CGFloat = 10
@@ -24,6 +25,7 @@ struct InstructionView: View {
     
     var body: some View {
         VStack {
+            NavigationLink(destination: CamView().navigationBarHidden(true), tag: "Camera", selection: $selection) { EmptyView() }
             Text("Anweisungen").titleStyle()
             //Text("Gleich kannst du starten. Vorab noch einige Answeisungen. Bitte lies sie dir aufmerksam durch.")
             GeometryReader { geometry in
@@ -62,19 +64,17 @@ struct InstructionView: View {
                     Image(systemName: position == self.step ? "circle.fill" : "circle").scaleEffect(position == self.step ? 1 : 0.65).foregroundColor(.darkgreen)
                 }
             }
-            NavigationLink(
-                destination: CamView().navigationBarHidden(true),
-                label: {
-                    Button(action: test) { Text(String.go) }
-                }).buttonStyle(CustomButtonStyle()).disabled((self.step >= totalInstructions - 1) ? false : true)
+            Button(action: startCamera, label: {
+                Text(String.go)
+            }).buttonStyle(CustomButtonStyle())
         }.environmentObject(status).environmentObject(polarApi)
         .navigationBarBackButtonHidden(true)
     }
     
-    func test() {
-        if polarApi.connetionState == .connected {
-            
-        }
+    func startCamera() {
+        if polarApi.connetionState == .connected && (self.step >= totalInstructions - 1) {
+            selection = "Camera"
+        } 
     }
 }
 
