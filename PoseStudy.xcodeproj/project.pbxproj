@@ -697,7 +697,7 @@
 				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
 				DEVELOPMENT_ASSET_PATHS = "\"PoseStudy/Preview Content\"";
-				DEVELOPMENT_TEAM = NC67T52M5C;
+				DEVELOPMENT_TEAM = C7PLUFBAM2;
 				ENABLE_PREVIEWS = YES;
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
@@ -726,7 +726,7 @@
 					"@executable_path/Frameworks",
 					"@executable_path/Frameworks/PolarBleSdk.framework",
 				);
-				PRODUCT_BUNDLE_IDENTIFIER = lang.de.PoseStudy;
+				PRODUCT_BUNDLE_IDENTIFIER = de.lmu.ifi.mobile.poseStudy;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE_SPECIFIER = "";
 				SWIFT_VERSION = 5.0;
@@ -744,7 +744,7 @@
 				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
 				DEVELOPMENT_ASSET_PATHS = "\"PoseStudy/Preview Content\"";
-				DEVELOPMENT_TEAM = NC67T52M5C;
+				DEVELOPMENT_TEAM = C7PLUFBAM2;
 				ENABLE_PREVIEWS = YES;
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
@@ -773,7 +773,7 @@
 					"@executable_path/Frameworks",
 					"@executable_path/Frameworks/PolarBleSdk.framework",
 				);
-				PRODUCT_BUNDLE_IDENTIFIER = lang.de.PoseStudy;
+				PRODUCT_BUNDLE_IDENTIFIER = de.lmu.ifi.mobile.poseStudy;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE_SPECIFIER = "";
 				SWIFT_VERSION = 5.0;

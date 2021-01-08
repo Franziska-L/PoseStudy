@@ -18,7 +18,7 @@ struct PauseView: View {
             NavigationLink(destination: InstructionView().navigationBarHidden(true), tag: "next", selection: $selection) { EmptyView() }
             Text("Pause").titleStyle()
             Spacer()
-            Image("brake")
+            Image("break")
             Text("Mache eine kurze kurze Pause bevor du mit der zweiten Runde beginnst").padding()
             Spacer()
             Text("Ausgeruht? Dann starte in die 2. Runde")

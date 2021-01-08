@@ -89,7 +89,6 @@ class CameraModel: NSObject, ObservableObject, AVCaptureFileOutputRecordingDeleg
         DispatchQueue(label: "session queue").async {
             if !self.output.isRecording {
                 if UIDevice.current.isMultitaskingSupported {
-                    //ToDo schau ob hier nötig oder wieder auskommentieren
                     self.backgroundRecordingID = UIApplication.shared.beginBackgroundTask(expirationHandler: nil)
                 }
                 
@@ -127,7 +126,6 @@ class CameraModel: NSObject, ObservableObject, AVCaptureFileOutputRecordingDeleg
     }
     
     func fileOutput(_ output: AVCaptureFileOutput, didFinishRecordingTo outputFileURL: URL, from connections: [AVCaptureConnection], error: Error?) {
-        // Note: Because we use a unique file path for each recording, a new recording won't overwrite a recording mid-save.
         func cleanup() {
             let path = outputFileURL.path
             if FileManager.default.fileExists(atPath: path) {
@@ -155,7 +153,7 @@ class CameraModel: NSObject, ObservableObject, AVCaptureFileOutputRecordingDeleg
         }
         
         if success {
-            
+            //TODO wo speichern video??
 //            saveVideoToDatabase(url: outputFileURL) { (success) in
 //                print("test")
 //                cleanup()

@@ -8,9 +8,6 @@
 import SwiftUI
 
 struct InstructionView: View {
-    var img = ["pulsgurt", "position", "jumpingjack", "jumpingjack"]
-    
-    var image = "jumpingjack"
     var instr = [String.exerciseInstr1, String.exerciseInstr2, String.exerciseInstr3, String.exerciseInstr4]
 
     @State private var selection: String? = nil
@@ -31,13 +28,13 @@ struct InstructionView: View {
             GeometryReader { geometry in
                 return ScrollView(.horizontal, showsIndicators: true) {
                     HStack(spacing: self.spacing) {
-                        CardView(image: "position", instruction: String.startInstr)
+                        CardView(image: "pushUp", instruction: String.startInstr)
                             .frame(width: geometry.size.width).frame(height: 300)
-                        ExerciseCardView(image: "position", instruction: String.exerciseInstr, exerciseInst: instr).frame(width: geometry.size.width).frame(height: 300)
+                        ExerciseCardView(image: "pushUpKnee", instruction: String.exerciseInstr, exerciseInst: instr).frame(width: geometry.size.width).frame(height: 300)
                         CardView(image: "pulsgurt", instruction: String.polarDeviceIntr)
                             .frame(width: geometry.size.width).frame(height: 300)
                         ConnectingCardView(instruction: String.connectInstr).frame(width: geometry.size.width).frame(height: 300)
-                        CardView(image: "position", instruction: String.positionInstr)
+                        CardView(image: "position1", instruction: String.positionInstr)
                             .frame(width: geometry.size.width).frame(height: 300)
                     }
                 }
@@ -71,10 +68,14 @@ struct InstructionView: View {
         .navigationBarBackButtonHidden(true)
     }
     
+    
     func startCamera() {
-        if polarApi.connetionState == .connected && (self.step >= totalInstructions - 1) {
+        if polarApi.connetionState == .connected && (self.step >= totalInstructions - 1) && polarApi.isECGReady() {
             selection = "Camera"
-        } 
+        }
+        if !polarApi.isECGReady() {
+            //Todo was machen wenn ecg nicht ready?
+        }
     }
 }
 

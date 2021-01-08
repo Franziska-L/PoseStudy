@@ -47,6 +47,7 @@ struct RecordButtonView: View {
     var body: some View {
         Image(systemName: isRecording ? "stop" : "video").font(.title)
             .padding(30)
+            .padding(.bottom, 40)
             .background(Color.red)
             .foregroundColor(.white)
             .clipShape(Circle())

@@ -59,8 +59,9 @@ struct WelcomeView: View {
             Alert(title: Text("Bitte stelle eine Verbindung zum Internet her."))
         })
         .alert(isPresented: $alertID, content: {
-            Alert(title: Text("Bitte gib deine ID ein."))
+            Alert(title: Text("Falsche ID"), message: Text("Gib die ID ein, die du zu Beginn der Studie bekommen hast."))
         })
+        .navigationViewStyle(StackNavigationViewStyle())
     }
     
     func checkConnection() {
@@ -96,10 +97,9 @@ struct WelcomeView: View {
             if snapshot.hasChild("Participant \(ID)") {
                 let ref1 = refParticipants.child("Participant \(ID)")
                 ref1.observeSingleEvent(of: .value) { (snap) in
-                    if snap.hasChild(String.gender) && snap.hasChild(String.age) {
+                    if snap.hasChild("Demographic") && snap.hasChild("Health Status") {
                         self.status.participantID = ID
                         self.selection = "WarmUp"
-                        //TODO lösche tag -> wird in finish screen gemanaged 
                         let refDay = refParticipants.child("Participant \(ID)").child("Day")
                         refDay.observeSingleEvent(of: .value) { (snap) in
                             if let value = snap.value as? Int {
@@ -116,19 +116,15 @@ struct WelcomeView: View {
             } else {
                 let refID = ref.child("IDs")
                 refID.observeSingleEvent(of: .value) { (snap) in
-                    snap.children.forEach({ (child) in
-                        if let child = child as? DataSnapshot, let value = child.value as? String {
-                            if value == ID {
-                                print("ja, dann kopiere code hier rein!")
-                            }
-                        }
-                    })
                     if snap.hasChild(ID) {
                         refParticipants = refParticipants.child("Participant \(ID)")
                         refParticipants.setValue(["Participant ID": ID, "Day": 1])
                         self.status.participantID = ID
                         self.status.day = 1
                         self.selection = "Demographic"
+                    }
+                    else {
+                        alertID = true
                     }
                 }
             }

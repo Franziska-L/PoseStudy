@@ -16,7 +16,15 @@ struct WarmUpView: View {
                 Text("Aufwärmen").titleStyle()
                 Spacer()
                 Text(String.warmup).padding()
-                Image("jumpingjack")
+                HStack {
+                    Spacer()
+                    Image("jumpingjack1").resizable().scaledToFit()
+                    Spacer()
+                    Image("jumpingjack2").resizable().scaledToFit()
+                    Spacer()
+                }
+                
+                //Text("10 Armkreisen pro Seite").padding()
                 Text("30 Hampelmänner").padding()
                 Spacer()
                 Text("Wenn du fertig bist kanns los gehen.")

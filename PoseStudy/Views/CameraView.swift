@@ -25,6 +25,10 @@ struct CameraView: View {
     @State var timeMinutes: String = "00"
     @State var timer: Timer? = nil
     
+    @State var isRecording = false
+    
+    var startTime: String?
+    
     @EnvironmentObject var status: GlobalState
     @EnvironmentObject var polarApi: PolarApiWrapper
     
@@ -45,6 +49,7 @@ struct CameraView: View {
                         .foregroundColor(.white)
                         .zIndex(2.0)
                         .cornerRadius(15.0)
+                        .padding(.top, 20)
                 }
                 CameraPreview(camera: camera)
                     .ignoresSafeArea(.all, edges: .all)
@@ -64,16 +69,21 @@ struct CameraView: View {
     }
     
     func onClick() {
+        //Todo überprüfe was passiert wenn ecg daten nicht vorhanden (schon 2 mal passiert nach aufnahme!)
         if camera.authState && camera.cameraAvailable {
             camera.startRecording()
+            //TODO: start und end timestamp hinzufügen
+            //TODO hier überprüfen evtl isRecording nicht schnell genug?
             if !camera.isRecording {
+                let timestamp = Date().initTimestamp()
                 self.startTimer()
+                self.polarApi.startStreaming()
                 DispatchQueue.global(qos: .background).async {
-                    self.polarApi.startStreaming()
+                    //TODO startStreaming in background?
                 }
             }
             else {
-                camera.stopSession()
+                self.camera.stopSession()
                 self.stopTimer()
                 self.polarApi.stopStream()
                 self.saveToDatabase()
@@ -90,7 +100,6 @@ struct CameraView: View {
     
     private func startTimer() {
         timer = Timer.scheduledTimer(withTimeInterval: 1, repeats: true) { _ in
-            
             if self.seconds == 59 {
                 self.seconds = 0
                 if self.minutes == 59 {
@@ -124,7 +133,10 @@ struct CameraView: View {
     }
     
     private func saveToDatabase() {
+        let timestamp = Date().initTimestamp()
+        
         let ref: DatabaseReference = Database.database().reference().child(String.participants).child("Participant \(status.participantID)").child("Day \(self.status.day)").child("Session \(status.session)")
+        //"Start Timestamp":  startTime,"End Timestamp": timestamp hinzufügen
         ref.setValue(["HR" : polarApi.hrDataStream, "ECG" : polarApi.ecgDataStream, "ECGs" : polarApi.ecgDataStreamPerSecond, "HR Timestamp" : polarApi.hrDataTimestamp, "ECG Timestamp" : polarApi.ecgDataTimestamp, "RR" : polarApi.rrsDataStream, "RRMs" : polarApi.rrMsDataStream, "RR Timestamp" : polarApi.rrDataTimestamp])
         
         polarApi.hrDataStream.removeAll()

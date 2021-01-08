@@ -42,7 +42,7 @@ extension String {
     static let startInstr = "Als nächstes wirst du Liegestützen machen bis zur maximalen Erschöpfung. Nimm auch die Wiederholung mit, die du nicht mehr schaffen würdest. \n\nWische nach links, um die nächste Anweisung zu lesen."
     static let polarDeviceIntr = "Lege jetzt den Brustgurt an. Befeuchte dazu zunächst den Elektrodenbereich des Gurtes. Lege den Gurt um die Brust und stelle ihn so ein, dass er fest sitzt."
     static let connectInstr = "Verbinde das Pulsmessgerät mit dem Handy."
-    static let positionInstr = "Stelle das Handy auf dem Handyhalter und positioniere diesen so, dass dein gesamter Körper seitlich zu sehen ist.\n\nWenn alles bereit ist kann es los gehen."
+    static let positionInstr = "Stelle das Handy auf dem Handyhalter. Positioniere den Handyhalter in ca. 1m bis 1,5m Abstand längs zu deinem Körper, sodass dein gesamter Körper seitlich zu sehen ist.\n\nWenn alles bereit ist kann es los gehen."
     
     //Buttons
     static let next = "Weiter"
@@ -74,6 +74,14 @@ extension Date {
     
     func toMillis() -> Int64 {
         return Int64(self.timeIntervalSince1970 * 1000.0)
+    }
+    
+    func initTimestamp() -> String {
+        let date = Date()
+        let formatter = DateFormatter()
+        formatter.dateFormat = "y-MM-dd HH:mm:ss.SSSSSS"
+        
+        return formatter.string(from: date)
     }
 }
 
