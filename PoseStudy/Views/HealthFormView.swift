@@ -82,7 +82,7 @@ struct HealthFormView: View {
         .environmentObject(status)
         .environmentObject(polarApi)
         .alert(isPresented: $alert, content: {
-            Alert(title: Text("Bitte fülle erst alle Angaben aus."))
+            Alert(title: Text(String.questions))
         })
     }
     
@@ -90,7 +90,7 @@ struct HealthFormView: View {
         if (nomedicaments || medicaments) && (cardiovascular || musculoskeletal || neuromuscular || nothing || diabetes || highBlood) {
             
             let ref: DatabaseReference = Database.database().reference().child("Participants").child("Participant \(self.status.participantID)").child("Health Status")
-            ref.updateChildValues(["Medication": "\(medicaments)", "Cardiovascular diseases": cardiovascular, "Musculoskeletal diseases": musculoskeletal, "Neuromuscular disorder": neuromuscular, "High Blood": highBlood, "Diabetes": neuromuscular, "Nothing": nothing, "Other": other])
+            ref.updateChildValues(["Medication": "\(medicaments)", "Cardiovascular diseases": "\(cardiovascular)", "Musculoskeletal diseases": "\(musculoskeletal)", "Neuromuscular disorder": "\(neuromuscular)", "High Blood": "\(highBlood)", "Diabetes": "\(neuromuscular)", "Nothing": "\(nothing)", "Other": other])
             
             self.selection = "WarmUp"
         } else {

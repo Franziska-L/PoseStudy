@@ -62,7 +62,7 @@ struct DemographicFormView: View {
                 self.endEditing()
             }
             .alert(isPresented: $alert, content: {
-                Alert(title: Text("Bitte fülle erst alle Angaben aus."))
+                Alert(title: Text(String.questions))
             })
         }
     }

@@ -18,7 +18,7 @@ struct FinishScreen: View {
             Image("done").resizable().scaledToFit()
             Text("Danke für deine Teilnahme!").titleStyle()
         }.environmentObject(status).environmentObject(polarApi).onAppear() {
-            setDay()
+            self.setDay()
         }
     }
     

@@ -153,17 +153,6 @@ class CameraModel: NSObject, ObservableObject, AVCaptureFileOutputRecordingDeleg
         }
         
         if success {
-            //TODO wo speichern video??
-//            saveVideoToDatabase(url: outputFileURL) { (success) in
-//                print("test")
-//                cleanup()
-//            } failure: { (error) in
-//                print(error)
-//                cleanup()
-//            }
-//
-
-
             print(outputFileURL)
             // Check the authorization status.
             PHPhotoLibrary.requestAuthorization { status in
@@ -189,6 +178,5 @@ class CameraModel: NSObject, ObservableObject, AVCaptureFileOutputRecordingDeleg
             cleanup()
         }
     }
-    
     
 }

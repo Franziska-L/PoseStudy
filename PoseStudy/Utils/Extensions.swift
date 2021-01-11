@@ -16,6 +16,8 @@ extension Color {
 
 extension String {
     static let participants = "Participants"
+    
+    static let questions = "Bitte fülle erst alle Angaben aus."
     //Personal Questions
     static let gender = "Geschlecht"
     static let male = "männlich"
@@ -42,7 +44,7 @@ extension String {
     static let startInstr = "Als nächstes wirst du Liegestützen machen bis zur maximalen Erschöpfung. Nimm auch die Wiederholung mit, die du nicht mehr schaffen würdest. \n\nWische nach links, um die nächste Anweisung zu lesen."
     static let polarDeviceIntr = "Lege jetzt den Brustgurt an. Befeuchte dazu zunächst den Elektrodenbereich des Gurtes. Lege den Gurt um die Brust und stelle ihn so ein, dass er fest sitzt."
     static let connectInstr = "Verbinde das Pulsmessgerät mit dem Handy."
-    static let positionInstr = "Stelle das Handy auf dem Handyhalter. Positioniere den Handyhalter in ca. 1m bis 1,5m Abstand längs zu deinem Körper, sodass dein gesamter Körper seitlich zu sehen ist.\n\nWenn alles bereit ist kann es los gehen."
+    static let positionInstr = "Stelle das Handy auf dem Handyhalter. Positioniere den Handyhalter in ca. 1 m bis 1,5 m Abstand längs zu deinem Körper, sodass dein gesamter Körper seitlich zu sehen ist.\n\nWenn alles bereit ist kann es los gehen."
     
     //Buttons
     static let next = "Weiter"

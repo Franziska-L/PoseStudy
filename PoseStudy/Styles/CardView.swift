@@ -44,6 +44,7 @@ struct ConnectingCardView: View {
     @EnvironmentObject var polarApi: PolarApiWrapper
     
     @State var alert = false
+    @State var alertConnection = false
     
     var body: some View {
         GeometryReader { geometry in
@@ -54,15 +55,13 @@ struct ConnectingCardView: View {
                     .multilineTextAlignment(.leading)
                     .fixedSize(horizontal: false, vertical: true)
                 VStack(alignment: .center) {
-                    if polarApi.connetionState == .connected && polarApi.streamReady {
-                        //TODO Timeout wenn verbindung nicht erfolgerich?
+                    if polarApi.connectionState == .connected && polarApi.streamReady {
                         Text("Erfolgreich Verbunden").foregroundColor(.darkgreen)
                     }
-                    if polarApi.connetionState == .connecting || (polarApi.connetionState == .connected && !polarApi.streamReady) {
-                        //TODO schauen ob das klappt (noch nicht getestet)
+                    if polarApi.connectionState == .connecting || (polarApi.connectionState == .connected && !polarApi.streamReady) {
                         ProgressView().progressViewStyle(CircularProgressViewStyle())
                     }
-                    if polarApi.connetionState == .disconnected {
+                    if polarApi.connectionState == .disconnected || polarApi.connectionState == .unknown {
                         Button(action: connectToDevice, label: {
                             Text("Verbinden")
                         }).buttonStyle(CustomButtonStyle()).padding(.horizontal, 40)
@@ -78,13 +77,22 @@ struct ConnectingCardView: View {
         }.alert(isPresented: $alert, content: {
             Alert(title: Text("Bluetooth Status"), message: Text("Bitte schalte Bluetooth ein um fortzufahren."))
         })
+        .alert(isPresented: $alert, content: {
+            Alert(title: Text("Etwas ist schief gelaufen."), message: Text("Bitte stelle sicher, dass du den Brustgurt richtig angelegt hast. Befeuchte ggf. den Elektrodenbereich erneut und lege ihn fest um die Brust."))
+        })
     }
     
     func connectToDevice() {
         if polarApi.bleState == .poweredOn {
             polarApi.autoConnectToDevice()
+            
+            DispatchQueue.main.asyncAfter(deadline: .now() + 6) {
+                if polarApi.connectionState != .connected || !polarApi.streamReady {
+                    polarApi.connectionState = .unknown
+                    alertConnection = true
+                }
+            }
         } else if polarApi.bleState == .poweredOff {
-            //TODO schauen ob noch mal nach auth status gefragt werden kann?
             alert = true
         }
     }

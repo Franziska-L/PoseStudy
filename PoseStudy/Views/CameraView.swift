@@ -26,9 +26,7 @@ struct CameraView: View {
     @State var timer: Timer? = nil
     
     @State var isRecording = false
-    
-    var startTime: String?
-    
+        
     @EnvironmentObject var status: GlobalState
     @EnvironmentObject var polarApi: PolarApiWrapper
     
@@ -69,18 +67,12 @@ struct CameraView: View {
     }
     
     func onClick() {
-        //Todo überprüfe was passiert wenn ecg daten nicht vorhanden (schon 2 mal passiert nach aufnahme!)
         if camera.authState && camera.cameraAvailable {
             camera.startRecording()
-            //TODO: start und end timestamp hinzufügen
-            //TODO hier überprüfen evtl isRecording nicht schnell genug?
             if !camera.isRecording {
-                let timestamp = Date().initTimestamp()
+                self.setStartTime()
                 self.startTimer()
                 self.polarApi.startStreaming()
-                DispatchQueue.global(qos: .background).async {
-                    //TODO startStreaming in background?
-                }
             }
             else {
                 self.camera.stopSession()
@@ -121,6 +113,7 @@ struct CameraView: View {
                 timeSeconds = "\(seconds)"
             }
         }
+        timer?.fire()
     }
     
     private func stopTimer() {
@@ -132,12 +125,19 @@ struct CameraView: View {
         timeMinutes = "0\(minutes)"
     }
     
+    private func setStartTime() {
+        let timestampStart = Date().toMillis()
+
+        let ref: DatabaseReference = Database.database().reference().child(String.participants).child("Participant \(status.participantID)").child("Day \(self.status.day)").child("Session \(status.session)")
+        ref.setValue(["Start Time": timestampStart])
+    }
+    
+    
     private func saveToDatabase() {
-        let timestamp = Date().initTimestamp()
+        let timestampEnd = Date().toMillis()
         
         let ref: DatabaseReference = Database.database().reference().child(String.participants).child("Participant \(status.participantID)").child("Day \(self.status.day)").child("Session \(status.session)")
-        //"Start Timestamp":  startTime,"End Timestamp": timestamp hinzufügen
-        ref.setValue(["HR" : polarApi.hrDataStream, "ECG" : polarApi.ecgDataStream, "ECGs" : polarApi.ecgDataStreamPerSecond, "HR Timestamp" : polarApi.hrDataTimestamp, "ECG Timestamp" : polarApi.ecgDataTimestamp, "RR" : polarApi.rrsDataStream, "RRMs" : polarApi.rrMsDataStream, "RR Timestamp" : polarApi.rrDataTimestamp])
+        ref.updateChildValues(["HR" : polarApi.hrDataStream, "ECG" : polarApi.ecgDataStream, "ECGs" : polarApi.ecgDataStreamPerSecond, "HR Timestamp" : polarApi.hrDataTimestamp, "ECG Timestamp" : polarApi.ecgDataTimestamp, "RR" : polarApi.rrsDataStream, "RRMs" : polarApi.rrMsDataStream, "HRs" : polarApi.hrDataStreamPerSec, "RR Timestamp" : polarApi.rrDataTimestamp, "End Time": timestampEnd])
         
         polarApi.hrDataStream.removeAll()
         polarApi.ecgDataStream.removeAll()
@@ -147,6 +147,7 @@ struct CameraView: View {
         
         polarApi.rrsDataStream.removeAll()
         polarApi.rrMsDataStream.removeAll()
+        polarApi.hrDataStreamPerSec.removeAll()
         polarApi.rrDataTimestamp.removeAll()
         
         polarApi.ecgDataStreamPerSecond.removeAll()

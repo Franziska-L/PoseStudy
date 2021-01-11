@@ -17,6 +17,8 @@ struct InstructionView: View {
     let spacing: CGFloat = 10
     let totalInstructions = 5
     
+    @State var alert = false
+    
     @EnvironmentObject var status: GlobalState
     @EnvironmentObject var polarApi: PolarApiWrapper
     
@@ -66,15 +68,18 @@ struct InstructionView: View {
             }).buttonStyle(CustomButtonStyle())
         }.environmentObject(status).environmentObject(polarApi)
         .navigationBarBackButtonHidden(true)
+        .alert(isPresented: $alert, content: {
+            Alert(title: Text("Etwas ist schief gelaufen"), message: Text("Das Polar Gerät ist noch nicht bereit. Bitte überprüfe die Verbindung zum Brustgurt."))
+        })
     }
     
     
     func startCamera() {
-        if polarApi.connetionState == .connected && (self.step >= totalInstructions - 1) && polarApi.isECGReady() {
+        if polarApi.connectionState == .connected && (self.step >= totalInstructions - 1) && polarApi.isECGReady() {
             selection = "Camera"
         }
-        if !polarApi.isECGReady() {
-            //Todo was machen wenn ecg nicht ready?
+        if (self.step >= totalInstructions - 1) && !polarApi.isECGReady() {
+            alert = true
         }
     }
 }

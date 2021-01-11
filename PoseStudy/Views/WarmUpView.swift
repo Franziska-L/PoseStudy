@@ -27,7 +27,7 @@ struct WarmUpView: View {
                 //Text("10 Armkreisen pro Seite").padding()
                 Text("30 Hampelmänner").padding()
                 Spacer()
-                Text("Wenn du fertig bist kanns los gehen.")
+                Text("Wenn du fertig bist lies dir als nächstes die Anweisungen durch.")
                 NavigationLink(
                     destination: InstructionView().navigationBarHidden(true),
                     label: {

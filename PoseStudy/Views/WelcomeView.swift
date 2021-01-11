@@ -20,7 +20,6 @@ struct WelcomeView: View {
     @ObservedObject var polarApi = PolarApiWrapper()
     
     @State private var selection: String? = nil
-    //TODO: info.plist photo library wieder löschen wenn videos in firebase gescpeichert werden
     @State var ID: String = ""
     @State var isCodeValide = false
     @State var codeExists = false

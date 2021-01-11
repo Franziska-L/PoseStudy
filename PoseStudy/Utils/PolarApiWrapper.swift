@@ -10,12 +10,14 @@ import SwiftUI
 import PolarBleSdk
 import RxSwift
 import FirebaseDatabase
+import CoreBluetooth
 
 enum ConnectionState {
     case connected
     case connecting
     case disconnected
     case failure
+    case unknown
 }
 
 
@@ -23,21 +25,20 @@ class PolarApiWrapper: ObservableObject,
                        PolarBleApiObserver,
                        PolarBleApiPowerStateObserver,
                        PolarBleApiDeviceHrObserver,
-                       PolarBleApiDeviceFeaturesObserver
-//                       PolarBleApiDeviceInfoObserver
-//                       PolarBleApiLogger,
-//                       PolarBleApiCCCWriteObserver
+                       PolarBleApiDeviceFeaturesObserver,
+                       PolarBleApiDeviceInfoObserver
 {
-    @Published var connetionState: ConnectionState = .disconnected
     
     var api: PolarBleApi
     var broadcast: Disposable?
     var autoConnect: Disposable?
     var ecgToggle: Disposable?
     var deviceId = "74D5EB20"
+    var timer: Timer? = nil
     
     @Published var bleState = BleState.unknown
-        
+    @Published var connectionState: ConnectionState = .unknown
+    
     @Published var isFeatureReady = false
     //TODO: Lösche hier alle Werte die nicht gebraucht werden und Überprüfe alles
     @Published var ecgDataStream: [Int32] = [Int32]()
@@ -49,22 +50,14 @@ class PolarApiWrapper: ObservableObject,
     @Published var ecgDataTimestamp = [Int64]()
     @Published var hrDataTimestamp = [Int64]()
     
-    @Published var hrDataStreamTest: [UInt8] = [UInt8]()
+    @Published var hrDataStreamPerSec: [UInt8] = [UInt8]()
     @Published var rrsDataStream: [[Int]] = [[Int]]()
     @Published var rrMsDataStream: [[Int]] = [[Int]]()
     
     @Published var rrDataTimestamp = [Int64]()
-    
-    @Published var hrDataStreamBreak: [UInt8] = [UInt8]()
-    @Published var hrDataTimestampBreak = [Int64]()
-    @Published var rrsDataStreamBreak: [[Int]] = [[Int]]()
-    @Published var rrMsDataStreamBreak: [[Int]] = [[Int]]()
-    
-    @Published var rrDataTimestampBreak = [Int64]()
-    
+
     @Published var isRecording = false
     @Published var streamReady = false
-    @State var timer: Timer? = nil
     
     init() {
         self.api = PolarBleApiDefaultImpl.polarImplementation(DispatchQueue.main, features: Features.allFeatures.rawValue)
@@ -82,6 +75,7 @@ class PolarApiWrapper: ObservableObject,
                 NSLog("auto connect search complete")
             case .error(let err):
                 NSLog("auto connect failed: \(err)")
+                self.connectionState = .failure
             }
         }
     }
@@ -92,74 +86,55 @@ class PolarApiWrapper: ObservableObject,
     }
     
     func startStreaming() {
-        //        let tiem = api.setLocalTime(self.deviceId, time: Date.init(timeIntervalSince1970: NSTimeIntervalSince1970), zone: TimeZone.current)
-        //        print(tiem)
-                //Start ECG Stream
+    //Start ECG Stream
+        ecgToggle = api.requestEcgSettings(deviceId).asObservable().flatMap({ (settings) -> Observable<PolarEcgData> in
+            return self.api.startEcgStreaming(self.deviceId, settings: settings.maxSettings())
+        }).observeOn(MainScheduler.instance).subscribe{ e in
+            switch e {
+            case .next(let data):
+                NSLog("      Timestamp: \(data.timeStamp)")
+                for µv in data.samples {
+                    NSLog("    µV: \(µv)")
+                    self.ecgDataStream.append(µv)
+                    self.ecgDataStreamTest.append(µv)
 
-                //TODO schau ob ecg ready ist sonst nimmts nicht auf
-        let ready = isFeatureReady(self.deviceId, feature: Features.polarSensorStreaming.rawValue)
-        if ready {
-            stopECGStream()
-            ecgToggle = api.requestEcgSettings(deviceId).asObservable().flatMap({ (settings) -> Observable<PolarEcgData> in
-                return self.api.startEcgStreaming(self.deviceId, settings: settings.maxSettings())
-            }).observeOn(MainScheduler.instance).subscribe{ e in
-                switch e {
-                case .next(let data):
-                    NSLog("      Timestamp: \(data.timeStamp)")
-                    for µv in data.samples {
-                        NSLog("    µV: \(µv)")
-                        self.ecgDataStream.append(µv)
-                        self.ecgDataStreamTest.append(µv)
-
-                        let timestamp = Date().toMillis()
-                        self.ecgDataTimestamp.append(timestamp)
-                        //self.timer?.invalidate()
-    //                    self.timer = Timer.scheduledTimer(withTimeInterval: 1.0, repeats: true) { time in
-    //                        self.ecgDataStreamPerSecond.append(self.ecgDataStreamTest)
-    //                        self.ecgDataStreamTest.removeAll()
-    //                        //self.timer?.invalidate()
-    //                    }
-                    }
-                    self.isRecording = true
-                case .error(let err):
-                    NSLog("start ecg error: \(err)")
-                    self.ecgToggle = nil
-                case .completed:
-                    break
-                }
-            }
-            
-          
-            //Start HR Stream
-            broadcast = api.startListenForPolarHrBroadcasts(nil).observeOn(MainScheduler.instance).subscribe{ e in
-                switch e {
-                case .completed:
-                    NSLog("completed")
-                case .error(let err):
-                    NSLog("listening error: \(err)")
-                case .next(let broadcast):
-                    NSLog("\(broadcast.deviceInfo.name) HR BROADCAST: \(broadcast.hr)")
-                    self.hrDataStream.append(broadcast.hr)
-                    
                     let timestamp = Date().toMillis()
-                    self.hrDataTimestamp.append(timestamp)
+                    self.ecgDataTimestamp.append(timestamp)
+                }
+                self.isRecording = true
+            case .error(let err):
+                NSLog("start ecg error: \(err)")
+                self.ecgToggle = nil
+            case .completed:
+                break
+            }
+        }
+            
+      
+        //Start HR Stream
+        broadcast = api.startListenForPolarHrBroadcasts(nil).observeOn(MainScheduler.instance).subscribe{ e in
+            switch e {
+            case .completed:
+                NSLog("completed")
+            case .error(let err):
+                NSLog("listening error: \(err)")
+            case .next(let broadcast):
+                NSLog("\(broadcast.deviceInfo.name) HR BROADCAST: \(broadcast.hr)  Battery: \(broadcast.batteryStatus)")
+                self.hrDataStream.append(broadcast.hr)
+                
+                let timestamp = Date().toMillis()
+                self.hrDataTimestamp.append(timestamp)
+            }
+        }
+        
+        //TODO: mit timesamps schauen dass alle dieselben sind
+        DispatchQueue.main.async {
+            if self.timer == nil {
+                self.timer = Timer.scheduledTimer(withTimeInterval: 1.0, repeats: true) { _ in
+                    self.ecgDataStreamPerSecond.append(self.ecgDataStreamTest)
+                    self.ecgDataStreamTest.removeAll()
                 }
             }
-            //TODO: mit timesamps schauen dass alle dieselben sind
-            //TODO das hier funktioniert noch nicht!
-            if isRecording {
-                DispatchQueue.main.async {
-                    self.timer = Timer.scheduledTimer(withTimeInterval: 1.0, repeats: true) { time in
-                        NSLog("Timer \(time)")
-                        self.ecgDataStreamPerSecond.append(self.ecgDataStreamTest)
-                        self.ecgDataStreamTest.removeAll()
-                        //self.timer?.invalidate()
-                    }
-                    self.timer?.fire()
-                }
-            }
-        } else {
-            //TODO wenn ecg features nicht ready sind???
         }
     }
     
@@ -177,50 +152,44 @@ class PolarApiWrapper: ObservableObject,
     private func stopECGStream() {
         ecgToggle?.dispose()
         ecgToggle = nil
+        
+        broadcast?.dispose()
+        broadcast = nil
     }
     
     
     func stopStream() {
         //Stop HR Stream
-        broadcast?.dispose()
-        broadcast = nil
+        stopECGStream()
         
-        //Stop ECG Stream
-        ecgToggle?.dispose()
-        ecgToggle = nil
-        
-        
-        if !ecgDataStreamTest.isEmpty {
-            //ecgDataStreamPerSecond.append(ecgDataStreamTest)
-        }
-        print(hrDataStream)
-        print(hrDataStreamTest)
-        print(ecgDataStream)
-
-        hrDataStreamTest.removeAll()
         isRecording = false
         
-        DispatchQueue.main.async {
+        if self.timer != nil {
             self.timer?.invalidate()
-            self.timer = nil
+        }
+        self.timer = nil
+        
+        if !ecgDataStreamTest.isEmpty {
+            self.ecgDataStreamPerSecond.append(ecgDataStreamTest)
+            self.ecgDataStreamTest.removeAll()
         }
     }
     
     ///PolarBleApiObserver
     func deviceConnecting(_ identifier: PolarDeviceInfo) {
         NSLog("DEVICE CONNECTING: \(identifier)")
-        connetionState = .connecting
+        connectionState = .connecting
     }
     
     func deviceConnected(_ identifier: PolarDeviceInfo) {
         NSLog("DEVICE CONNECTED: \(identifier)")
         deviceId = identifier.deviceId
-        connetionState = .connected
+        connectionState = .connected
     }
     
     func deviceDisconnected(_ identifier: PolarDeviceInfo) {
         NSLog("DISCONNECTED: \(identifier)")
-        connetionState = .disconnected
+        connectionState = .disconnected
     }
     
     
@@ -241,7 +210,7 @@ class PolarApiWrapper: ObservableObject,
         if isRecording {
             rrsDataStream.append(data.rrs)
             rrMsDataStream.append(data.rrsMs)
-            hrDataStreamTest.append(data.hr)
+            hrDataStreamPerSec.append(data.hr)
             
             let timestamp = Date().toMillis()
             rrDataTimestamp.append(timestamp)
@@ -274,5 +243,14 @@ class PolarApiWrapper: ObservableObject,
     
     func ftpFeatureReady(_ identifier: String) {
         NSLog("FTP READY")
+    }
+    
+    /// PolarBleApiDeviceInfoObserver
+    func batteryLevelReceived(_ identifier: String, batteryLevel: UInt) {
+        NSLog("battery level updated: \(batteryLevel)")
+    }
+    
+    func disInformationReceived(_ identifier: String, uuid: CBUUID, value: String) {
+        NSLog("dis info: \(uuid.uuidString) value: \(value)")
     }
 }
