@@ -18,6 +18,7 @@ enum ConnectionState {
     case disconnected
     case failure
     case unknown
+    case notAvailable
 }
 
 
@@ -26,12 +27,24 @@ class PolarApiWrapper: ObservableObject,
                        PolarBleApiPowerStateObserver,
                        PolarBleApiDeviceHrObserver,
                        PolarBleApiDeviceFeaturesObserver,
-                       PolarBleApiDeviceInfoObserver
+                       PolarBleApiDeviceInfoObserver,
+                       PolarBleApiLogger,
+                       PolarBleApiCCCWriteObserver
 {
+    func message(_ str: String) {
+        NSLog(str)
+    }
+    
+    /// ccc write observer
+    func cccWrite(_ address: UUID, characteristic: CBUUID) {
+        NSLog("ccc write: \(address) chr: \(characteristic)")
+    }
+    
     
     var api: PolarBleApi
     var broadcast: Disposable?
     var autoConnect: Disposable?
+    var searchToggle: Disposable?
     var ecgToggle: Disposable?
     var deviceId = "74D5EB20"
     var timer: Timer? = nil
@@ -65,6 +78,9 @@ class PolarApiWrapper: ObservableObject,
         self.api.powerStateObserver = self
         self.api.deviceHrObserver = self
         self.api.deviceFeaturesObserver = self
+        self.api.logger = self
+        self.api.cccWriteObserver = self
+        self.api.polarFilter(false)
     }
     
     func autoConnectToDevice() {
@@ -83,6 +99,31 @@ class PolarApiWrapper: ObservableObject,
     func stopAutoConnectToDevice() {
         autoConnect?.dispose()
         autoConnect = nil
+    }
+    
+    func searchForDevice() {
+        //stopSearch()
+        searchToggle = api.searchForDevice().observeOn(MainScheduler.instance).subscribe{ e in
+            switch e {
+            case .completed:
+                NSLog("search complete")
+            case .error(let err):
+                NSLog("search error: \(err)")
+            case .next(let item):
+                if item.name.contains("H10") {
+                    self.autoConnectToDevice()
+                    self.stopSearch()
+                } else {
+                    self.connectionState = .notAvailable
+                }
+                NSLog("polar device found: \(item.name) connectable: \(item.connectable) address: \(item.address.uuidString)")
+            }
+        }
+    }
+    
+    func stopSearch() {
+        searchToggle?.dispose()
+        searchToggle = nil
     }
     
     func startStreaming() {

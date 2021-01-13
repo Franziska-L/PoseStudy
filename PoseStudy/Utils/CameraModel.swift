@@ -22,7 +22,9 @@ class CameraModel: NSObject, ObservableObject, AVCaptureFileOutputRecordingDeleg
     @Published var previewLayer : AVCaptureVideoPreviewLayer!
 
     var frontCamera: AVCaptureDevice?
+    var audio: AVCaptureDevice?
     var frontCameraInput: AVCaptureDeviceInput?
+    var audioInput: AVCaptureDeviceInput?
     var backgroundRecordingID: UIBackgroundTaskIdentifier?
        
     func checkAuth() {
@@ -30,9 +32,27 @@ class CameraModel: NSObject, ObservableObject, AVCaptureFileOutputRecordingDeleg
         // Check if camera has permission
         switch AVCaptureDevice.authorizationStatus(for: .video) {
         case .authorized:
-            setUpCamera()
-            authState = true
-            return
+            switch AVCaptureDevice.authorizationStatus(for: .audio) {
+            case .authorized:
+                setUpCamera()
+                authState = true
+                return
+            case .notDetermined:
+                AVCaptureDevice.requestAccess(for: .audio) { (status) in
+                    if status {
+                        self.setUpCamera()
+                        DispatchQueue.main.async {
+                            self.authState = true
+                        }
+                    }
+                }
+            case .denied:
+                self.alert.toggle()
+                return
+            default:
+                return
+            }
+            
         case .notDetermined:
             // retusting for permission
             AVCaptureDevice.requestAccess(for: .video) { (status) in
@@ -59,14 +79,21 @@ class CameraModel: NSObject, ObservableObject, AVCaptureFileOutputRecordingDeleg
             self.session.beginConfiguration()
 
             let device = AVCaptureDevice.default(.builtInWideAngleCamera, for: .video, position: .front)
+            let audio = AVCaptureDevice.default(for: .audio)
 
             guard device != nil, let deviceInput = try? AVCaptureDeviceInput(device: device!), session.canAddInput(deviceInput) else {
-                print("nicht availbale")
+                print("Kamera nicht verfügbar")
                 return
             }
             
-            if self.session.canAddInput(deviceInput){
+            guard audio != nil, let audioInput = try? AVCaptureDeviceInput(device: audio!), session.canAddInput(audioInput) else {
+                print("Audio nicht verfügbar")
+                return
+            }
+            
+            if self.session.canAddInput(deviceInput) && self.session.canAddInput(audioInput) {
                 self.session.addInput(deviceInput)
+                self.session.addInput(audioInput)
             }
 
             if self.session.canAddOutput(self.output){

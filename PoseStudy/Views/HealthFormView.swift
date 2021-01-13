@@ -26,14 +26,17 @@ struct HealthFormView: View {
     @State private var nomedicaments = false
     
     @State private var other = ""
-    @State private var three = false
-    @State private var fife = false
+    @State private var never = false
     @State private var more = false
     @State private var less = false
             
     var body: some View {
         let yes = Binding<Bool>(get: { self.medicaments }, set: { self.medicaments = $0; self.nomedicaments = false})
         let no = Binding<Bool>(get: { self.nomedicaments }, set: { self.medicaments = false; self.nomedicaments = $0})
+        
+        let more = Binding<Bool>(get: { self.more }, set: { self.more = $0; self.less = false; self.never = false})
+        let less = Binding<Bool>(get: { self.less }, set: { self.more = false; self.less = $0; self.never = false})
+        let never = Binding<Bool>(get: { self.never }, set: { self.more = false; self.less = false; self.never = $0})
         ScrollView {
             VStack {
                 NavigationLink(destination: WarmUpView().navigationBarHidden(true), tag: "WarmUp", selection: $selection) { EmptyView() }
@@ -71,6 +74,18 @@ struct HealthFormView: View {
                         Text("Nein")
                     }.toggleStyle(CheckboxToggleStyle())
                 }.padding()
+                
+                GroupBox(label: Text("Wie oft trainierst du in der Woche?")) {
+                    Toggle(isOn: more) {
+                        Text("3 mal oder öfter")
+                    }.toggleStyle(CheckboxToggleStyle())
+                    Toggle(isOn: less) {
+                        Text("Weniger als 3 mal")
+                    }.toggleStyle(CheckboxToggleStyle())
+                    Toggle(isOn: never) {
+                        Text("Nie")
+                    }.toggleStyle(CheckboxToggleStyle())
+                }.padding()
                 Spacer()
                 Button(action: save, label: {
                     Text(String.next)
@@ -87,7 +102,7 @@ struct HealthFormView: View {
     }
     
     private func save() {
-        if (nomedicaments || medicaments) && (cardiovascular || musculoskeletal || neuromuscular || nothing || diabetes || highBlood) {
+        if (nomedicaments || medicaments) && (cardiovascular || musculoskeletal || neuromuscular || nothing || diabetes || highBlood) && (less || more || never) {
             
             let ref: DatabaseReference = Database.database().reference().child("Participants").child("Participant \(self.status.participantID)").child("Health Status")
             ref.updateChildValues(["Medication": "\(medicaments)", "Cardiovascular diseases": "\(cardiovascular)", "Musculoskeletal diseases": "\(musculoskeletal)", "Neuromuscular disorder": "\(neuromuscular)", "High Blood": "\(highBlood)", "Diabetes": "\(neuromuscular)", "Nothing": "\(nothing)", "Other": other])

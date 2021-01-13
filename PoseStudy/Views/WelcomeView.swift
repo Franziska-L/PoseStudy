@@ -28,23 +28,31 @@ struct WelcomeView: View {
     @State var alertConnection = false
     @State var alertID = false
     
+    @State var wait = false
+    
     var body: some View {
         NavigationView {
-            VStack {
-                NavigationLink(destination: DemographicFormView(), tag: "Demographic", selection: $selection) { EmptyView() }
-                NavigationLink(destination: WarmUpView(), tag: "WarmUp", selection: $selection) { EmptyView() }
-                
-                Text("Willkommen zur Studie.").titleStyle()
-                Spacer()
-                TextField("Gib deine ID ein", text: $ID)
-                    .padding(.horizontal, 40)
-                    .multilineTextAlignment(TextAlignment.center)
-                    .textFieldStyle(RoundedBorderTextFieldStyle())
-                Spacer()
-                
-                Button(action: start) {
-                    Text(String.next)
-                }.buttonStyle(CustomButtonStyle())
+            ZStack {
+                VStack {
+                    NavigationLink(destination: DemographicFormView(), tag: "Demographic", selection: $selection) { EmptyView() }
+                    NavigationLink(destination: WarmUpView(), tag: "WarmUp", selection: $selection) { EmptyView() }
+                    
+                    Text("Willkommen zur Studie.").titleStyle()
+                    Spacer()
+                    TextField("Gib deine ID ein", text: $ID)
+                        .padding(.horizontal, 40)
+                        .multilineTextAlignment(TextAlignment.center)
+                        .textFieldStyle(RoundedBorderTextFieldStyle())
+                    
+                    Spacer()
+                    
+                    Button(action: start) {
+                        Text(String.next)
+                    }.buttonStyle(CustomButtonStyle())
+                }
+                if wait {
+                    ProgressView().progressViewStyle(CircularProgressViewStyle())
+                }
             }
         }
         .navigationBarHidden(true)
@@ -80,6 +88,7 @@ struct WelcomeView: View {
     
     func start() {
         if hasInternetConnection && !ID.isEmpty {
+            wait = true
             saveToDatabase()
         } else if !hasInternetConnection {
             alertConnection = true
@@ -104,13 +113,16 @@ struct WelcomeView: View {
                             if let value = snap.value as? Int {
                                 self.status.day = value
                                 refDay.setValue(value)
+                                self.wait = false
                             }
                         }
                     } else {
                         self.selection = "Demographic"
                         self.status.day = 1
                         self.status.participantID = ID
+                        self.wait = false
                     }
+                    self.wait = false
                 }
             } else {
                 let refID = ref.child("IDs")
@@ -125,6 +137,7 @@ struct WelcomeView: View {
                     else {
                         alertID = true
                     }
+                    self.wait = false
                 }
             }
         }) { (error) in

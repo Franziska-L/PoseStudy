@@ -38,6 +38,43 @@ struct CardView: View {
     }
 }
 
+struct CardView1: View {
+    var image: String
+    var secondImg: String
+    var instruction: String
+    
+    var centralManager: CBCentralManager?
+    var peripheral: CBPeripheral?
+    
+    var body: some View {
+        GeometryReader { geometry in
+            VStack(alignment: .leading) {
+                HStack {
+                    Image(image)
+                        .resizable()
+                        .scaledToFit()
+                        .frame(width: geometry.size.width / 2, height: geometry.size.height * 0.5)
+                        .clipped()
+                    Image(secondImg)
+                        .resizable()
+                        .scaledToFit()
+                        .frame(width: geometry.size.width / 2, height: geometry.size.height * 0.5)
+                        .clipped()
+                }
+                Text(instruction)
+                    .padding()
+                    .lineLimit(nil)
+                    .multilineTextAlignment(.leading)
+                    .fixedSize(horizontal: false, vertical: true)
+            }
+            .padding(.bottom)
+            .background(Color.white)
+            .cornerRadius(10)
+            .shadow(radius: 5)
+        }
+    }
+}
+
 struct ConnectingCardView: View {
     var instruction: String
     @EnvironmentObject var status: GlobalState
@@ -67,6 +104,9 @@ struct ConnectingCardView: View {
                         }).buttonStyle(CustomButtonStyle()).padding(.horizontal, 40)
                     }
                 }
+                if polarApi.connectionState == .notAvailable {
+                    Text("Es wurde kein Polar Gerät gefunden. Stelle sicher, dass du den Elektrodenbereich befeuchtet hast und der Brustgurt fest am Körper sitzt.")
+                }
                 
                
             }
@@ -84,14 +124,14 @@ struct ConnectingCardView: View {
     
     func connectToDevice() {
         if polarApi.bleState == .poweredOn {
-            polarApi.autoConnectToDevice()
+            polarApi.searchForDevice()
             
-            DispatchQueue.main.asyncAfter(deadline: .now() + 6) {
+            /*DispatchQueue.main.asyncAfter(deadline: .now() + 6) {
                 if polarApi.connectionState != .connected || !polarApi.streamReady {
                     polarApi.connectionState = .unknown
                     alertConnection = true
                 }
-            }
+            }*/
         } else if polarApi.bleState == .poweredOff {
             alert = true
         }
@@ -112,6 +152,7 @@ struct ExerciseCardView: View {
                         .lineLimit(nil)
                         .multilineTextAlignment(.leading)
                         .fixedSize(horizontal: false, vertical: true)
+                    Image("push-up").resizable().scaledToFit().padding()
                     ForEach(0..<exerciseInst.count) { position in
                         Text("\(exerciseInst[position])")
                             .padding(.top, 10).padding(.horizontal, 10)
@@ -120,14 +161,13 @@ struct ExerciseCardView: View {
                             .multilineTextAlignment(.leading)
                             .fixedSize(horizontal: false, vertical: true)
                     }
-                    Image("pushUp").resizable().scaledToFit().padding()
-                    Image("pushUpKnee").resizable().scaledToFit().padding()
+                    Image("push-up-knee").resizable().scaledToFit().padding()
                 }
-                .padding(.bottom)
-                .background(Color.white)
-                .cornerRadius(10)
-                .shadow(radius: 5)
             }
+            .padding(.bottom)
+            .background(Color.white)
+            .cornerRadius(10)
+            .shadow(radius: 5)
         }
     }
 }

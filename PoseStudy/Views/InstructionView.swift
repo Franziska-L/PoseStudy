@@ -36,7 +36,7 @@ struct InstructionView: View {
                         CardView(image: "pulsgurt", instruction: String.polarDeviceIntr)
                             .frame(width: geometry.size.width).frame(height: 300)
                         ConnectingCardView(instruction: String.connectInstr).frame(width: geometry.size.width).frame(height: 300)
-                        CardView(image: "position1", instruction: String.positionInstr)
+                        CardView(image: "position2", instruction: String.positionInstr)
                             .frame(width: geometry.size.width).frame(height: 300)
                     }
                 }
@@ -45,7 +45,9 @@ struct InstructionView: View {
                 .gesture(
                     DragGesture()
                         .onChanged({ value in
-                            self.offset = value.translation.width - geometry.size.width * CGFloat(self.step)
+                            if abs(value.translation.width) > 50 {
+                                self.offset = value.translation.width - geometry.size.width * CGFloat(self.step)
+                            }
                         })
                         .onEnded({ value in
                             if -value.predictedEndTranslation.width > geometry.size.width / 2, self.step < self.totalInstructions - 1 {
