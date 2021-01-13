@@ -7,14 +7,10 @@
 
 import SwiftUI
 import PolarBleSdk
-import CoreBluetooth
 
 struct CardView: View {
     var image: String
     var instruction: String
-    
-    var centralManager: CBCentralManager?
-    var peripheral: CBPeripheral?
     
     var body: some View {
         GeometryReader { geometry in
@@ -24,43 +20,6 @@ struct CardView: View {
                     .scaledToFit()
                     .frame(width: geometry.size.width, height: geometry.size.height * 0.5)
                     .clipped()
-                Text(instruction)
-                    .padding()
-                    .lineLimit(nil)
-                    .multilineTextAlignment(.leading)
-                    .fixedSize(horizontal: false, vertical: true)
-            }
-            .padding(.bottom)
-            .background(Color.white)
-            .cornerRadius(10)
-            .shadow(radius: 5)
-        }
-    }
-}
-
-struct CardView1: View {
-    var image: String
-    var secondImg: String
-    var instruction: String
-    
-    var centralManager: CBCentralManager?
-    var peripheral: CBPeripheral?
-    
-    var body: some View {
-        GeometryReader { geometry in
-            VStack(alignment: .leading) {
-                HStack {
-                    Image(image)
-                        .resizable()
-                        .scaledToFit()
-                        .frame(width: geometry.size.width / 2, height: geometry.size.height * 0.5)
-                        .clipped()
-                    Image(secondImg)
-                        .resizable()
-                        .scaledToFit()
-                        .frame(width: geometry.size.width / 2, height: geometry.size.height * 0.5)
-                        .clipped()
-                }
                 Text(instruction)
                     .padding()
                     .lineLimit(nil)
