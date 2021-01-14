@@ -103,6 +103,14 @@ struct HealthFormView: View {
     
     private func save() {
         if (nomedicaments || medicaments) && (cardiovascular || musculoskeletal || neuromuscular || nothing || diabetes || highBlood) && (less || more || never) {
+            status.userData.health.cardiovascularDiseases = "\(cardiovascular)"
+            status.userData.health.musculoskeletalDiseases = "\(musculoskeletal)"
+            status.userData.health.neuromuscularDisorder = "\(neuromuscular)"
+            status.userData.health.medication = "\(medicaments)"
+            status.userData.health.highBlood = "\(highBlood)"
+            status.userData.health.diabetes = "\(diabetes)"
+            status.userData.health.nothing = "\(nothing)"
+            status.userData.health.other = other
             
             let ref: DatabaseReference = Database.database().reference().child("Participants").child("Participant \(self.status.participantID)").child("Health Status")
             ref.updateChildValues(["Medication": "\(medicaments)", "Cardiovascular diseases": "\(cardiovascular)", "Musculoskeletal diseases": "\(musculoskeletal)", "Neuromuscular disorder": "\(neuromuscular)", "High Blood": "\(highBlood)", "Diabetes": "\(neuromuscular)", "Nothing": "\(nothing)", "Other": other])

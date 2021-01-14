@@ -8,11 +8,13 @@
 import SwiftUI
 import FirebaseDatabase
 import Network
+import FirebaseStorage
 
 class GlobalState: ObservableObject {
     @Published var session: Int = 1
     @Published var participantID: String = ""
     @Published var day: Int = 0
+    @Published var userData = UserData()
 }
 
 struct WelcomeView: View {
@@ -29,7 +31,8 @@ struct WelcomeView: View {
     @State var alertID = false
     
     @State var wait = false
-    
+    @State private var isSharePresented: Bool = false
+
     var body: some View {
         NavigationView {
             ZStack {
@@ -37,7 +40,10 @@ struct WelcomeView: View {
                     NavigationLink(destination: DemographicFormView(), tag: "Demographic", selection: $selection) { EmptyView() }
                     NavigationLink(destination: WarmUpView(), tag: "WarmUp", selection: $selection) { EmptyView() }
                     
-                    Text("Willkommen zur Studie.").titleStyle()
+                    Text("Willkommen zur Studie.").titleStyle().onTapGesture(count: 5) {
+                        print("Tapped on text")
+                        self.isSharePresented = true
+                    }
                     Spacer()
                     TextField("Gib deine ID ein", text: $ID)
                         .padding(.horizontal, 40)
@@ -69,6 +75,37 @@ struct WelcomeView: View {
             Alert(title: Text("Falsche ID"), message: Text("Gib die ID ein, die du zu Beginn der Studie bekommen hast."))
         })
         .navigationViewStyle(StackNavigationViewStyle())
+        .sheet(isPresented: $isSharePresented, onDismiss: {
+            print("Dismiss")
+        }, content: {
+            let url = show()
+            ActivityViewController(activityItems: url, applicationActivities: nil)
+        })
+    }
+    
+    func show() -> [URL] {
+        var urls = [URL]()
+        let fileManager = FileManager.default
+        let documentsURL = fileManager.urls(for: .documentDirectory, in: .userDomainMask)[0]
+        do {
+            let fileURLs = try fileManager.contentsOfDirectory(at: documentsURL, includingPropertiesForKeys: nil)
+            print(fileURLs)
+            for file in fileURLs {
+                let input = try String(contentsOf: file)
+                urls.append(file)
+                print(input)
+            }
+            // process files
+        } catch {
+            print("Error while enumerating files \(documentsURL.path): \(error.localizedDescription)")
+        }
+        
+        return urls
+    }
+    
+    func getDocumentsDirectory() -> URL {
+        let paths = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask)
+        return paths[0]
     }
     
     func checkConnection() {
@@ -98,6 +135,7 @@ struct WelcomeView: View {
     }
     
     func saveToDatabase() {
+        status.userData.ID = ID
         let ref: DatabaseReference = Database.database().reference()
         
         var refParticipants = ref.child("Participants")

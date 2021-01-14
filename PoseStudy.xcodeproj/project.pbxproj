@@ -24,6 +24,7 @@
 		737328C525754B6B0081FCA2 /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 737328C425754B6B0081FCA2 /* GoogleService-Info.plist */; };
 		7392A6942588ECB00079AEDE /* Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7392A6932588ECB00079AEDE /* Extensions.swift */; };
 		739B9DE8256FEFA100CE1F4A /* HealthFormView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 739B9DE7256FEFA100CE1F4A /* HealthFormView.swift */; };
+		739E4D9E25B0733B00D0B644 /* UserData.swift in Sources */ = {isa = PBXBuildFile; fileRef = 739E4D9D25B0733B00D0B644 /* UserData.swift */; };
 		73A2BF7E256ED2DB00A592E3 /* InstructionView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 73A2BF7D256ED2DB00A592E3 /* InstructionView.swift */; };
 		73D6030C25778A9B00ABC437 /* CardView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 73D6030B25778A9B00ABC437 /* CardView.swift */; };
 		73D603112577C4AB00ABC437 /* Buttons.swift in Sources */ = {isa = PBXBuildFile; fileRef = 73D603102577C4AB00ABC437 /* Buttons.swift */; };
@@ -93,6 +94,7 @@
 		737328C425754B6B0081FCA2 /* GoogleService-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "GoogleService-Info.plist"; sourceTree = "<group>"; };
 		7392A6932588ECB00079AEDE /* Extensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Extensions.swift; sourceTree = "<group>"; };
 		739B9DE7256FEFA100CE1F4A /* HealthFormView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HealthFormView.swift; sourceTree = "<group>"; };
+		739E4D9D25B0733B00D0B644 /* UserData.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserData.swift; sourceTree = "<group>"; };
 		73A2BF7D256ED2DB00A592E3 /* InstructionView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InstructionView.swift; sourceTree = "<group>"; };
 		73D6030B25778A9B00ABC437 /* CardView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CardView.swift; sourceTree = "<group>"; };
 		73D603102577C4AB00ABC437 /* Buttons.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Buttons.swift; sourceTree = "<group>"; };
@@ -223,6 +225,7 @@
 				737328582574E50F0081FCA2 /* CameraRepresentable.swift */,
 				73DDC0C02587767E00B864AA /* PolarApiWrapper.swift */,
 				7392A6932588ECB00079AEDE /* Extensions.swift */,
+				739E4D9D25B0733B00D0B644 /* UserData.swift */,
 			);
 			path = Utils;
 			sourceTree = "<group>";
@@ -534,6 +537,7 @@
 				739B9DE8256FEFA100CE1F4A /* HealthFormView.swift in Sources */,
 				7336A31B256E790D00CB090D /* PoseStudyApp.swift in Sources */,
 				73D6031F2577D5AA00ABC437 /* PauseView.swift in Sources */,
+				739E4D9E25B0733B00D0B644 /* UserData.swift in Sources */,
 				7392A6942588ECB00079AEDE /* Extensions.swift in Sources */,
 				737328202572EE6D0081FCA2 /* CameraView.swift in Sources */,
 				73D603112577C4AB00ABC437 /* Buttons.swift in Sources */,

@@ -26,7 +26,8 @@ struct CameraView: View {
     @State var timer: Timer? = nil
     
     @State var isRecording = false
-        
+    @State var data = MeasuredData()
+    
     @EnvironmentObject var status: GlobalState
     @EnvironmentObject var polarApi: PolarApiWrapper
     
@@ -126,8 +127,9 @@ struct CameraView: View {
     }
     
     private func setStartTime() {
-        let timestampStart = Date().toMillis()
+        let timestampStart: Int64 = Date().toMillis()
 
+        data.startTime = timestampStart
         let ref: DatabaseReference = Database.database().reference().child(String.participants).child("Participant \(status.participantID)").child("Day \(self.status.day)").child("Session \(status.session)")
         ref.setValue(["Start Time": timestampStart])
     }
@@ -138,6 +140,20 @@ struct CameraView: View {
         
         let ref: DatabaseReference = Database.database().reference().child(String.participants).child("Participant \(status.participantID)").child("Day \(self.status.day)").child("Session \(status.session)")
         ref.updateChildValues(["HR" : polarApi.hrDataStream, "ECG" : polarApi.ecgDataStream, "ECGs" : polarApi.ecgDataStreamPerSecond, "HR Timestamp" : polarApi.hrDataTimestamp, "ECG Timestamp" : polarApi.ecgDataTimestamp, "RR" : polarApi.rrsDataStream, "RRMs" : polarApi.rrMsDataStream, "HRs" : polarApi.hrDataStreamPerSec, "RR Timestamp" : polarApi.rrDataTimestamp, "End Time": timestampEnd])
+        
+        data.ecgDataStream = polarApi.ecgDataStream
+        data.ecgDataStream = polarApi.ecgDataStream
+        data.ecgDataStreamPerSecond = polarApi.ecgDataStreamPerSecond
+        data.hrDataTimestamp = polarApi.hrDataTimestamp
+        data.ecgDataTimestamp = polarApi.ecgDataTimestamp
+        data.rrsDataStream = polarApi.rrsDataStream
+        data.rrMsDataStream = polarApi.rrMsDataStream
+        data.rrDataTimestamp = polarApi.rrDataTimestamp
+        data.hrDataStreamPerSec = polarApi.hrDataStreamPerSec
+        data.endTime = timestampEnd
+        
+        status.userData.measured.append(data)
+
         
         polarApi.hrDataStream.removeAll()
         polarApi.ecgDataStream.removeAll()

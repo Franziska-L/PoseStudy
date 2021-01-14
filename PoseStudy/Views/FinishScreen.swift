@@ -8,9 +8,30 @@
 import SwiftUI
 import Firebase
 
+
+struct ActivityViewController: UIViewControllerRepresentable {
+
+    var activityItems: [Any]
+    var applicationActivities: [UIActivity]? = nil
+
+    func makeUIViewController(context: UIViewControllerRepresentableContext<ActivityViewController>) -> UIActivityViewController {
+        let controller = UIActivityViewController(activityItems: activityItems, applicationActivities: applicationActivities)
+        return controller
+    }
+
+    func updateUIViewController(_ uiViewController: UIActivityViewController, context: UIViewControllerRepresentableContext<ActivityViewController>) {}
+
+}
+
+
+
+
 struct FinishScreen: View {
     @EnvironmentObject var status: GlobalState
     @EnvironmentObject var polarApi: PolarApiWrapper
+    
+    @State private var isSharePresented: Bool = false
+
     
     var body: some View {
         VStack {
@@ -19,6 +40,7 @@ struct FinishScreen: View {
             Text("Danke für deine Teilnahme!").titleStyle()
         }.environmentObject(status).environmentObject(polarApi).onAppear() {
             self.setDay()
+            self.saveToFile()
         }
     }
     
@@ -31,6 +53,33 @@ struct FinishScreen: View {
                 ref.setValue(value + 1)
             }
         }
+    }
+    
+    func saveToFile() {
+        var file = getDocumentsDirectory().appendingPathComponent("Participant_\(status.participantID)_Day_\(status.day)")
+        let fileManager = FileManager.default
+        var fileExists = true
+//        while fileExists {
+//            if fileManager.fileExists(atPath: file.path) {
+//                file.appendPathComponent("-1")
+//            } else {
+//                file.appendPathComponent(".json")
+//                fileExists = false
+//            }
+//        }
+        
+        do {
+            let jsonData = try JSONEncoder().encode(status.userData)
+            let jsonString = String(data: jsonData, encoding: .utf8)
+            try jsonString?.write(to: file, atomically: true, encoding: String.Encoding.utf8)
+        } catch {
+            print(error.localizedDescription)
+        }
+    }
+    
+    func getDocumentsDirectory() -> URL {
+        let paths = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask)
+        return paths[0]
     }
 }
 
