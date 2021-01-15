@@ -61,21 +61,33 @@ struct HealtData: Codable {
 struct MeasuredData: Codable {
     var startTime: Int64 = Int64()
     var endTime: Int64 = Int64()
-    var isFeatureReady = false
+    
     var ecgDataStream: [Int32] = [Int32]()
-    var ecgDataStreamTest: [Int32] = [Int32]()
-    var hrDataStream: [UInt8] = [UInt8]()
-
     var ecgDataStreamPerSecond: [[Int32]] = [[Int32]]()
-
     var ecgDataTimestamp = [Int64]()
+    
+    var hrDataStream: [UInt8] = [UInt8]()
+    var hrDataStreamPerSec: [UInt8] = [UInt8]()
     var hrDataTimestamp = [Int64]()
 
-    var hrDataStreamPerSec: [UInt8] = [UInt8]()
     var rrsDataStream: [[Int]] = [[Int]]()
     var rrMsDataStream: [[Int]] = [[Int]]()
 
     var rrDataTimestamp = [Int64]()
+    
+    enum CodingKeys: String, CodingKey {
+        case startTime = "Start Time"
+        case endTime = "End Time"
+        case ecgDataStream = "ECG"
+        case ecgDataStreamPerSecond = "ECGs"
+        case ecgDataTimestamp = "ECG Timestamp"
+        case hrDataStream = "HR"
+        case hrDataStreamPerSec = "HRs"
+        case hrDataTimestamp = "HR Timestamp"
+        case rrsDataStream = "RRs"
+        case rrMsDataStream = "RRms"
+        case rrDataTimestamp = "RR Timestamp"
+    }
 }
 
 

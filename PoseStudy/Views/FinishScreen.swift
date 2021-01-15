@@ -56,18 +56,9 @@ struct FinishScreen: View {
     }
     
     func saveToFile() {
-        var file = getDocumentsDirectory().appendingPathComponent("Participant_\(status.participantID)_Day_\(status.day)")
-        let fileManager = FileManager.default
-        var fileExists = true
-//        while fileExists {
-//            if fileManager.fileExists(atPath: file.path) {
-//                file.appendPathComponent("-1")
-//            } else {
-//                file.appendPathComponent(".json")
-//                fileExists = false
-//            }
-//        }
+        let identifier = UUID()
         
+        let file = getDocumentsDirectory().appendingPathComponent("Participant_\(status.participantID)_Day_\(status.day)_\(identifier).json")
         do {
             let jsonData = try JSONEncoder().encode(status.userData)
             let jsonString = String(data: jsonData, encoding: .utf8)

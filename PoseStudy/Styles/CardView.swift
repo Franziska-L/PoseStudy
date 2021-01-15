@@ -57,7 +57,7 @@ struct ConnectingCardView: View {
                     if polarApi.connectionState == .connecting || (polarApi.connectionState == .connected && !polarApi.streamReady) {
                         ProgressView().progressViewStyle(CircularProgressViewStyle())
                     }
-                    if polarApi.connectionState == .disconnected || polarApi.connectionState == .unknown {
+                    if polarApi.connectionState == .disconnected || polarApi.connectionState == .unknown || polarApi.connectionState == .notAvailable {
                         Button(action: connectToDevice, label: {
                             Text("Verbinden")
                         }).buttonStyle(CustomButtonStyle()).padding(.horizontal, 40)

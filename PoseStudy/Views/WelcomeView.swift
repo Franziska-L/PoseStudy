@@ -17,20 +17,24 @@ class GlobalState: ObservableObject {
     @Published var userData = UserData()
 }
 
+enum ActiveAlert {
+    case first, second
+}
+
 struct WelcomeView: View {
     @ObservedObject var status = GlobalState()
     @ObservedObject var polarApi = PolarApiWrapper()
     
     @State private var selection: String? = nil
-    @State var ID: String = ""
-    @State var isCodeValide = false
-    @State var codeExists = false
+    @State private var ID: String = ""
+    @State private var isCodeValide = false
+    @State private var codeExists = false
     
-    @State var hasInternetConnection = false
-    @State var alertConnection = false
-    @State var alertID = false
+    @State private var hasInternetConnection = false
+    @State private var showAlert = false
+    @State private var activeAlert: ActiveAlert = .first
     
-    @State var wait = false
+    @State private var wait = false
     @State private var isSharePresented: Bool = false
 
     var body: some View {
@@ -65,22 +69,24 @@ struct WelcomeView: View {
         .navigationBarBackButtonHidden(true)
         .environmentObject(status)
         .environmentObject(polarApi)
+        .navigationViewStyle(StackNavigationViewStyle())
         .onAppear() {
             checkConnection()
         }
-        .alert(isPresented: $alertConnection, content: {
-            Alert(title: Text("Bitte stelle eine Verbindung zum Internet her."))
-        })
-        .alert(isPresented: $alertID, content: {
-            Alert(title: Text("Falsche ID"), message: Text("Gib die ID ein, die du zu Beginn der Studie bekommen hast."))
-        })
-        .navigationViewStyle(StackNavigationViewStyle())
         .sheet(isPresented: $isSharePresented, onDismiss: {
             print("Dismiss")
         }, content: {
             let url = show()
             ActivityViewController(activityItems: url, applicationActivities: nil)
         })
+        .alert(isPresented: $showAlert) {
+            switch activeAlert {
+            case .first:
+                return Alert(title: Text(String.connection), message: Text("Bitte stelle eine Verbindung zum Internet her."))
+            case .second:
+                return Alert(title: Text("Falsche ID"), message: Text("Gib die ID ein, die du zu Beginn der Studie bekommen hast."))
+            }
+        }
     }
     
     func show() -> [URL] {
@@ -125,12 +131,14 @@ struct WelcomeView: View {
     
     func start() {
         if hasInternetConnection && !ID.isEmpty {
-            wait = true
-            saveToDatabase()
-        } else if !hasInternetConnection {
-            alertConnection = true
+            self.wait = true
+            self.saveToDatabase()
         } else if ID.isEmpty {
-            alertID = true
+            self.activeAlert = .second
+            self.showAlert = true
+        } else if !hasInternetConnection {
+            self.activeAlert = .first
+            self.showAlert = true
         }
     }
     
@@ -173,7 +181,8 @@ struct WelcomeView: View {
                         self.selection = "Demographic"
                     }
                     else {
-                        alertID = true
+                        self.activeAlert = .second
+                        self.showAlert = true
                     }
                     self.wait = false
                 }

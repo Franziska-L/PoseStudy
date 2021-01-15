@@ -87,7 +87,7 @@ struct InstructionView: View {
         }.environmentObject(status).environmentObject(polarApi)
         .navigationBarBackButtonHidden(true)
         .alert(isPresented: $alert, content: {
-            Alert(title: Text("Etwas ist schief gelaufen"), message: Text("Das Polar Gerät ist noch nicht bereit. Bitte überprüfe die Verbindung zum Brustgurt."))
+            Alert(title: Text(String.connection), message: Text(String.connectionMessage))
         })
     }
     
@@ -99,7 +99,6 @@ struct InstructionView: View {
         if (self.step >= totalInstructions - 1) && !polarApi.isECGReady() {
             alert = true
         } else {
-            //TODO gehe eine card weiter
             self.step += 1
             withAnimation { self.offset = -(CGFloat(width) + self.spacing) * CGFloat(self.step) }
         }

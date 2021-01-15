@@ -31,15 +31,7 @@ class PolarApiWrapper: ObservableObject,
                        PolarBleApiLogger,
                        PolarBleApiCCCWriteObserver
 {
-    func message(_ str: String) {
-        NSLog(str)
-    }
-    
-    /// ccc write observer
-    func cccWrite(_ address: UUID, characteristic: CBUUID) {
-        NSLog("ccc write: \(address) chr: \(characteristic)")
-    }
-    
+
     
     var api: PolarBleApi
     var broadcast: Disposable?
@@ -52,8 +44,6 @@ class PolarApiWrapper: ObservableObject,
     @Published var bleState = BleState.unknown
     @Published var connectionState: ConnectionState = .unknown
     
-    @Published var isFeatureReady = false
-    //TODO: Lösche hier alle Werte die nicht gebraucht werden und Überprüfe alles
     @Published var ecgDataStream: [Int32] = [Int32]()
     @Published var ecgDataStreamTest: [Int32] = [Int32]()
     @Published var hrDataStream: [UInt8] = [UInt8]()
@@ -102,7 +92,6 @@ class PolarApiWrapper: ObservableObject,
     }
     
     func searchForDevice() {
-        //stopSearch()
         searchToggle = api.searchForDevice().observeOn(MainScheduler.instance).subscribe{ e in
             switch e {
             case .completed:
@@ -168,7 +157,6 @@ class PolarApiWrapper: ObservableObject,
             }
         }
         
-        //TODO: mit timesamps schauen dass alle dieselben sind
         DispatchQueue.main.async {
             if self.timer == nil {
                 self.timer = Timer.scheduledTimer(withTimeInterval: 1.0, repeats: true) { _ in
@@ -293,5 +281,14 @@ class PolarApiWrapper: ObservableObject,
     
     func disInformationReceived(_ identifier: String, uuid: CBUUID, value: String) {
         NSLog("dis info: \(uuid.uuidString) value: \(value)")
+    }
+    
+    func message(_ str: String) {
+        NSLog(str)
+    }
+    
+    /// ccc write observer
+    func cccWrite(_ address: UUID, characteristic: CBUUID) {
+        NSLog("ccc write: \(address) chr: \(characteristic)")
     }
 }

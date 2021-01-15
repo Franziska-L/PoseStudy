@@ -142,10 +142,12 @@ struct CameraView: View {
         ref.updateChildValues(["HR" : polarApi.hrDataStream, "ECG" : polarApi.ecgDataStream, "ECGs" : polarApi.ecgDataStreamPerSecond, "HR Timestamp" : polarApi.hrDataTimestamp, "ECG Timestamp" : polarApi.ecgDataTimestamp, "RR" : polarApi.rrsDataStream, "RRMs" : polarApi.rrMsDataStream, "HRs" : polarApi.hrDataStreamPerSec, "RR Timestamp" : polarApi.rrDataTimestamp, "End Time": timestampEnd])
         
         data.ecgDataStream = polarApi.ecgDataStream
-        data.ecgDataStream = polarApi.ecgDataStream
-        data.ecgDataStreamPerSecond = polarApi.ecgDataStreamPerSecond
-        data.hrDataTimestamp = polarApi.hrDataTimestamp
         data.ecgDataTimestamp = polarApi.ecgDataTimestamp
+        data.ecgDataStreamPerSecond = polarApi.ecgDataStreamPerSecond
+        
+        data.hrDataStream = polarApi.hrDataStream
+        data.hrDataTimestamp = polarApi.hrDataTimestamp
+        
         data.rrsDataStream = polarApi.rrsDataStream
         data.rrMsDataStream = polarApi.rrMsDataStream
         data.rrDataTimestamp = polarApi.rrDataTimestamp

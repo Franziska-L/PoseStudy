@@ -49,6 +49,10 @@ extension String {
     //Buttons
     static let next = "Weiter"
     static let go = "Los"
+    
+    //Connection
+    static let connection = "Verbindungsfehler"
+    static let connectionMessage = "Das Polar Gerät ist noch nicht bereit. Bitte überprüfe die Verbindung zum Brustgurt. Stelle dazu sicher, dass der Brustgurt fest am Körper liegt."
 }
 
 extension UIApplication {
