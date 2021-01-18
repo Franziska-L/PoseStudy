@@ -41,6 +41,8 @@ class PolarApiWrapper: ObservableObject,
     var deviceId = "74D5EB20"
     var timer: Timer? = nil
     
+    @Published var searchDone = true
+    
     @Published var bleState = BleState.unknown
     @Published var connectionState: ConnectionState = .unknown
     
@@ -92,6 +94,10 @@ class PolarApiWrapper: ObservableObject,
     }
     
     func searchForDevice() {
+        if searchToggle != nil {
+            self.stopSearch()
+        }
+        searchDone = false
         searchToggle = api.searchForDevice().observeOn(MainScheduler.instance).subscribe{ e in
             switch e {
             case .completed:
@@ -107,6 +113,9 @@ class PolarApiWrapper: ObservableObject,
                 }
                 NSLog("polar device found: \(item.name) connectable: \(item.connectable) address: \(item.address.uuidString)")
             }
+        }
+        DispatchQueue.main.asyncAfter(deadline: .now() + 1) {
+            self.searchDone = true
         }
     }
     

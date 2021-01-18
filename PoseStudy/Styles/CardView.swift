@@ -40,7 +40,6 @@ struct ConnectingCardView: View {
     @EnvironmentObject var polarApi: PolarApiWrapper
     
     @State var alert = false
-    @State var alertConnection = false
     
     var body: some View {
         GeometryReader { geometry in
@@ -51,20 +50,20 @@ struct ConnectingCardView: View {
                     .multilineTextAlignment(.leading)
                     .fixedSize(horizontal: false, vertical: true)
                 VStack(alignment: .center) {
-                    if polarApi.connectionState == .connected && polarApi.streamReady {
-                        Text("Erfolgreich Verbunden").foregroundColor(.darkgreen)
-                    }
-                    if polarApi.connectionState == .connecting || (polarApi.connectionState == .connected && !polarApi.streamReady) {
-                        ProgressView().progressViewStyle(CircularProgressViewStyle())
-                    }
                     if polarApi.connectionState == .disconnected || polarApi.connectionState == .unknown || polarApi.connectionState == .notAvailable {
                         Button(action: connectToDevice, label: {
                             Text("Verbinden")
                         }).buttonStyle(CustomButtonStyle()).padding(.horizontal, 40)
                     }
+                    if polarApi.connectionState == .connected && polarApi.streamReady {
+                        Text("Erfolgreich Verbunden").foregroundColor(.darkgreen)
+                    }
+                    if polarApi.connectionState == .connecting || (polarApi.connectionState == .connected && !polarApi.streamReady) || !polarApi.searchDone {
+                        ProgressView().progressViewStyle(CircularProgressViewStyle())
+                    }
                 }
-                if polarApi.connectionState == .notAvailable {
-                    Text("Es wurde kein Polar Gerät gefunden. Stelle sicher, dass du den Elektrodenbereich befeuchtet hast und der Brustgurt fest am Körper sitzt.")
+                if polarApi.connectionState == .notAvailable && polarApi.searchDone {
+                    Text("Die Verbindung zum Brustgurt konnte nicht hergestellt werden. Stelle sicher, dass du den Elektrodenbereich des Brustgurtes befeuchtet hast und der Brustgurt fest am Körper anliegt.")
                 }
                 
                
@@ -76,21 +75,17 @@ struct ConnectingCardView: View {
         }.alert(isPresented: $alert, content: {
             Alert(title: Text("Bluetooth Status"), message: Text("Bitte schalte Bluetooth ein um fortzufahren."))
         })
-        .alert(isPresented: $alert, content: {
-            Alert(title: Text("Etwas ist schief gelaufen."), message: Text("Bitte stelle sicher, dass du den Brustgurt richtig angelegt hast. Befeuchte ggf. den Elektrodenbereich erneut und lege ihn fest um die Brust."))
-        })
     }
     
     func connectToDevice() {
         if polarApi.bleState == .poweredOn {
             polarApi.searchForDevice()
             
-            /*DispatchQueue.main.asyncAfter(deadline: .now() + 6) {
+            DispatchQueue.main.asyncAfter(deadline: .now() + 6) {
                 if polarApi.connectionState != .connected || !polarApi.streamReady {
-                    polarApi.connectionState = .unknown
-                    alertConnection = true
+                    polarApi.connectionState = .notAvailable
                 }
-            }*/
+            }
         } else if polarApi.bleState == .poweredOff {
             alert = true
         }

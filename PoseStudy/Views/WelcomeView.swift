@@ -53,6 +53,7 @@ struct WelcomeView: View {
                         .padding(.horizontal, 40)
                         .multilineTextAlignment(TextAlignment.center)
                         .textFieldStyle(RoundedBorderTextFieldStyle())
+                        .keyboardType(.numberPad)
                     
                     Spacer()
                     
