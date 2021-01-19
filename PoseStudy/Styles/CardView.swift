@@ -63,7 +63,7 @@ struct ConnectingCardView: View {
                     }
                 }
                 if polarApi.connectionState == .notAvailable && polarApi.searchDone {
-                    Text("Die Verbindung zum Brustgurt konnte nicht hergestellt werden. Stelle sicher, dass du den Elektrodenbereich des Brustgurtes befeuchtet hast und der Brustgurt fest am Körper anliegt.")
+                    Text("Die Verbindung zum Puls-Sensor konnte nicht hergestellt werden. Stelle sicher, dass du den Elektrodenbereich des Brustgurtes befeuchtet hast und der Brustgurt fest am Körper anliegt.")
                 }
                 
                
