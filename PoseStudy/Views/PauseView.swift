@@ -6,6 +6,7 @@
 //
 
 import SwiftUI
+import Firebase
 
 struct PauseView: View {
     @State private var selection: String? = nil
@@ -19,7 +20,8 @@ struct PauseView: View {
             Text("Pause").titleStyle()
             Spacer()
             Image("break").resizable().scaledToFit()
-            Text("Mache eine kurze kurze Pause bevor du mit der zweiten Runde beginnst").padding()
+            Text("Mache eine kurze Pause (2-4 Minuten) bevor du mit der zweiten Runde beginnst.").padding()
+            Text("Behalte aber den Brustgurt in der Zeit an.").padding()
             Spacer()
             Text("Ausgeruht? Dann starte in die 2. Runde")
             Button(action: {
@@ -32,11 +34,31 @@ struct PauseView: View {
         .environmentObject(polarApi)
         .navigationBarBackButtonHidden(true)
         .navigationBarHidden(true)
+        .onAppear(perform: {
+            polarApi.startStreaming()
+        })
     }
     
     func setState() {
         self.status.session = 2
         self.selection = "next"
+        
+        let ref: DatabaseReference = Database.database().reference().child(String.participants).child("Participant \(status.participantID)").child("Day \(self.status.day)").child("Resting")
+        ref.updateChildValues(["HR" : polarApi.hrDataStream, "ECG" : polarApi.ecgDataStream, "ECGs" : polarApi.ecgDataStreamPerSecond, "HR Timestamp" : polarApi.hrDataTimestamp, "ECG Timestamp" : polarApi.ecgDataTimestamp, "RR" : polarApi.rrsDataStream, "RRMs" : polarApi.rrMsDataStream, "HRs" : polarApi.hrDataStreamPerSec, "RR Timestamp" : polarApi.rrDataTimestamp])
+        
+        polarApi.hrDataStream.removeAll()
+        polarApi.ecgDataStream.removeAll()
+        
+        polarApi.hrDataTimestamp.removeAll()
+        polarApi.ecgDataTimestamp.removeAll()
+        
+        polarApi.rrsDataStream.removeAll()
+        polarApi.rrMsDataStream.removeAll()
+        polarApi.hrDataStreamPerSec.removeAll()
+        polarApi.rrDataTimestamp.removeAll()
+        
+        polarApi.ecgDataStreamPerSecond.removeAll()
+        polarApi.ecgDataStreamTest.removeAll()
     }
 }
 

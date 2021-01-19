@@ -8,7 +8,7 @@
 import SwiftUI
 
 struct InstructionView: View {
-    var instr = [String.exerciseInstr1, String.exerciseInstr2, String.exerciseInstr3, String.exerciseInstr4]
+    var instr = [String.exerciseInstr1, String.exerciseInstr11 , String.exerciseInstr2, String.exerciseInstr3, String.exerciseInstr4]
 
     @State private var selection: String? = nil
     

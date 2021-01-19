@@ -41,7 +41,10 @@ struct HealthFormView: View {
             VStack {
                 NavigationLink(destination: WarmUpView().navigationBarHidden(true), tag: "WarmUp", selection: $selection) { EmptyView() }
                 Text("Angaben zum Gesundheitszustand").titleStyle()
-                GroupBox(label: Text("Hast du eine der folgenden Krankheiten?")) {
+                GroupBox(label: Text("Hast du eine der folgenden Krankheiten?")
+                            .lineLimit(nil)
+                            .multilineTextAlignment(.leading)
+                            .fixedSize(horizontal: false, vertical: true)) {
                     Toggle(isOn: $cardiovascular) {
                         Text("Herz-Kreislauf-Krankheit")
                     }.toggleStyle(CheckboxToggleStyle())
@@ -62,11 +65,17 @@ struct HealthFormView: View {
                     }.toggleStyle(CheckboxToggleStyle())
                 }.padding().padding(.top, 40)
                 
-                GroupBox(label: Text("Hast du eine andere chronische Krankheit?")) {
+                GroupBox(label: Text("Hast du eine andere chronische Krankheit? (optional)")
+                            .lineLimit(nil)
+                            .multilineTextAlignment(.leading)
+                            .fixedSize(horizontal: false, vertical: true)) {
                     TextField("Sonstiges", text: $other)
                 }.padding()
                 
-                GroupBox(label: Text("Nimmst du regelmäßig Medikamente?")) {
+                GroupBox(label: Text("Nimmst du regelmäßig Medikamente?")
+                            .lineLimit(nil)
+                            .multilineTextAlignment(.leading)
+                            .fixedSize(horizontal: false, vertical: true)) {
                     Toggle(isOn: yes) {
                         Text("Ja")
                     }.toggleStyle(CheckboxToggleStyle())
@@ -103,6 +112,14 @@ struct HealthFormView: View {
     
     private func save() {
         if (nomedicaments || medicaments) && (cardiovascular || musculoskeletal || neuromuscular || nothing || diabetes || highBlood) && (less || more || never) {
+            var fitness = ""
+            if more {
+                fitness = "3 mal oder öfter"
+            } else if less {
+                fitness = "Weniger als 3 mal"
+            } else {
+                fitness = "Nie"
+            }
             status.userData.health.cardiovascularDiseases = "\(cardiovascular)"
             status.userData.health.musculoskeletalDiseases = "\(musculoskeletal)"
             status.userData.health.neuromuscularDisorder = "\(neuromuscular)"
@@ -113,7 +130,7 @@ struct HealthFormView: View {
             status.userData.health.other = other
             
             let ref: DatabaseReference = Database.database().reference().child("Participants").child("Participant \(self.status.participantID)").child("Health Status")
-            ref.updateChildValues(["Medication": "\(medicaments)", "Cardiovascular diseases": "\(cardiovascular)", "Musculoskeletal diseases": "\(musculoskeletal)", "Neuromuscular disorder": "\(neuromuscular)", "High Blood": "\(highBlood)", "Diabetes": "\(neuromuscular)", "Nothing": "\(nothing)", "Other": other])
+            ref.updateChildValues(["Medication": "\(medicaments)", "Cardiovascular diseases": "\(cardiovascular)", "Musculoskeletal diseases": "\(musculoskeletal)", "Neuromuscular disorder": "\(neuromuscular)", "High Blood": "\(highBlood)", "Diabetes": "\(neuromuscular)", "Nothing": "\(nothing)", "Other": other, "Fitness": fitness])
             
             self.selection = "WarmUp"
         } else {

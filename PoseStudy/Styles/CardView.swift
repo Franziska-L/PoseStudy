@@ -106,6 +106,11 @@ struct ExerciseCardView: View {
                         .lineLimit(nil)
                         .multilineTextAlignment(.leading)
                         .fixedSize(horizontal: false, vertical: true)
+                    Text(String.exerciseIntr0)
+                        .padding()
+                        .lineLimit(nil)
+                        .multilineTextAlignment(.leading)
+                        .fixedSize(horizontal: false, vertical: true)
                     Image("push-up").resizable().scaledToFit().padding()
                     ForEach(0..<exerciseInst.count) { position in
                         Text("\(exerciseInst[position])")

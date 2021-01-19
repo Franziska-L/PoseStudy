@@ -49,7 +49,7 @@ struct WelcomeView: View {
                         self.isSharePresented = true
                     }
                     Spacer()
-                    TextField("Gib deine ID ein", text: $ID)
+                    TextField("Gib deine Teilnehmer ID ein", text: $ID)
                         .padding(.horizontal, 40)
                         .multilineTextAlignment(TextAlignment.center)
                         .textFieldStyle(RoundedBorderTextFieldStyle())

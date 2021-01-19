@@ -60,6 +60,8 @@ class PolarApiWrapper: ObservableObject,
     @Published var rrMsDataStream: [[Int]] = [[Int]]()
     
     @Published var rrDataTimestamp = [Int64]()
+    
+    @Published var ecgResting: [Int32] = [Int32]()
 
     @Published var isRecording = false
     @Published var streamReady = false
