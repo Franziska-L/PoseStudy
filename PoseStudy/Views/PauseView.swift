@@ -13,6 +13,7 @@ struct PauseView: View {
     @EnvironmentObject var status: GlobalState
     @EnvironmentObject var polarApi: PolarApiWrapper
     
+    @State var data = MeasuredData()
     
     var body: some View {
         VStack {
@@ -36,6 +37,11 @@ struct PauseView: View {
         .navigationBarHidden(true)
         .onAppear(perform: {
             polarApi.startStreaming()
+            let timestampStart: Int64 = Date().toMillis()
+
+            data.startTime = timestampStart
+            let ref: DatabaseReference = Database.database().reference().child(String.participants).child("Participant \(status.participantID)").child("Day \(self.status.day)").child("Resting")
+            ref.setValue(["Start Time": timestampStart])
         })
     }
     
@@ -43,8 +49,25 @@ struct PauseView: View {
         self.status.session = 2
         self.selection = "next"
         
+        let timestampEnd = Date().toMillis()
+        
         let ref: DatabaseReference = Database.database().reference().child(String.participants).child("Participant \(status.participantID)").child("Day \(self.status.day)").child("Resting")
-        ref.updateChildValues(["HR" : polarApi.hrDataStream, "ECG" : polarApi.ecgDataStream, "ECGs" : polarApi.ecgDataStreamPerSecond, "HR Timestamp" : polarApi.hrDataTimestamp, "ECG Timestamp" : polarApi.ecgDataTimestamp, "RR" : polarApi.rrsDataStream, "RRMs" : polarApi.rrMsDataStream, "HRs" : polarApi.hrDataStreamPerSec, "RR Timestamp" : polarApi.rrDataTimestamp])
+        ref.updateChildValues(["HR" : polarApi.hrDataStream, "ECG" : polarApi.ecgDataStream, "ECGs" : polarApi.ecgDataStreamPerSecond, "HR Timestamp" : polarApi.hrDataTimestamp, "ECG Timestamp" : polarApi.ecgDataTimestamp, "RR" : polarApi.rrsDataStream, "RRMs" : polarApi.rrMsDataStream, "HRs" : polarApi.hrDataStreamPerSec, "RR Timestamp" : polarApi.rrDataTimestamp, "End Time": timestampEnd])
+        
+        data.ecgDataStream = polarApi.ecgDataStream
+        data.ecgDataTimestamp = polarApi.ecgDataTimestamp
+        data.ecgDataStreamPerSecond = polarApi.ecgDataStreamPerSecond
+        
+        data.hrDataStream = polarApi.hrDataStream
+        data.hrDataTimestamp = polarApi.hrDataTimestamp
+        
+        data.rrsDataStream = polarApi.rrsDataStream
+        data.rrMsDataStream = polarApi.rrMsDataStream
+        data.rrDataTimestamp = polarApi.rrDataTimestamp
+        data.hrDataStreamPerSec = polarApi.hrDataStreamPerSec
+        data.endTime = timestampEnd
+        
+        status.userData.resting = data
         
         polarApi.hrDataStream.removeAll()
         polarApi.ecgDataStream.removeAll()

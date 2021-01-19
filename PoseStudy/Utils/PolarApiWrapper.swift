@@ -116,7 +116,7 @@ class PolarApiWrapper: ObservableObject,
                 NSLog("polar device found: \(item.name) connectable: \(item.connectable) address: \(item.address.uuidString)")
             }
         }
-        DispatchQueue.main.asyncAfter(deadline: .now() + 1) {
+        DispatchQueue.main.asyncAfter(deadline: .now() + 1.3) {
             self.searchDone = true
         }
     }

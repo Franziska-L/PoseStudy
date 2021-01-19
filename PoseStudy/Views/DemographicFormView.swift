@@ -78,7 +78,7 @@ struct DemographicFormView: View {
             status.userData.demographic.height = hight
             status.userData.demographic.mass = mass
             let ref: DatabaseReference = Database.database().reference().child(String.participants).child("Participant \(status.participantID)").child("Demographic")
-            ref.updateChildValues(["Age": age, "Gender": male ? "männlich" : "weiblich", "Mass": mass, "Hight": hight])
+            ref.updateChildValues(["Age": age, "Gender": male ? "männlich" : "weiblich", "Mass": mass, "Height": hight])
             
             self.selection = "Form"
         } else {

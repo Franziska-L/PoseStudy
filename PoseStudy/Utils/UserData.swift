@@ -13,12 +13,14 @@ struct UserData: Codable {
     var demographic: DemographicData = DemographicData()
     var health: HealtData = HealtData()
     var measured: [MeasuredData] = [MeasuredData]()
+    var resting: MeasuredData = MeasuredData()
     
     enum CodingKeys: String, CodingKey {
         case ID
         case demographic = "Demographic"
         case health = "Health Status"
         case measured = "Data"
+        case resting = "Resting"
     }
 }
 
