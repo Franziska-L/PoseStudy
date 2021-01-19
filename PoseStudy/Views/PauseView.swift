@@ -46,6 +46,7 @@ struct PauseView: View {
     }
     
     func setState() {
+        polarApi.stopStream()
         self.status.session = 2
         self.selection = "next"
         

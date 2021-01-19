@@ -62,22 +62,27 @@ struct ConnectingCardView: View {
                         ProgressView().progressViewStyle(CircularProgressViewStyle())
                     }
                 }
-                if polarApi.connectionState == .notAvailable && polarApi.searchDone {
+                if polarApi.bleState == .poweredOff && polarApi.searchDone {
+                    Text("Bluetooth ist ausgeschaltet. Bitte schalte zunächst Bluetooth ein um fortzufahren.")
+                } else if polarApi.connectionState == .notAvailable && polarApi.searchDone {
                     Text("Die Verbindung zum Puls-Sensor konnte nicht hergestellt werden. Stelle sicher, dass du den Elektrodenbereich des Brustgurtes befeuchtet hast und der Brustgurt fest am Körper anliegt.")
                 }
                 
                
             }
+            .alert(isPresented: $alert, content: {
+                Alert(title: Text("Bluetooth Status"), message: Text("Bitte schalte Bluetooth ein um fortzufahren."))
+            })
             .padding(.bottom)
             .background(Color.white)
             .cornerRadius(10)
             .shadow(radius: 5)
-        }.alert(isPresented: $alert, content: {
-            Alert(title: Text("Bluetooth Status"), message: Text("Bitte schalte Bluetooth ein um fortzufahren."))
-        })
+            
+        }
     }
     
     func connectToDevice() {
+        print(polarApi.bleState)
         if polarApi.bleState == .poweredOn {
             polarApi.searchForDevice()
             
