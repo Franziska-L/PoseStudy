@@ -46,7 +46,7 @@ extension String {
     static let startInstr = "Als nächstes wirst du Liegestützen machen bis zur maximalen Belsatung. Nimm auch die Wiederholung mit, die du nicht mehr sauber schaffen würdest. \n\nWische nach links, um die nächste Anweisung zu lesen oder klicke auf den Weiter Button."
     static let polarDeviceIntr = "Lege jetzt den Brustgurt an. Befeuchte dazu zunächst den Elektrodenbereich des Gurtes. Lege den Gurt um die Brust und stelle ihn so ein, dass er fest sitzt."
     static let connectInstr = "Verbinde den Puls-Sensor mit dem Handy."
-    static let positionInstr = "Stelle das Handy quer auf die Handyhalterung. Positioniere die Handyhalterung in ca. 1 m bis 1,5 m Abstand längs zu deinem Körper, sodass dein gesamter Körper seitlich zu sehen ist.\n\nWenn alles bereit ist kann es los gehen."
+    static let positionInstr = "Stelle das Handy quer auf die Handyhalterung. Positioniere die Handyhalterung in ca. 1,5 m bis 2 m Abstand längs zu deinem Körper, sodass dein gesamter Körper seitlich zu sehen ist.\n\nWenn alles bereit ist kann es los gehen."
     
     //Buttons
     static let next = "Weiter"
