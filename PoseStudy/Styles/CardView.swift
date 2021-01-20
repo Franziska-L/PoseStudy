@@ -49,7 +49,7 @@ struct ConnectingCardView: View {
                     .lineLimit(nil)
                     .multilineTextAlignment(.leading)
                     .fixedSize(horizontal: false, vertical: true)
-                VStack(alignment: .leading) {
+                VStack(alignment: .center) {
                     if polarApi.connectionState == .disconnected || polarApi.connectionState == .unknown || polarApi.connectionState == .notAvailable {
                         Button(action: connectToDevice, label: {
                             Text("Verbinden")
