@@ -131,7 +131,7 @@ class CameraModel: NSObject, ObservableObject, AVCaptureFileOutputRecordingDeleg
                 
                 // Start recording video to a temporary file.
                 let outputFileName = NSUUID().uuidString
-                let outputFilePath = (NSTemporaryDirectory() as NSString).appendingPathComponent((outputFileName as NSString).appendingPathExtension("mp4")!)
+                let outputFilePath = (NSTemporaryDirectory() as NSString).appendingPathComponent((outputFileName as NSString).appendingPathExtension("mov")!)
                 self.output.startRecording(to: URL(fileURLWithPath: outputFilePath), recordingDelegate: self)
             } else {
                 DispatchQueue.main.async {

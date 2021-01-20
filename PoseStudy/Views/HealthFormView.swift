@@ -34,6 +34,13 @@ struct HealthFormView: View {
         let yes = Binding<Bool>(get: { self.medicaments }, set: { self.medicaments = $0; self.nomedicaments = false})
         let no = Binding<Bool>(get: { self.nomedicaments }, set: { self.medicaments = false; self.nomedicaments = $0})
         
+        let nothing = Binding<Bool>(get: { self.nothing }, set: { self.cardiovascular = false; self.musculoskeletal = false; self.neuromuscular = false; self.highBlood = false; self.diabetes = false; self.nothing = $0})
+        let cardio = Binding<Bool>(get: { self.cardiovascular }, set: { self.cardiovascular = $0; self.nothing = false})
+        let musco = Binding<Bool>(get: { self.musculoskeletal }, set: { self.musculoskeletal = $0; self.nothing = false})
+        let neuro = Binding<Bool>(get: { self.neuromuscular }, set: { self.neuromuscular = $0; self.nothing = false})
+        let blood = Binding<Bool>(get: { self.highBlood }, set: { self.highBlood = $0; self.nothing = false})
+        let diab = Binding<Bool>(get: { self.diabetes }, set: { self.diabetes = $0; self.nothing = false})
+        
         let more = Binding<Bool>(get: { self.more }, set: { self.more = $0; self.less = false; self.never = false})
         let less = Binding<Bool>(get: { self.less }, set: { self.more = false; self.less = $0; self.never = false})
         let never = Binding<Bool>(get: { self.never }, set: { self.more = false; self.less = false; self.never = $0})
@@ -45,22 +52,22 @@ struct HealthFormView: View {
                             .lineLimit(nil)
                             .multilineTextAlignment(.leading)
                             .fixedSize(horizontal: false, vertical: true)) {
-                    Toggle(isOn: $cardiovascular) {
+                    Toggle(isOn: cardio) {
                         Text("Herz-Kreislauf-Krankheit")
                     }.toggleStyle(CheckboxToggleStyle())
-                    Toggle(isOn: $musculoskeletal ) {
+                    Toggle(isOn: musco ) {
                         Text("Muskel-Skelett-Erkrankung")
                     }.toggleStyle(CheckboxToggleStyle())
-                    Toggle(isOn: $neuromuscular) {
+                    Toggle(isOn: neuro) {
                         Text("Neuromuskuläre Erkrankung")
                     }.toggleStyle(CheckboxToggleStyle())
-                    Toggle(isOn: $highBlood) {
+                    Toggle(isOn: blood) {
                         Text("Bluthochdruck")
                     }.toggleStyle(CheckboxToggleStyle())
-                    Toggle(isOn: $diabetes) {
+                    Toggle(isOn: diab) {
                         Text("Diabetes")
                     }.toggleStyle(CheckboxToggleStyle())
-                    Toggle(isOn: $nothing) {
+                    Toggle(isOn: nothing) {
                         Text("Nichts")
                     }.toggleStyle(CheckboxToggleStyle())
                 }.padding().padding(.top, 40)
