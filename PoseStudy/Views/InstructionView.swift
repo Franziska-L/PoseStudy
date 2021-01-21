@@ -33,10 +33,10 @@ struct InstructionView: View {
                             CardView(image: "pushUp", instruction: String.startInstr)
                                 .frame(width: geometry.size.width).frame(height: 300)
                             ExerciseCardView(image: "pushUpKnee", instruction: String.exerciseInstr, exerciseInst: instr).frame(width: geometry.size.width).frame(height: 300)
-                            CardView(image: "pulsgurt", instruction: String.polarDeviceIntr)
+                            SensorCardView(image: "pulsgurt", instruction: String.polarDeviceIntr)
                                 .frame(width: geometry.size.width).frame(height: 300)
                             ConnectingCardView(instruction: String.connectInstr).frame(width: geometry.size.width).frame(height: 300)
-                            CardView(image: "position2", instruction: String.positionInstr)
+                            PositionCardView(image: "position2")
                                 .frame(width: geometry.size.width).frame(height: 300)
                         }
                     }
@@ -83,7 +83,7 @@ struct InstructionView: View {
                         }
                     }).buttonStyle(CustomButtonStyle())
                 }
-            }.padding(.top, 32)
+            }.padding(.top, 28)
         }.environmentObject(status).environmentObject(polarApi)
         .navigationBarBackButtonHidden(true)
         .alert(isPresented: $alert, content: {

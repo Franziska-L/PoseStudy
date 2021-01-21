@@ -20,11 +20,13 @@ struct CardView: View {
                     .scaledToFit()
                     .frame(width: geometry.size.width, height: geometry.size.height * 0.5)
                     .clipped()
-                Text(instruction)
-                    .padding()
-                    .lineLimit(nil)
-                    .multilineTextAlignment(.leading)
-                    .fixedSize(horizontal: false, vertical: true)
+                VStack {
+                    Text("Als nächstes wirst du Liegestützen machen bis zur") + Text(" maximalen Belsatung").bold().font(.system(size: 18)) + Text(". Nimm auch die Wiederholung mit, die du nicht mehr sauber ausführen kannst. \n\nWische nach links, um die nächste Anweisung zu lesen oder klicke auf den Weiter Button.")
+                }
+                .padding()
+                .lineLimit(nil)
+                .multilineTextAlignment(.leading)
+                .fixedSize(horizontal: false, vertical: true)
             }
             .padding(.bottom)
             .background(Color.white)
@@ -33,6 +35,65 @@ struct CardView: View {
         }
     }
 }
+
+
+struct SensorCardView: View {
+    var image: String
+    var instruction: String
+    
+    var body: some View {
+        GeometryReader { geometry in
+            VStack(alignment: .leading) {
+                Image(image)
+                    .resizable()
+                    .scaledToFit()
+                    .frame(width: geometry.size.width, height: geometry.size.height * 0.5)
+                    .clipped()
+                VStack {
+                    Text("Lege jetzt den Brustgurt wie folgt an. Befeuchte zunächst den ") + Text("Elektrodenbereich des Gurtes").bold().font(.system(size: 18)) + Text(". Lege den Gurt so um die Brust, dass er unter dem Brustmuskel sitzt und das Polar Logo") + Text(" mittig zur Brust").bold().font(.system(size: 18)) + Text(" ausgerichtet ist.\n\nStelle die Gurtlänge so ein, dass der Brustgurt fest, aber nicht zu eng sitzt.")
+                }
+                .padding()
+                .lineLimit(nil)
+                .multilineTextAlignment(.leading)
+                .fixedSize(horizontal: false, vertical: true)
+            }
+            .padding(.bottom)
+            .background(Color.white)
+            .cornerRadius(10)
+            .shadow(radius: 5)
+        }
+    }
+}
+
+
+struct PositionCardView: View {
+    var image: String
+    
+    var body: some View {
+        GeometryReader { geometry in
+            VStack(alignment: .leading) {
+                Image(image)
+                    .resizable()
+                    .scaledToFit()
+                    .frame(width: geometry.size.width, height: geometry.size.height * 0.5)
+                    .clipped()
+                VStack {
+                    Text("Stelle das Handy") + Text(" quer").bold().font(.system(size: 18)) + Text(" auf die Handyhalterung. Positioniere die Handyhalterung in ca. 1,5 m bis 2 m Abstand") + Text(" längs zu deinem Körper").bold().font(.system(size: 18)) + Text(", sodass dein gesamter Körper seitlich zu sehen ist.\n\nWenn alles bereit ist kann es los gehen.")
+                }
+                .padding()
+                .lineLimit(nil)
+                .multilineTextAlignment(.leading)
+                .fixedSize(horizontal: false, vertical: true)
+                
+            }
+            .padding(.bottom)
+            .background(Color.white)
+            .cornerRadius(10)
+            .shadow(radius: 5)
+        }
+    }
+}
+
 
 struct ConnectingCardView: View {
     var instruction: String

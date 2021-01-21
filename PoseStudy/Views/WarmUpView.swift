@@ -24,8 +24,7 @@ struct WarmUpView: View {
                     Spacer()
                 }
                 
-                //Text("10 Armkreisen pro Seite").padding()
-                Text("30 Hampelmänner").font(.title2).bold().padding()
+                Text("30 Hampelmänner").font(.system(size: 18)).bold().padding()
                 Spacer()
                 Text("Wenn du fertig bist lies dir als nächstes die Anweisungen durch.")
                 NavigationLink(

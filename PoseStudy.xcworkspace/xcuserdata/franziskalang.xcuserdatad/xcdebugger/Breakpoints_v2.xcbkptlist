@@ -14,8 +14,8 @@
             filePath = "PoseStudy/Styles/CardView.swift"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "96"
-            endingLineNumber = "96"
+            startingLineNumber = "157"
+            endingLineNumber = "157"
             landmarkName = "connectToDevice()"
             landmarkType = "7">
          </BreakpointContent>
@@ -30,8 +30,8 @@
             filePath = "PoseStudy/Styles/CardView.swift"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "95"
-            endingLineNumber = "95"
+            startingLineNumber = "156"
+            endingLineNumber = "156"
             landmarkName = "connectToDevice()"
             landmarkType = "7">
          </BreakpointContent>
