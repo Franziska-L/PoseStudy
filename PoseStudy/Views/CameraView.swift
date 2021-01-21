@@ -49,6 +49,12 @@ struct CameraView: View {
                         .zIndex(2.0)
                         .cornerRadius(15.0)
                         .padding(.top, 20)
+                } else {
+                    Text("Klicke auf den Kamera Button, um die Aufnahme zu starten.")
+                        .zIndex(2.0)
+                        .foregroundColor(.white)
+                        .padding(.horizontal, 30)
+                        .padding(.top, 30)
                 }
                 CameraPreview(camera: camera)
                     .ignoresSafeArea(.all, edges: .all)
