@@ -33,6 +33,8 @@ struct CameraView: View {
     
     @ObservedObject var camera = CameraModel()
     
+    @State private var alert = false
+    
     var body: some View {
         return (
         VStack {
@@ -49,13 +51,7 @@ struct CameraView: View {
                         .zIndex(2.0)
                         .cornerRadius(15.0)
                         .padding(.top, 20)
-                } else {
-                    Text("Klicke auf den Kamera Button, um die Aufnahme zu starten.")
-                        .zIndex(2.0)
-                        .foregroundColor(.white)
-                        .padding(.horizontal, 30)
-                        .padding(.top, 30)
-                }
+                } 
                 CameraPreview(camera: camera)
                     .ignoresSafeArea(.all, edges: .all)
                 
@@ -71,6 +67,16 @@ struct CameraView: View {
         .alert(isPresented: $camera.alert) {
             Alert(title: Text("Bitte erlaube Zugriff auf Kamera in den Einstellungen."))
         })
+        .alert(isPresented: $alert) { () -> Alert in
+            let primaryButton = Alert.Button.cancel(Text("Ja")) {
+                stopCamera()
+            }
+            let secondaryButton = Alert.Button.default(Text("Nein")) {
+                camera.startRecording()
+                startTimer()
+            }
+            return Alert(title: Text("Aufnahme beenden"), message: Text("Wenn du fertig bist kannst du die Aufnahme stoppen. Jetzt beenden?"), primaryButton: primaryButton, secondaryButton: secondaryButton)
+        }
     }
     
     func onClick() {
@@ -82,18 +88,23 @@ struct CameraView: View {
                 self.polarApi.startStreaming()
             }
             else {
-                self.camera.stopSession()
-                self.stopTimer()
-                self.polarApi.stopStream()
-                self.saveToDatabase()
-                if status.session == 2 {
-                    self.selection = "Finish"
-                } else {
-                    self.selection = "Pause"
-                }
+                alert = true
+                timer?.invalidate()
             }
         } else {
             camera.checkAuth()
+        }
+    }
+    
+    func stopCamera() {
+        self.camera.stopSession()
+        self.stopTimer()
+        self.polarApi.stopStream()
+        self.saveToDatabase()
+        if status.session == 2 {
+            self.selection = "Finish"
+        } else {
+            self.selection = "Pause"
         }
     }
     
@@ -120,7 +131,6 @@ struct CameraView: View {
                 timeSeconds = "\(seconds)"
             }
         }
-        timer?.fire()
     }
     
     private func stopTimer() {

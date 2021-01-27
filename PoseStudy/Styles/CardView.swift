@@ -78,7 +78,7 @@ struct PositionCardView: View {
                     .frame(width: geometry.size.width, height: geometry.size.height * 0.5)
                     .clipped()
                 VStack {
-                    Text("Stelle das Handy") + Text(" quer").bold().font(.system(size: 18)) + Text(" auf die Handyhalterung. Positioniere die Handyhalterung in ca. 1,5 m bis 2 m Abstand") + Text(" längs zu deinem Körper").bold().font(.system(size: 18)) + Text(", sodass dein gesamter Körper seitlich zu sehen ist.\n\nWenn alles bereit ist kann es los gehen.")
+                    Text("Stelle das Handy") + Text(" quer").bold().font(.system(size: 18)) + Text(" auf die Handyhalterung. Positioniere die Handyhalterung in ca. 1,5 m bis 2 m Abstand") + Text(" längs zu deinem Körper").bold().font(.system(size: 18)) + Text(", sodass dein gesamter Körper seitlich zu sehen ist (inklusive Arme und Beine)!\n\nWenn alles bereit ist kann es los gehen.")
                 }
                 .padding()
                 .lineLimit(nil)

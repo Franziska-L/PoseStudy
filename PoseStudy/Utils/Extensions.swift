@@ -36,14 +36,14 @@ extension String {
     
     //Sit Up Instruction
     static let exerciseInstr = "Richtige Ausführung:"
-    static let exerciseIntr0 = "Lies dir die Anweisung zur richtigen Ausführung einer Liegestütze durch. Du musst sie nicht gleich nachmachen, behalte dir nur im Kopf, was zu beachten ist."
+    static let exerciseIntr0 = "Lies dir die Anweisung zur richtigen Ausführung einer Liegestütze durch. Du musst sie nicht gleich nachmachen, behalte dir nur im Kopf, was zu beachten ist.\nScrolle nach unten, um weiter zu lesen."
     static let exerciseInstr1 = "Stelle die Hände etwa schulterbreit auf den Boden und drehe sie leicht nach innen."
     static let exerciseInstr11 = "Strecke anschließend deine Beine gerade nach hinten aus."
     static let exerciseInstr2 = "Halte den Rücken gerade und den Kopf in Verlängerung der Wirbelsäule."
     static let exerciseInstr3 = "Achte auf eine feste Körpermitte. Hebe und senke deinen Körper mit den Armen bis zum Boden."
     static let exerciseInstr4 = "Wenn die Übung auf den Füßen zu anstrengend ist, gehe auf die Knie. Entscheide dich aber vorab, ob du die Übungen auf den Knien ausführen willst oder nicht."
     
-    static let startInstr = "Als nächstes wirst du Liegestützen machen bis zur maximalen Belsatung. Nimm auch die Wiederholung mit, die du nicht mehr sauber schaffen würdest. \n\nWische nach links, um die nächste Anweisung zu lesen oder klicke auf den Weiter Button."
+    static let startInstr = "Als nächstes wirst du Liegestützen machen bis zur maximalen Belas tung. Nimm auch die Wiederholung mit, die du nicht mehr sauber schaffen würdest. \n\nWische nach links, um die nächste Anweisung zu lesen oder klicke auf den Weiter Button."
     static let polarDeviceIntr = "Lege jetzt den Brustgurt an. Befeuchte dazu zunächst den Elektrodenbereich des Gurtes. Lege den Gurt so um die Brust, dass er unter dem Brustmuskel sitzt und das Polar Logo mittig zur Brust ausgerichtet.\n\nStelle die Gurtlänge so ein, dass der Brustgurt fest, aber nicht zu eng sitzt."
     static let connectInstr = "Verbinde den Puls-Sensor mit dem Handy."
     static let positionInstr = "Stelle das Handy quer auf die Handyhalterung. Positioniere die Handyhalterung in ca. 1,5 m bis 2 m Abstand längs zu deinem Körper, sodass dein gesamter Körper seitlich zu sehen ist.\n\nWenn alles bereit ist kann es los gehen."
