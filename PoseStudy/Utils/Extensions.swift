@@ -43,7 +43,7 @@ extension String {
     static let exerciseInstr3 = "Achte auf eine feste Körpermitte. Hebe und senke deinen Körper mit den Armen bis zum Boden."
     static let exerciseInstr4 = "Wenn die Übung auf den Füßen zu anstrengend ist, gehe auf die Knie. Entscheide dich aber vorab, ob du die Übungen auf den Knien ausführen willst oder nicht."
     
-    static let startInstr = "Als nächstes wirst du Liegestützen machen bis zur maximalen Belas tung. Nimm auch die Wiederholung mit, die du nicht mehr sauber schaffen würdest. \n\nWische nach links, um die nächste Anweisung zu lesen oder klicke auf den Weiter Button."
+    static let startInstr = "Als nächstes wirst du Liegestützen machen bis zur maximalen Belastung. Nimm auch die Wiederholung mit, die du nicht mehr sauber schaffen würdest. \n\nWische nach links, um die nächste Anweisung zu lesen oder klicke auf den Weiter Button."
     static let polarDeviceIntr = "Lege jetzt den Brustgurt an. Befeuchte dazu zunächst den Elektrodenbereich des Gurtes. Lege den Gurt so um die Brust, dass er unter dem Brustmuskel sitzt und das Polar Logo mittig zur Brust ausgerichtet.\n\nStelle die Gurtlänge so ein, dass der Brustgurt fest, aber nicht zu eng sitzt."
     static let connectInstr = "Verbinde den Puls-Sensor mit dem Handy."
     static let positionInstr = "Stelle das Handy quer auf die Handyhalterung. Positioniere die Handyhalterung in ca. 1,5 m bis 2 m Abstand längs zu deinem Körper, sodass dein gesamter Körper seitlich zu sehen ist.\n\nWenn alles bereit ist kann es los gehen."

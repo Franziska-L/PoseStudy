@@ -7,6 +7,9 @@ target 'PoseStudy' do
   pod 'Firebase/Core'
   pod 'Firebase/Database'
   pod 'Firebase/Storage'
+  pod 'RxSwift'
+  pod 'RxCocoa'
+  pod 'PolarBleSdk', '~> 3.2'
 
   # Pods for PoseStudy
 
@@ -23,3 +26,12 @@ target 'PoseStudy' do
   end
 
 end
+
+post_install do |installer|
+        installer.pods_project.targets.each do |target|
+          target.build_configurations.each do |config|
+            config.build_settings['BUILD_LIBRARY_FOR_DISTRIBUTION'] = 'YES'
+          end
+        end
+      end
+

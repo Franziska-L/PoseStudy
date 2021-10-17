@@ -21,7 +21,7 @@ struct CardView: View {
                     .frame(width: geometry.size.width, height: geometry.size.height * 0.5)
                     .clipped()
                 VStack {
-                    Text("Als nächstes wirst du Liegestützen machen bis zur") + Text(" maximalen Belsatung").bold().font(.system(size: 18)) + Text(". Nimm auch die Wiederholung mit, die du nicht mehr sauber ausführen kannst. \n\nWische nach links, um die nächste Anweisung zu lesen oder klicke auf den Weiter Button.")
+                    Text("Als nächstes wirst du Liegestützen machen bis zur") + Text(" maximalen Belastung").bold().font(.system(size: 18)) + Text(". Nimm auch die Wiederholung mit, die du nicht mehr sauber ausführen kannst. \n\nWische nach links, um die nächste Anweisung zu lesen oder klicke auf den Weiter Button.")
                 }
                 .padding()
                 .lineLimit(nil)

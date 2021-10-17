@@ -31,6 +31,8 @@ class PolarApiWrapper: ObservableObject,
                        PolarBleApiLogger,
                        PolarBleApiCCCWriteObserver
 {
+   
+    
 
     
     var api: PolarBleApi
@@ -126,56 +128,69 @@ class PolarApiWrapper: ObservableObject,
         searchToggle = nil
     }
     
+    
+    func streamingFeaturesReady(_ identifier: String, streamingFeatures: Set<DeviceStreamingFeature>) {
+            for feature in streamingFeatures {
+                print("Feature \(feature) is ready.")
+            }
+        }
+    
+    
     func startStreaming() {
-    //Start ECG Stream
-        ecgToggle = api.requestEcgSettings(deviceId).asObservable().flatMap({ (settings) -> Observable<PolarEcgData> in
-            return self.api.startEcgStreaming(self.deviceId, settings: settings.maxSettings())
-        }).observeOn(MainScheduler.instance).subscribe{ e in
-            switch e {
-            case .next(let data):
-                NSLog("      Timestamp: \(data.timeStamp)")
-                for µv in data.samples {
-                    NSLog("    µV: \(µv)")
-                    self.ecgDataStream.append(µv)
-                    self.ecgDataStreamTest.append(µv)
-
-                    let timestamp = Date().toMillis()
-                    self.ecgDataTimestamp.append(timestamp)
-                }
-                self.isRecording = true
-            case .error(let err):
-                NSLog("start ecg error: \(err)")
-                self.ecgToggle = nil
-            case .completed:
-                break
-            }
-        }
-            
-      
-        //Start HR Stream
-        broadcast = api.startListenForPolarHrBroadcasts(nil).observeOn(MainScheduler.instance).subscribe{ e in
-            switch e {
-            case .completed:
-                NSLog("completed")
-            case .error(let err):
-                NSLog("listening error: \(err)")
-            case .next(let broadcast):
-                NSLog("\(broadcast.deviceInfo.name) HR BROADCAST: \(broadcast.hr)  Battery: \(broadcast.batteryStatus)")
-                self.hrDataStream.append(broadcast.hr)
-                
-                let timestamp = Date().toMillis()
-                self.hrDataTimestamp.append(timestamp)
-            }
-        }
         
-        DispatchQueue.main.async {
-            if self.timer == nil {
-                self.timer = Timer.scheduledTimer(withTimeInterval: 1.0, repeats: true) { _ in
-                    self.ecgDataStreamPerSecond.append(self.ecgDataStreamTest)
-                    self.ecgDataStreamTest.removeAll()
-                }
-            }
-        }
+    //Start ECG Stream
+        
+//
+//        ecgToggle = api.startEcgStreaming(deviceId, settings: PolarSensorSetting(polarSensorSettings))
+//            .observeOn(MainScheduler.instance)
+//            .subscribe{ e in
+//        switch e {
+//        case .next(let data):
+//            NSLog("      Timestamp: \(data.timeStamp)")
+//            for µv in data.samples {
+//                NSLog("    µV: \(µv)")
+//                self.ecgDataStream.append(µv)
+//                self.ecgDataStreamTest.append(µv)
+//
+//                let timestamp = Date().toMillis()
+//                self.ecgDataTimestamp.append(timestamp)
+//            }
+//            self.isRecording = true
+//        case .error(let err):
+//            NSLog("start ecg error: \(err)")
+//            self.ecgToggle = nil
+//        case .completed:
+//            break
+//        }
+//    }
+//
+//
+//    //Start HR Stream
+//    broadcast = api.startListenForPolarHrBroadcasts(nil)
+//        .observeOn(MainScheduler.instance)
+//        .subscribe{ e in
+//        switch e {
+//        case .completed:
+//            NSLog("completed")
+//        case .error(let err):
+//            NSLog("listening error: \(err)")
+//        case .next(let broadcast):
+//            NSLog("\(broadcast.deviceInfo.name) HR BROADCAST: \(broadcast.hr)  Battery: \(broadcast.batteryStatus)")
+//            self.hrDataStream.append(broadcast.hr)
+//
+//            let timestamp = Date().toMillis()
+//            self.hrDataTimestamp.append(timestamp)
+//        }
+//    }
+//        
+//        DispatchQueue.main.async {
+//            if self.timer == nil {
+//                self.timer = Timer.scheduledTimer(withTimeInterval: 1.0, repeats: true) { _ in
+//                    self.ecgDataStreamPerSecond.append(self.ecgDataStreamTest)
+//                    self.ecgDataStreamTest.removeAll()
+//                }
+//            }
+//        }
     }
     
     

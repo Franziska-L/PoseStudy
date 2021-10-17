@@ -90,19 +90,6 @@ struct InstructionView: View {
             Alert(title: Text(String.connection), message: Text(String.connectionMessage))
         })
     }
-    
-    
-    func startCamera(width: CGFloat) {
-        if polarApi.connectionState == .connected && (self.step >= totalInstructions - 1) && polarApi.isECGReady() {
-            selection = "Camera"
-        }
-        if (self.step >= totalInstructions - 1) && !polarApi.isECGReady() {
-            alert = true
-        } else {
-            self.step += 1
-            withAnimation { self.offset = -(CGFloat(width) + self.spacing) * CGFloat(self.step) }
-        }
-    }
 }
 
 
