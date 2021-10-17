@@ -19,10 +19,7 @@ struct WelcomeView: View {
                     NavigationLink(destination: DemographicFormView(), tag: "Demographic", selection: $viewModel.selection) { EmptyView() }
                     NavigationLink(destination: WarmUpView(), tag: "WarmUp", selection: $viewModel.selection) { EmptyView() }
                     
-                    Text("Willkommen zur Studie.").titleStyle().onTapGesture(count: 5) {
-                        print("Tapped on text")
-                        viewModel.isSharePresented = true
-                    }
+                    Text("Willkommen zur Studie.").titleStyle()
                     Spacer()
                     TextField("Gib deine Teilnehmer ID ein", text: $viewModel.ID)
                         .padding(.horizontal, 40)
@@ -49,10 +46,6 @@ struct WelcomeView: View {
         .onAppear() {
             viewModel.checkConnection()
         }
-        .sheet(isPresented: $viewModel.isSharePresented, content: {
-            let url = viewModel.show()
-            ActivityViewController(activityItems: url, applicationActivities: nil)
-        })
         .alert(item: $viewModel.alertItem) { item in
             Alert(title: item.title, message: item.message)
         }

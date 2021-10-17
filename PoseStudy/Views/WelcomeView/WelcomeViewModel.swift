@@ -26,29 +26,7 @@ final class WelcomeViewModel: ObservableObject {
     @Published var alertItem: AlertItem?
     
     @Published var wait = false
-    @Published var isSharePresented: Bool = false
 
-    
-    
-    func show() -> [URL] {
-        var urls = [URL]()
-        let fileManager = FileManager.default
-        let documentsURL = fileManager.urls(for: .documentDirectory, in: .userDomainMask)[0]
-        do {
-            let fileURLs = try fileManager.contentsOfDirectory(at: documentsURL, includingPropertiesForKeys: nil)
-            print(fileURLs)
-            for file in fileURLs {
-                let input = try String(contentsOf: file)
-                urls.append(file)
-                print(input)
-            }
-            // process files
-        } catch {
-            print("Error while enumerating files \(documentsURL.path): \(error.localizedDescription)")
-        }
-        
-        return urls
-    }
     
     
     func start() {
