@@ -15,7 +15,7 @@ final class DemographicViewModel: ObservableObject {
     func setup(status: GlobalState, polarApi: PolarApiWrapper) {
         self.status = status
         self.polarApi = polarApi
-      }
+    }
     
     @Published var age: String = ""
     @Published var mass: String = ""
