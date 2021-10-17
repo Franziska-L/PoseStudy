@@ -29,6 +29,7 @@
 		73DD27BA271C786100C5FE1B /* StateModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 73DD27B9271C786100C5FE1B /* StateModel.swift */; };
 		73DD27BC271C789C00C5FE1B /* WelcomeViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 73DD27BB271C789C00C5FE1B /* WelcomeViewModel.swift */; };
 		73DD27BF271C7D1200C5FE1B /* Alerts.swift in Sources */ = {isa = PBXBuildFile; fileRef = 73DD27BE271C7D1200C5FE1B /* Alerts.swift */; };
+		73DD27C2271C835400C5FE1B /* DemographicViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 73DD27C1271C835400C5FE1B /* DemographicViewModel.swift */; };
 		73DDC0C12587767E00B864AA /* PolarApiWrapper.swift in Sources */ = {isa = PBXBuildFile; fileRef = 73DDC0C02587767E00B864AA /* PolarApiWrapper.swift */; };
 		73F92244256E87B80005D25F /* Style.swift in Sources */ = {isa = PBXBuildFile; fileRef = 73F92243256E87B80005D25F /* Style.swift */; };
 		73F9224C256E89BC0005D25F /* DemographicFormView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 73F9224B256E89BC0005D25F /* DemographicFormView.swift */; };
@@ -87,6 +88,7 @@
 		73DD27B9271C786100C5FE1B /* StateModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StateModel.swift; sourceTree = "<group>"; };
 		73DD27BB271C789C00C5FE1B /* WelcomeViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WelcomeViewModel.swift; sourceTree = "<group>"; };
 		73DD27BE271C7D1200C5FE1B /* Alerts.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Alerts.swift; sourceTree = "<group>"; };
+		73DD27C1271C835400C5FE1B /* DemographicViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DemographicViewModel.swift; sourceTree = "<group>"; };
 		73DDC02A2587671700B864AA /* PolarBleSdk.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = PolarBleSdk.framework; path = "../polar-sdk-ios/PolarBleSdk.framework"; sourceTree = "<group>"; };
 		73DDC0302587672200B864AA /* RxSwift.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = RxSwift.framework; path = "../polar-sdk-ios/RxSwift.framework"; sourceTree = "<group>"; };
 		73DDC0C02587767E00B864AA /* PolarApiWrapper.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PolarApiWrapper.swift; sourceTree = "<group>"; };
@@ -224,11 +226,20 @@
 			path = WelcomeView;
 			sourceTree = "<group>";
 		};
+		73DD27C0271C833B00C5FE1B /* DemographicFormView */ = {
+			isa = PBXGroup;
+			children = (
+				73F9224B256E89BC0005D25F /* DemographicFormView.swift */,
+				73DD27C1271C835400C5FE1B /* DemographicViewModel.swift */,
+			);
+			path = DemographicFormView;
+			sourceTree = "<group>";
+		};
 		73F92253256E89C60005D25F /* Views */ = {
 			isa = PBXGroup;
 			children = (
+				73DD27C0271C833B00C5FE1B /* DemographicFormView */,
 				73DD27BD271C78A600C5FE1B /* WelcomeView */,
-				73F9224B256E89BC0005D25F /* DemographicFormView.swift */,
 				739B9DE7256FEFA100CE1F4A /* HealthFormView.swift */,
 				73F9226D256EC2F50005D25F /* WarmUpView.swift */,
 				73A2BF7D256ED2DB00A592E3 /* InstructionView.swift */,
@@ -537,6 +548,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				73DD27C2271C835400C5FE1B /* DemographicViewModel.swift in Sources */,
 				737328592574E50F0081FCA2 /* CameraRepresentable.swift in Sources */,
 				73F9226E256EC2F50005D25F /* WarmUpView.swift in Sources */,
 				73F9224C256E89BC0005D25F /* DemographicFormView.swift in Sources */,

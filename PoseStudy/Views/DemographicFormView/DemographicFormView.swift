@@ -6,28 +6,19 @@
 //
 
 import SwiftUI
-import FirebaseDatabase
 
 struct DemographicFormView: View {
     @EnvironmentObject var status: GlobalState
     @EnvironmentObject var polarApi: PolarApiWrapper
     
-    @State private var age: String = ""
-    @State private var mass: String = ""
-    @State private var hight: String = ""
-    @State private var male = false
-    @State private var female = false
-    
-    @State private var alert = false
-        
-    @State private var selection: String? = nil
+    @StateObject var viewModel = DemographicViewModel()
         
     var body: some View {
-        let m = Binding<Bool>(get: { self.male }, set: { self.male = $0; self.female = false})
-        let w = Binding<Bool>(get: { self.female }, set: { self.male = false; self.female = $0})
+        let m = Binding<Bool>(get: { viewModel.male }, set: { viewModel.male = $0; viewModel.female = false})
+        let w = Binding<Bool>(get: { viewModel.female }, set: { viewModel.male = false; viewModel.female = $0})
         ScrollView {
             VStack {
-                NavigationLink(destination: HealthFormView().navigationBarHidden(true), tag: "Form", selection: $selection) { EmptyView() }
+                NavigationLink(destination: HealthFormView().navigationBarHidden(true), tag: "Form", selection: $viewModel.selection) { EmptyView() }
                 Text("Persönliche Angaben").titleStyle()
                 
                 GroupBox(label: Text(String.gender)) {
@@ -39,18 +30,18 @@ struct DemographicFormView: View {
                     }.toggleStyle(CheckboxToggleStyle())
                 }.padding().padding(.top, 40)
                 GroupBox(label: Text(String.age)) {
-                    TextField("Gib dein Alter an", text: $age).keyboardType(.numberPad)
+                    TextField("Gib dein Alter an", text: $viewModel.age).keyboardType(.numberPad)
                 }.padding()
                 GroupBox(label: Text("Größe")) {
-                    TextField("Gib dein Größe (in cm) an", text: $hight).keyboardType(.numberPad)
+                    TextField("Gib dein Größe (in cm) an", text: $viewModel.hight).keyboardType(.numberPad)
                 }.padding()
                 
                 GroupBox(label: Text("Gewicht")) {
-                    TextField("Gib dein Gewicht (in kg) an", text: $mass).keyboardType(.numberPad)
+                    TextField("Gib dein Gewicht (in kg) an", text: $viewModel.mass).keyboardType(.numberPad)
                 }.padding()
                 
                 Spacer()
-                Button(action: self.save, label: {
+                Button(action: viewModel.save, label: {
                     Text(String.next)
                 }).buttonStyle(CustomButtonStyle())
             }
@@ -59,30 +50,14 @@ struct DemographicFormView: View {
             .environmentObject(status)
             .environmentObject(polarApi)
             .onTapGesture {
-                self.endEditing()
+                viewModel.endEditing()
             }
-            .alert(isPresented: $alert, content: {
+            .alert(isPresented: $viewModel.alert, content: {
                 Alert(title: Text(String.questions))
             })
-        }
-    }
-    
-    private func endEditing() {
-        UIApplication.shared.endEditing()
-    }
-    
-    private func save() {
-        if (male == true || female == true) && age != "" && mass != "" && hight != "" {
-            status.userData.demographic.age = age
-            status.userData.demographic.gender = male ? "männlich" : "weiblich"
-            status.userData.demographic.height = hight
-            status.userData.demographic.mass = mass
-            let ref: DatabaseReference = Database.database().reference().child(String.participants).child("Participant \(status.participantID)").child("Demographic")
-            ref.updateChildValues(["Age": age, "Gender": male ? "männlich" : "weiblich", "Mass": mass, "Height": hight])
-            
-            self.selection = "Form"
-        } else {
-            alert = true
+            .onAppear {
+                viewModel.setup(status: self.status, polarApi: self.polarApi)
+            }
         }
     }
 }
