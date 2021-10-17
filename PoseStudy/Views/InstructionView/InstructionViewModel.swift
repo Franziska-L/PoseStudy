@@ -8,8 +8,8 @@
 import SwiftUI
 
 final class InstructionViewModel: ObservableObject {
-    var status: GlobalState?
-    var polarApi: PolarApiWrapper?
+    @Published var status: GlobalState?
+    @Published var polarApi: PolarApiWrapper?
       
     func setup(status: GlobalState, polarApi: PolarApiWrapper) {
         self.status = status

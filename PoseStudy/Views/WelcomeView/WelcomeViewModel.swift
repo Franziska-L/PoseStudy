@@ -13,9 +13,8 @@ import FirebaseStorage
 
 
 final class WelcomeViewModel: ObservableObject {
-        
-    @Published var status = GlobalState()
-    @Published var polarApi = PolarApiWrapper()
+    @ObservedObject var status = GlobalState()
+    @ObservedObject var polarApi = PolarApiWrapper()
     
     @Published var selection: String? = nil
     @Published var ID: String = ""
@@ -27,6 +26,7 @@ final class WelcomeViewModel: ObservableObject {
     
     @Published var wait = false
 
+    private let ref: DatabaseReference = Database.database().reference()
     
     
     func start() {
@@ -41,59 +41,56 @@ final class WelcomeViewModel: ObservableObject {
     }
     
     
-    func saveToDatabase() {
-        status.userData.ID = ID
-        let ref: DatabaseReference = Database.database().reference()
+    func observeID() {
+        //If ID is valid check if ID already is used
+        let refParticipants = ref.child("Participants")
         
-        let refID = ref.child("IDs")
-        refID.observeSingleEvent(of: .value) { (snap) in
-            if snap.hasChild(self.ID) {
-                let refParticipants = ref.child("Participants")
-                refParticipants.observeSingleEvent(of: .value) { (snapshot) in
-                    if snapshot.hasChild("Participant \(self.ID)") {
-                        let refParticipantWithID = refParticipants.child("Participant \(self.ID)")
-                        refParticipantWithID.observeSingleEvent(of: .value) { (snap) in
-                            if snap.hasChild("Demographic") && snap.hasChild("Health Status") {
-                                self.status.participantID = self.ID
-                                self.selection = "WarmUp"
-                                self.wait = false
-                                let refDay = refParticipants.child("Participant \(self.ID)").child("Day")
-                                refDay.observeSingleEvent(of: .value) { (snap) in
-                                    if let value = snap.value as? Int {
-                                        self.status.day = value
-                                        refDay.setValue(value)
-                                    }
-                                }
-                            } else {
-                                self.selection = "Demographic"
-                                self.status.day = 1
-                                self.status.participantID = self.ID
-                                self.wait = false
+        refParticipants.observeSingleEvent(of: .value) { (snapshot) in
+            if snapshot.hasChild("Participant \(self.ID)") {
+                
+                let refParticipantWithID = refParticipants.child("Participant \(self.ID)")
+                refParticipantWithID.observeSingleEvent(of: .value) { (snap) in
+                    if snap.hasChild("Demographic") && snap.hasChild("Health Status") {
+                        self.setData(selection: "WarmUp")
+                        let refDay = refParticipants.child("Participant \(self.ID)").child("Day")
+                        refDay.observeSingleEvent(of: .value) { (snap) in
+                            if let value = snap.value as? Int {
+                                self.status.day = value
+                                refDay.setValue(value)
                             }
                         }
                     } else {
-                        let refParticipantID = refParticipants.child("Participant \(self.ID)")
-                        refParticipantID.setValue(["Participant ID": self.ID, "Day": 1])
-                        self.status.participantID = self.ID
+                        self.setData(selection: "Demographic")
                         self.status.day = 1
-                        self.selection = "Demographic"
-                        self.wait = false
                     }
                 }
+            } else {
+                let refParticipantID = refParticipants.child("Participant \(self.ID)")
+                refParticipantID.setValue(["Participant ID": self.ID, "Day": 1])
+                self.setData(selection: "Demographic")
+                self.status.day = 1
+            }
+        }
+    }
+    
+    func saveToDatabase() {
+        status.userData.ID = ID
+        
+        ref.child("IDs").observeSingleEvent(of: .value) { (snap) in
+            if snap.hasChild(self.ID) {
+                self.observeID()
             }
             else {
                 self.alertItem = AlertContext.IdMissing
                 self.wait = false
             }
         }
-        print(selection)
     }
     
-    
-    
-    func getDocumentsDirectory() -> URL {
-        let paths = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask)
-        return paths[0]
+    func setData(selection: String) {
+        self.selection = selection
+        self.status.participantID = ID
+        self.wait = false
     }
     
     func checkConnection() {

@@ -33,7 +33,7 @@ struct DemographicFormView: View {
                     TextField("Gib dein Alter an", text: $viewModel.age).keyboardType(.numberPad)
                 }.padding()
                 GroupBox(label: Text("Größe")) {
-                    TextField("Gib dein Größe (in cm) an", text: $viewModel.hight).keyboardType(.numberPad)
+                    TextField("Gib dein Größe (in cm) an", text: $viewModel.height).keyboardType(.numberPad)
                 }.padding()
                 
                 GroupBox(label: Text("Gewicht")) {

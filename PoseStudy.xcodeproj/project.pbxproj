@@ -32,6 +32,7 @@
 		73DD27C2271C835400C5FE1B /* DemographicViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 73DD27C1271C835400C5FE1B /* DemographicViewModel.swift */; };
 		73DD27C5271C870500C5FE1B /* HealthViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 73DD27C4271C870500C5FE1B /* HealthViewModel.swift */; };
 		73DD27CB271C88FD00C5FE1B /* InstructionViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 73DD27CA271C88FD00C5FE1B /* InstructionViewModel.swift */; };
+		73DD27CE271CB7DB00C5FE1B /* CameraViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 73DD27CD271CB7DB00C5FE1B /* CameraViewModel.swift */; };
 		73DDC0C12587767E00B864AA /* PolarApiWrapper.swift in Sources */ = {isa = PBXBuildFile; fileRef = 73DDC0C02587767E00B864AA /* PolarApiWrapper.swift */; };
 		73F92244256E87B80005D25F /* Style.swift in Sources */ = {isa = PBXBuildFile; fileRef = 73F92243256E87B80005D25F /* Style.swift */; };
 		73F9224C256E89BC0005D25F /* DemographicFormView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 73F9224B256E89BC0005D25F /* DemographicFormView.swift */; };
@@ -93,6 +94,7 @@
 		73DD27C1271C835400C5FE1B /* DemographicViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DemographicViewModel.swift; sourceTree = "<group>"; };
 		73DD27C4271C870500C5FE1B /* HealthViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HealthViewModel.swift; sourceTree = "<group>"; };
 		73DD27CA271C88FD00C5FE1B /* InstructionViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InstructionViewModel.swift; sourceTree = "<group>"; };
+		73DD27CD271CB7DB00C5FE1B /* CameraViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CameraViewModel.swift; sourceTree = "<group>"; };
 		73DDC02A2587671700B864AA /* PolarBleSdk.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = PolarBleSdk.framework; path = "../polar-sdk-ios/PolarBleSdk.framework"; sourceTree = "<group>"; };
 		73DDC0302587672200B864AA /* RxSwift.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = RxSwift.framework; path = "../polar-sdk-ios/RxSwift.framework"; sourceTree = "<group>"; };
 		73DDC0C02587767E00B864AA /* PolarApiWrapper.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PolarApiWrapper.swift; sourceTree = "<group>"; };
@@ -266,6 +268,15 @@
 			path = InstructionView;
 			sourceTree = "<group>";
 		};
+		73DD27CC271CB7BA00C5FE1B /* CameraView */ = {
+			isa = PBXGroup;
+			children = (
+				7373281F2572EE6D0081FCA2 /* CameraView.swift */,
+				73DD27CD271CB7DB00C5FE1B /* CameraViewModel.swift */,
+			);
+			path = CameraView;
+			sourceTree = "<group>";
+		};
 		73F92253256E89C60005D25F /* Views */ = {
 			isa = PBXGroup;
 			children = (
@@ -274,7 +285,7 @@
 				73DD27C3271C86E600C5FE1B /* HealthView */,
 				73DD27C8271C88CA00C5FE1B /* WarmUpView */,
 				73DD27C9271C88E900C5FE1B /* InstructionView */,
-				7373281F2572EE6D0081FCA2 /* CameraView.swift */,
+				73DD27CC271CB7BA00C5FE1B /* CameraView */,
 				73D6031E2577D5AA00ABC437 /* PauseView.swift */,
 				73D60326257E62CB00ABC437 /* FinishScreen.swift */,
 			);
@@ -583,6 +594,7 @@
 				73F9226E256EC2F50005D25F /* WarmUpView.swift in Sources */,
 				73DD27CB271C88FD00C5FE1B /* InstructionViewModel.swift in Sources */,
 				73F9224C256E89BC0005D25F /* DemographicFormView.swift in Sources */,
+				73DD27CE271CB7DB00C5FE1B /* CameraViewModel.swift in Sources */,
 				7336A31D256E790D00CB090D /* WelcomeView.swift in Sources */,
 				737328542574E3CF0081FCA2 /* CameraModel.swift in Sources */,
 				73F92244256E87B80005D25F /* Style.swift in Sources */,

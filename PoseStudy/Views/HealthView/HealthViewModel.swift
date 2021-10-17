@@ -9,8 +9,8 @@ import SwiftUI
 import FirebaseDatabase
 
 final class HealthViewModel: ObservableObject {
-    var status: GlobalState?
-    var polarApi: PolarApiWrapper?
+    @Published var status: GlobalState?
+    @Published var polarApi: PolarApiWrapper?
       
     func setup(status: GlobalState, polarApi: PolarApiWrapper) {
         self.status = status
@@ -37,6 +37,9 @@ final class HealthViewModel: ObservableObject {
     
     
     func save() {
+        guard let ID = status?.participantID else {
+            return
+        }
         if (nomedicaments || medicaments) && (cardiovascular || musculoskeletal || neuromuscular || nothing || diabetes || highBlood) && (less || more || never) {
             var fitness = ""
             if more {
@@ -55,7 +58,7 @@ final class HealthViewModel: ObservableObject {
             status?.userData.health.nothing = "\(nothing)"
             status?.userData.health.other = other
             
-            let ref: DatabaseReference = Database.database().reference().child("Participants").child("Participant \(status?.participantID)").child("Health Status")
+            let ref: DatabaseReference = Database.database().reference().child("Participants").child("Participant \(ID)").child("Health Status")
             ref.updateChildValues(["Medication": "\(medicaments)", "Cardiovascular diseases": "\(cardiovascular)", "Musculoskeletal diseases": "\(musculoskeletal)", "Neuromuscular disorder": "\(neuromuscular)", "High Blood": "\(highBlood)", "Diabetes": "\(neuromuscular)", "Nothing": "\(nothing)", "Other": other, "Fitness": fitness])
             
             self.selection = "WarmUp"
