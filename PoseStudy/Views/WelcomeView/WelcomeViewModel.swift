@@ -31,12 +31,12 @@ final class WelcomeViewModel: ObservableObject {
     
     func start() {
         if hasInternetConnection && !ID.isEmpty {
-            self.wait = true
-            self.saveToDatabase()
+            wait = true
+            saveToDatabase()
         } else if ID.isEmpty {
-            self.alertItem = AlertContext.IdMissing
+            alertItem = AlertContext.IdMissing
         } else if !hasInternetConnection {
-            self.alertItem = AlertContext.noInternetConnetion
+            alertItem = AlertContext.noInternetConnetion
         }
     }
     
@@ -86,6 +86,7 @@ final class WelcomeViewModel: ObservableObject {
                 self.wait = false
             }
         }
+        print(selection)
     }
     
     
